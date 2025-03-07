@@ -18,25 +18,10 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 // =========================================================================
 
-namespace GitcSimulator.Core.Reaction
+namespace GitcSimulator.Core.Attacks
 {
-	public enum ReactionType
+	public class AttackBatch<T> : Batch<T, AttackType>
+		where T : new()
 	{
-		Vaporize,
-		Melt,
-		Overloaded,
-		ElectroCharged,
-		Burning,
-		Bloom,
-		Burgeon,
-		Hyperbloom,
-		Quicken,
-		Spread,
-		Aggravate,
-		Frozen,
-		SuperConduct,
-		Shatter,
-		Swirl,
-		Crystalize
 	}
 }

@@ -18,33 +18,33 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 // =========================================================================
 
-namespace GitcSimulator.Core.Stats
+using System;
+using GitcSimulator.Core.Abilities;
+using GitcSimulator.Core.Attacks;
+using GitcSimulator.Core.Elements;
+using GitcSimulator.Core.Lifeforms;
+
+namespace GitcSimulator
 {
-	public abstract class Stat<T>
+	public class Program
 	{
-		private T _baseValue;
-
-		protected Stat(T baseValue)
+		public static void Main(string[] args)
 		{
-			BaseValue = baseValue;
+			var player = new Enemy(90, 1000, 1149.5);
+			var enemy = new Enemy(100, 1000, 1000);
+
+			var ability = new BasicAbility(
+				AttackType.Skill,
+				ElementType.Anemo,
+				103.94,
+				s => s.ATK);
+
+			player.Stats.ElementalDMG.Anemo.Bonus.AddPercent(15);
+
+			//enemy.Stats.RES.Anemo.AddPercent(-30);
+
+			var dmg = ability.Attack(player, enemy);
+			Console.WriteLine(dmg);
 		}
-
-		protected Stat()
-		{
-		}
-
-		public T Value { get; protected set; }
-
-		public T BaseValue
-		{
-			get => _baseValue;
-			set
-			{
-				_baseValue = value;
-				Update();
-			}
-		}
-
-		protected abstract void Update();
 	}
 }

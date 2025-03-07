@@ -18,11 +18,11 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 // =========================================================================
 
-using GitcSimulator.Core.Attack;
-using GitcSimulator.Core.Element;
-using GitcSimulator.Core.Reaction;
+using GitcSimulator.Core.Attacks;
+using GitcSimulator.Core.Elements;
+using GitcSimulator.Core.Reactions;
 
-namespace GitcSimulator.Core.Stats
+namespace GitcSimulator.Core.Statistics
 {
 	public class Stats
 	{

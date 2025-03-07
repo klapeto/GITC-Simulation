@@ -61,9 +61,14 @@ namespace GitcSimulator.Core.Values
 			return new FlatValue(value1.Value * value2.Value);
 		}
 
-		public static FlatValue operator *(FlatValue value1, Percent value2)
+		public static FlatValue operator *(FlatValue value1, double value2)
 		{
 			return new FlatValue(value1.Value * value2);
+		}
+
+		public static FlatValue operator *(FlatValue value1, Percent value2)
+		{
+			return new FlatValue(value1.Value * value2.ToDouble());
 		}
 
 		public static FlatValue operator /(FlatValue value1, FlatValue value2)

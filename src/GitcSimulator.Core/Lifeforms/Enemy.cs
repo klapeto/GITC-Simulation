@@ -18,10 +18,18 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 // =========================================================================
 
-namespace GitcSimulator.Core.Attack
+namespace GitcSimulator.Core.Lifeforms
 {
-	public class AttackBatch<T> : Batch<T, AttackType>
-		where T : new()
+	public class Enemy : Lifeform
 	{
+		public Enemy(int level, double baseHp, double baseATK)
+			: base(level, baseHp, baseATK, CalculateBaseDEF(level))
+		{
+		}
+
+		private static double CalculateBaseDEF(int level)
+		{
+			return (5 * level) + 500;
+		}
 	}
 }

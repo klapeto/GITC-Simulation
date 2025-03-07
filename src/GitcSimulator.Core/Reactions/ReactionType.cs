@@ -18,10 +18,33 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 // =========================================================================
 
-namespace GitcSimulator.Core.Reaction
+namespace GitcSimulator.Core.Reactions
 {
-	public class ReactionBatch<T> : Batch<T, ReactionType>
-		where T : new()
+	public enum ReactionType
 	{
+		VaporizeHtP,
+		VaporizePtH,
+		MeltPtC,
+		MeltCtP,
+		Overloaded,
+		ElectroCharged,
+		Burning,
+		Bloom,
+		Burgeon,
+		Hyperbloom,
+		Quicken,
+		Spread,
+		Aggravate,
+		Frozen,
+		SuperConduct,
+		Shatter,
+		HydroSwirl,
+		PyroSwirl,
+		ElectroSwirl,
+		CryoSwirl,
+		HydroCrystalize,
+		PyroCrystalize,
+		ElectroCrystalize,
+		CryoCrystalize,
 	}
 }

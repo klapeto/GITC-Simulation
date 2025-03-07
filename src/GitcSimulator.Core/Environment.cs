@@ -18,22 +18,21 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 // =========================================================================
 
-namespace GitcSimulator.Core.Stats
+using System;
+using System.Collections.Generic;
+using GitcSimulator.Core.Lifeforms;
+
+namespace GitcSimulator.Core
 {
-	public class Crit
+	public class Environment : IUpdateable
 	{
-		public Crit()
+		public List<Lifeform> Lifeforms { get; } = new();
+
+		public List<EnvironmentObject> Objects { get; } = new();
+
+		public void Update(TimeSpan timeElapsed)
 		{
+			throw new NotImplementedException();
 		}
-
-		public Crit(double rate, double dmg)
-		{
-			Rate = new PercentStat(rate);
-			DMG = new PercentStat(dmg);
-		}
-
-		public PercentStat Rate { get; } = new();
-
-		public PercentStat DMG { get; } = new();
 	}
 }

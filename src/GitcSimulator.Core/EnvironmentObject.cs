@@ -18,44 +18,15 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 // =========================================================================
 
-using System.Collections.Generic;
-using GitcSimulator.Core.Values;
+using System;
+using System.Drawing;
 
-namespace GitcSimulator.Core.Stats
+namespace GitcSimulator.Core
 {
-	public class PercentStat : Stat<Percent>
+	public abstract class EnvironmentObject : IUpdateable
 	{
-		private readonly List<Percent> _percentModifiers = new();
+		public Rectangle Bounds { get; }
 
-		public PercentStat(Percent baseValue)
-			: base(baseValue)
-		{
-		}
-
-		public PercentStat()
-		{
-		}
-
-		public void RemovePercent(Percent modifier)
-		{
-			_percentModifiers.Remove(modifier);
-			Update();
-		}
-
-		public void AddPercent(Percent percentModifier)
-		{
-			_percentModifiers.Add(percentModifier);
-			Update();
-		}
-
-		protected override void Update()
-		{
-			Value = BaseValue;
-
-			foreach (var percentModifier in _percentModifiers)
-			{
-				Value += percentModifier;
-			}
-		}
+		public abstract void Update(TimeSpan timeElapsed);
 	}
 }

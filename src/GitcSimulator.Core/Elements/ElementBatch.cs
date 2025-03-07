@@ -18,12 +18,25 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 // =========================================================================
 
-namespace GitcSimulator.Core.Stats
+namespace GitcSimulator.Core.Elements
 {
-	public class Buff
+	public class ElementBatch<T> : Batch<T, ElementType>
+		where T : new()
 	{
-		public FlatStat Increase { get; } = new(0);
+		public T Physical => this[ElementType.Physical];
 
-		public PercentStat Bonus { get; } = new(0);
+		public T Anemo => this[ElementType.Anemo];
+
+		public T Geo => this[ElementType.Geo];
+
+		public T Electro => this[ElementType.Electro];
+
+		public T Hydro => this[ElementType.Hydro];
+
+		public T Pyro => this[ElementType.Pyro];
+
+		public T Cryo => this[ElementType.Cryo];
+
+		public T Dendro => this[ElementType.Dendro];
 	}
 }

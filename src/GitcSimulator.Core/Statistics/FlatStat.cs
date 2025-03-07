@@ -18,10 +18,11 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 // =========================================================================
 
+using System;
 using System.Collections.Generic;
 using GitcSimulator.Core.Values;
 
-namespace GitcSimulator.Core.Stats
+namespace GitcSimulator.Core.Statistics
 {
 	public class FlatStat : Stat<FlatValue>
 	{
@@ -35,6 +36,56 @@ namespace GitcSimulator.Core.Stats
 
 		public FlatStat()
 		{
+		}
+
+		public static implicit operator FlatValue(FlatStat value)
+		{
+			return value.CurrentValue;
+		}
+
+		public static FlatValue operator +(FlatStat a, FlatStat b)
+		{
+			return a.CurrentValue + b.CurrentValue;
+		}
+
+		public static FlatValue operator -(FlatStat a, FlatStat b)
+		{
+			return a.CurrentValue - b.CurrentValue;
+		}
+
+		public static FlatValue operator *(FlatStat a, Percent b)
+		{
+			return a.CurrentValue * b;
+		}
+
+		public static FlatValue operator +(FlatStat a, FlatValue b)
+		{
+			return a.CurrentValue + b;
+		}
+
+		public static FlatValue operator -(FlatStat a, FlatValue b)
+		{
+			return a.CurrentValue - b;
+		}
+
+		public static FlatValue operator /(FlatStat a, FlatValue b)
+		{
+			if (b == 0)
+			{
+				throw new DivideByZeroException();
+			}
+
+			return a.CurrentValue / b;
+		}
+
+		public static FlatValue operator /(FlatStat a, FlatStat b)
+		{
+			if (b.CurrentValue == 0)
+			{
+				throw new DivideByZeroException();
+			}
+
+			return a.CurrentValue / b.CurrentValue;
 		}
 
 		public void AddFlat(FlatValue flatModifier)
@@ -63,16 +114,16 @@ namespace GitcSimulator.Core.Stats
 
 		protected override void Update()
 		{
-			Value = BaseValue;
+			CurrentValue = BaseValue;
 
 			foreach (var percentModifier in _percentModifiers)
 			{
-				Value *= percentModifier;
+				CurrentValue *= percentModifier;
 			}
 
 			foreach (var flatModifier in _flatModifiers)
 			{
-				Value += flatModifier;
+				CurrentValue += flatModifier;
 			}
 		}
 	}

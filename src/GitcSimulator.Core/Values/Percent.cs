@@ -31,7 +31,7 @@ namespace GitcSimulator.Core.Values
 
 		public static implicit operator double(Percent percent)
 		{
-			return 1 + (percent.Percentage / 100.0);
+			return percent.ToDouble();
 		}
 
 		public static implicit operator Percent(double percent)
@@ -56,7 +56,17 @@ namespace GitcSimulator.Core.Values
 
 		public static Percent operator *(Percent left, Percent right)
 		{
-			return new Percent(left.Percentage + right.Percentage);
+			return FromDouble(left.ToDouble() * right.ToDouble());
+		}
+
+		public double ToDouble()
+		{
+			return Percentage / 100.0;
+		}
+
+		private static Percent FromDouble(double value)
+		{
+			return new Percent(value * 100);
 		}
 	}
 }
