@@ -18,28 +18,10 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 // =========================================================================
 
-using GitcSimulator.Core.Elements;
-using GitcSimulator.Core.Lifeforms;
-
-namespace GitcSimulator.Data.Mizuki
+namespace GitcSimulator.Core.Weapons
 {
-	public class Mizuki : Playable
+	public enum SecondaryStat
 	{
-		public Mizuki(int level = 90, int ascensionLevel = -1)
-			: base(
-				"Yumemizuki Mizuki",
-				5,
-				level,
-				ascensionLevel,
-				991.45,
-				16.76,
-				58.93,
-				4071.4412,
-				68.81238,
-				242.0145,
-				ElementType.Anemo,
-				AscensionStat.ElementalMastery)
-		{
-		}
+		
 	}
 }

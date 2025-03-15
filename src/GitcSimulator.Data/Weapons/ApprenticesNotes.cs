@@ -19,21 +19,30 @@
 // =========================================================================
 
 using System;
+using GitcSimulator.Core;
 using GitcSimulator.Core.Lifeforms;
-using GitcSimulator.Data.Characters.Mizuki;
-using GitcSimulator.Data.Weapons;
+using GitcSimulator.Core.Weapons;
 
-namespace GitcSimulator
+namespace GitcSimulator.Data.Weapons
 {
-	public class Program
+	public class ApprenticesNotes : BaseWeapon
 	{
-		public static void Main(string[] args)
+		public ApprenticesNotes(
+			int level = 1,
+			AscensionLevel ascensionLevel = AscensionLevel.None,
+			RefinementLevel refinementLevel = RefinementLevel.R1)
+			: base(WeaponType.Catalyst, Quality.OneStar, level, ascensionLevel, refinementLevel, MultiplierTier.Tier2)
 		{
-			var player = new Mizuki();
-			var enemy = new Enemy("Dummy", 100, 1000, 1000);
+		}
 
-			var weapon = new ApprenticesNotes(58);
-			Console.WriteLine("End");
+		public override void OnEquiped(Playable playable)
+		{
+			throw new NotImplementedException();
+		}
+
+		public override void OnUnEquiped(Playable playable)
+		{
+			throw new NotImplementedException();
 		}
 	}
 }

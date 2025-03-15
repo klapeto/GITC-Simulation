@@ -20,8 +20,10 @@
 
 using System;
 using GitcSimulator.Core.Elements;
+using GitcSimulator.Core.Extensions;
 using GitcSimulator.Core.Reactions;
 using GitcSimulator.Core.Statistics;
+using GitcSimulator.Core.Weapons;
 
 namespace GitcSimulator.Core.Lifeforms
 {
@@ -29,11 +31,11 @@ namespace GitcSimulator.Core.Lifeforms
 	{
 		private const int MaxLevel = 90;
 
-		public Playable(
+		protected Playable(
 			string name,
-			int quality,
+			Quality quality,
 			int level,
-			int ascensionLevel,
+			AscensionLevel ascensionLevel,
 			double baseHP,
 			double baseATK,
 			double baseDEF,
@@ -41,6 +43,7 @@ namespace GitcSimulator.Core.Lifeforms
 			double maxAscensionValueATK,
 			double maxAscensionValueDEF,
 			ElementType elementType,
+			WeaponType weaponType,
 			AscensionStat ascensionStat)
 			: base(
 				name,
@@ -49,15 +52,16 @@ namespace GitcSimulator.Core.Lifeforms
 				baseATK,
 				baseDEF)
 		{
-			Level = Math.Max(Math.Min(MaxLevel, level), 1);
+			Level = level.SanitizeLevel();
 			ElementType = elementType;
+			WeaponType = weaponType;
 			Quality = quality;
-			AscensionLevel = SanitizeAscension(Level, ascensionLevel);
+			AscensionLevel = ascensionLevel.Sanitize(Level);
 
-			var levelMultiplier = quality == 5
+			var levelMultiplier = quality == Quality.FiveStars
 				? LevelMultipliers.GetBaseStatLevelMultiplier5Star(Level)
 				: LevelMultipliers.GetBaseStatLevelMultiplier4Star(Level);
-			var ascensionMultiplier = LevelMultipliers.GetBaseStatAscensionMultiplier(ascensionLevel);
+			var ascensionMultiplier = LevelMultipliers.GetBaseStatAscensionMultiplier(AscensionLevel);
 
 			var ascensionValueHP = maxAscensionValueHP * ascensionMultiplier;
 			var ascensionValueATK = maxAscensionValueATK * ascensionMultiplier;
@@ -68,7 +72,7 @@ namespace GitcSimulator.Core.Lifeforms
 			Stats.DEF.BaseValue = (baseDEF * levelMultiplier) + ascensionValueDEF;
 
 			var bonusStat = GetAscensionBonuStat(ascensionStat);
-			var baseBonusStat = quality == 5
+			var baseBonusStat = quality == Quality.FiveStars
 				? LevelMultipliers.GetBonusStatBaseValue5Star(ascensionStat)
 				: LevelMultipliers.GetBonusStatBaseValue4Star(ascensionStat);
 
@@ -81,30 +85,12 @@ namespace GitcSimulator.Core.Lifeforms
 
 		public ElementType ElementType { get; }
 
-		public int Quality { get; }
+		public WeaponType WeaponType { get; }
 
-		public int AscensionLevel { get; }
+		public Quality Quality { get; }
 
-		private static int SanitizeAscension(int level, int ascension)
-		{
-			if (ascension < 0)
-			{
-				ascension = 1000;
-			}
-
-			switch (level)
-			{
-				case <= 20: return Math.Max(0, Math.Min(ascension, 1));
-				case <= 40: return Math.Max(1, Math.Min(ascension, 2));
-				case <= 60: return Math.Max(2, Math.Min(ascension, 3));
-				case <= 70: return Math.Max(3, Math.Min(ascension, 4));
-				case <= 80: return Math.Max(4, Math.Min(ascension, 5));
-				case <= 90: return Math.Max(5, Math.Min(ascension, 6));
-			}
-
-			return ascension;
-		}
-
+		public AscensionLevel AscensionLevel { get; }
+		
 		private Stat GetAscensionBonuStat(AscensionStat stat)
 		{
 			switch (stat)

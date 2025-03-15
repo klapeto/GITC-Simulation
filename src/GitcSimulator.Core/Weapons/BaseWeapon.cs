@@ -18,22 +18,44 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 // =========================================================================
 
-using System;
+using GitcSimulator.Core.Extensions;
 using GitcSimulator.Core.Lifeforms;
-using GitcSimulator.Data.Characters.Mizuki;
-using GitcSimulator.Data.Weapons;
+using GitcSimulator.Core.Weapons.Interfaces;
 
-namespace GitcSimulator
+namespace GitcSimulator.Core.Weapons
 {
-	public class Program
+	public abstract class BaseWeapon : IWeapon
 	{
-		public static void Main(string[] args)
+		public BaseWeapon(
+			WeaponType weaponType,
+			Quality quality,
+			int level,
+			AscensionLevel ascensionLevel,
+			RefinementLevel refinementLevel,
+			MultiplierTier multiplierTier)
 		{
-			var player = new Mizuki();
-			var enemy = new Enemy("Dummy", 100, 1000, 1000);
-
-			var weapon = new ApprenticesNotes(58);
-			Console.WriteLine("End");
+			Type = weaponType;
+			Quality = quality;
+			Level = level.SanitizeLevel();
+			AscensionLevel = ascensionLevel.Sanitize(level);
+			RefinementLevel = refinementLevel;
+			ATK = WeaponStatsCalculator.CalculateATK(level, Quality, multiplierTier, AscensionLevel);
 		}
+
+		public int Level { get; }
+
+		public double ATK { get; }
+
+		public RefinementLevel RefinementLevel { get; }
+
+		public AscensionLevel AscensionLevel { get; }
+
+		public WeaponType Type { get; }
+
+		public Quality Quality { get; }
+
+		public abstract void OnEquiped(Playable playable);
+
+		public abstract void OnUnEquiped(Playable playable);
 	}
 }

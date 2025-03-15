@@ -28,7 +28,7 @@ using GitcSimulator.Core.Statistics;
 using GitcSimulator.Core.Values;
 using Environment = GitcSimulator.Core.Environment;
 
-namespace GitcSimulator.Data.Mizuki.Abilities.ElementalSkill
+namespace GitcSimulator.Data.Characters.Mizuki.Abilities.ElementalSkill
 {
 	public class ElementalSkill : BaseElementalSkill
 	{

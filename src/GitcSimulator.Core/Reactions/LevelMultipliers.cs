@@ -36,16 +36,16 @@ namespace GitcSimulator.Core.Reactions
 			return 1 + (((9.17431 - 1) / (100 - 1)) * (level - 1));
 		}
 
-		public static double GetBaseStatAscensionMultiplier(int ascensionLevel)
+		public static double GetBaseStatAscensionMultiplier(AscensionLevel ascensionLevel)
 		{
 			return ascensionLevel switch
 			{
-				0 => 0.0,
-				1 => 38.0 / 182.0,
-				2 => 65.0 / 182.0,
-				3 => 101.0 / 182.0,
-				4 => 128.0 / 182.0,
-				5 => 155.0 / 182.0,
+				AscensionLevel.None => 0.0,
+				AscensionLevel.First => 38.0 / 182.0,
+				AscensionLevel.Second => 65.0 / 182.0,
+				AscensionLevel.Third => 101.0 / 182.0,
+				AscensionLevel.Fourth => 128.0 / 182.0,
+				AscensionLevel.Fifth => 155.0 / 182.0,
 				_ => 1.0
 			};
 		}
@@ -114,14 +114,14 @@ namespace GitcSimulator.Core.Reactions
 			}
 		}
 
-		public static double GetBonusStatAscensionMultiplier(int ascensionLevel)
+		public static double GetBonusStatAscensionMultiplier(AscensionLevel ascensionLevel)
 		{
 			return ascensionLevel switch
 			{
-				0 or 1 => 0.0,
-				2 => 1.0,
-				3 or 4 => 2.0,
-				5 => 3.0,
+				AscensionLevel.None or AscensionLevel.First => 0.0,
+				AscensionLevel.Second => 1.0,
+				AscensionLevel.Third or AscensionLevel.Fourth => 2.0,
+				AscensionLevel.Fifth => 3.0,
 				_ => 4.0
 			};
 		}

@@ -18,22 +18,13 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 // =========================================================================
 
-using System;
-using GitcSimulator.Core.Lifeforms;
-using GitcSimulator.Data.Characters.Mizuki;
-using GitcSimulator.Data.Weapons;
-
-namespace GitcSimulator
+namespace GitcSimulator.Core.Weapons
 {
-	public class Program
+	public enum MultiplierTier
 	{
-		public static void Main(string[] args)
-		{
-			var player = new Mizuki();
-			var enemy = new Enemy("Dummy", 100, 1000, 1000);
-
-			var weapon = new ApprenticesNotes(58);
-			Console.WriteLine("End");
-		}
+		Tier1,
+		Tier2,
+		Tier3,
+		Tier4,
 	}
 }

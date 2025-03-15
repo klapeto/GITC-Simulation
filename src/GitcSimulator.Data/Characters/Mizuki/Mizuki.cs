@@ -18,22 +18,31 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 // =========================================================================
 
-using System;
+using GitcSimulator.Core;
+using GitcSimulator.Core.Elements;
 using GitcSimulator.Core.Lifeforms;
-using GitcSimulator.Data.Characters.Mizuki;
-using GitcSimulator.Data.Weapons;
+using GitcSimulator.Core.Weapons;
 
-namespace GitcSimulator
+namespace GitcSimulator.Data.Characters.Mizuki
 {
-	public class Program
+	public class Mizuki : Playable
 	{
-		public static void Main(string[] args)
+		public Mizuki(int level = 90, AscensionLevel ascensionLevel = AscensionLevel.Sixth)
+			: base(
+				"Yumemizuki Mizuki",
+				Quality.FiveStars,
+				level,
+				ascensionLevel,
+				991.45,
+				16.76,
+				58.93,
+				4071.4412,
+				68.81238,
+				242.0145,
+				ElementType.Anemo,
+				WeaponType.Catalyst,
+				AscensionStat.ElementalMastery)
 		{
-			var player = new Mizuki();
-			var enemy = new Enemy("Dummy", 100, 1000, 1000);
-
-			var weapon = new ApprenticesNotes(58);
-			Console.WriteLine("End");
 		}
 	}
 }
