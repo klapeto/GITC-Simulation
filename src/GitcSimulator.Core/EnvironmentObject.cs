@@ -19,13 +19,13 @@
 // =========================================================================
 
 using System;
-using System.Drawing;
+using GitcSimulator.Core.HitBoxes;
 
 namespace GitcSimulator.Core
 {
 	public abstract class EnvironmentObject : IUpdateable
 	{
-		public Rectangle Bounds { get; }
+		public Point Location { get; }
 
 		public abstract void Update(TimeSpan timeElapsed);
 	}

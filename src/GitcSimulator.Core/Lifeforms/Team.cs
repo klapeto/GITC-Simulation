@@ -18,16 +18,42 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 // =========================================================================
 
-namespace GitcSimulator.Core.Attacks
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using GitcSimulator.Core.Statistics;
+using GitcSimulator.Core.Statistics.Interfaces;
+
+namespace GitcSimulator.Core.Lifeforms
 {
-	public enum AttackType
+	public class Team : IUpdateable
 	{
-		Normal,
-		Charged,
-		Plunge,
-		PlungeCollision,
-		PlungeImpact,
-		ElementalSkill,
-		Burst
+		private List<IEffect> _resonances = new List<IEffect>();
+		
+		public Team(IEnumerable<Playable> playables)
+		{
+			Playables = playables.ToList();
+		}
+
+		private void UpdateResonances()
+		{
+			foreach (var resonance in _resonances)
+			{
+				foreach (var playable in Playables)
+				{
+					//playable.Stats.
+				}
+			}
+		}
+
+		public List<Playable> Playables { get; }
+
+		public void Update(TimeSpan timeElapsed)
+		{
+			foreach (var playable in Playables)
+			{
+				playable.Update(timeElapsed);
+			}
+		}
 	}
 }

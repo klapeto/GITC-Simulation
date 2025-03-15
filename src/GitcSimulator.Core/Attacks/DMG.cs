@@ -20,14 +20,18 @@
 
 namespace GitcSimulator.Core.Attacks
 {
-	public enum AttackType
+	public class DMG
 	{
-		Normal,
-		Charged,
-		Plunge,
-		PlungeCollision,
-		PlungeImpact,
-		ElementalSkill,
-		Burst
+		public DMG(double dmg, ElementalInstance? elementalInstance)
+		{
+			Dmg = dmg;
+			ElementalInstance = elementalInstance;
+		}
+
+		public ElementalInstance? ElementalInstance { get; }
+		
+		
+
+		public double Dmg { get; }
 	}
 }

@@ -22,8 +22,8 @@ namespace GitcSimulator.Core.Lifeforms
 {
 	public class Enemy : Lifeform
 	{
-		public Enemy(int level, double baseHp, double baseATK)
-			: base(level, baseHp, baseATK, CalculateBaseDEF(level))
+		public Enemy(string name, int level, double baseHp, double baseATK)
+			: base(name, level, baseHp, baseATK, CalculateBaseDEF(level))
 		{
 		}
 

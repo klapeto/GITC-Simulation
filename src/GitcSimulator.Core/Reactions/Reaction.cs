@@ -18,12 +18,23 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 // =========================================================================
 
+using GitcSimulator.Core.Values;
+
 namespace GitcSimulator.Core.Reactions
 {
 	public class Reaction
 	{
+		public Reaction(ReactionType type, Percent originalDMGMultiplier, double additionalDMG)
+		{
+			Type = type;
+			OriginalDMGMultiplier = originalDMGMultiplier;
+			AdditionalDMG = additionalDMG;
+		}
+
 		public ReactionType Type { get; }
-		
-		public double Value { get; }
+
+		public Percent OriginalDMGMultiplier { get; }
+
+		public double AdditionalDMG { get; }
 	}
 }

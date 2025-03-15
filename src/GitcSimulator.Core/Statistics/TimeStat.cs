@@ -18,16 +18,20 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 // =========================================================================
 
-namespace GitcSimulator.Core.Attacks
+using System;
+using GitcSimulator.Core.Statistics.Converters;
+
+namespace GitcSimulator.Core.Statistics
 {
-	public enum AttackType
+	public class TimeStat : BaseStat<TimeSpan, TimeSpanConverter>
 	{
-		Normal,
-		Charged,
-		Plunge,
-		PlungeCollision,
-		PlungeImpact,
-		ElementalSkill,
-		Burst
+		public TimeStat(TimeSpan baseValue)
+			: base(baseValue)
+		{
+		}
+
+		public TimeStat()
+		{
+		}
 	}
 }

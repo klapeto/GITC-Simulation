@@ -18,16 +18,25 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 // =========================================================================
 
-namespace GitcSimulator.Core.Attacks
+namespace GitcSimulator.Core.Lifeforms
 {
-	public enum AttackType
+	public enum AscensionStat
 	{
-		Normal,
-		Charged,
-		Plunge,
-		PlungeCollision,
-		PlungeImpact,
-		ElementalSkill,
-		Burst
+		PhysicalDMGBonus,
+		AnemoDMGBonus,
+		GeoDMGBonus,
+		ElectroDMGBonus,
+		HydroDMGBonus,
+		PyroDMGBonus,
+		CryoDMGBonus,
+		DendroDMGBonus,
+		ATK,
+		MaxHP,
+		DEF,
+		EnergyRecharge,
+		ElementalMastery,
+		HealingBonus,
+		CRITRate,
+		CRITDamage
 	}
 }

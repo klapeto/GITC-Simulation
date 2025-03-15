@@ -24,18 +24,18 @@ namespace GitcSimulator.Core.Statistics
 	{
 		public Crit()
 		{
-			Rate = new PercentStat(0);
-			DMG = new PercentStat(0);
+			Rate = new Stat(0);
+			DMG = new Stat(0);
 		}
 
 		public Crit(double rate, double dmg)
 		{
-			Rate = new PercentStat(rate);
-			DMG = new PercentStat(dmg);
+			Rate = new Stat(rate);
+			DMG = new Stat(dmg);
 		}
 
-		public PercentStat Rate { get; }
+		public Stat Rate { get; }
 
-		public PercentStat DMG { get; }
+		public Stat DMG { get; }
 	}
 }

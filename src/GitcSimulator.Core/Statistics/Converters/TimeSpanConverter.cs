@@ -18,16 +18,21 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 // =========================================================================
 
-namespace GitcSimulator.Core.Attacks
+using System;
+using GitcSimulator.Core.Statistics.Interfaces;
+
+namespace GitcSimulator.Core.Statistics.Converters
 {
-	public enum AttackType
+	public class TimeSpanConverter : IValueConverter<TimeSpan>
 	{
-		Normal,
-		Charged,
-		Plunge,
-		PlungeCollision,
-		PlungeImpact,
-		ElementalSkill,
-		Burst
+		public TimeSpan FromDouble(double value)
+		{
+			return TimeSpan.FromSeconds(value);
+		}
+
+		public double ToDouble(TimeSpan value)
+		{
+			return value.TotalSeconds;
+		}
 	}
 }

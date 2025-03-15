@@ -19,31 +19,49 @@
 // =========================================================================
 
 using System;
-using System.Collections.Generic;
+using GitcSimulator.Core.Elements;
 using GitcSimulator.Core.Lifeforms;
+using GitcSimulator.Core.Statistics;
 
-namespace GitcSimulator.Core
+namespace GitcSimulator.Core.Attacks
 {
-	public class Environment : IUpdateable
+	public abstract class UserTriggeredAttack : Attack, IUpdateable
 	{
-		public List<Lifeform> Enemies { get; } = new();
+		protected UserTriggeredAttack(Lifeform user)
+			: base(user)
+		{
+		}
 
-		public Team Team { get; } = new(Array.Empty<Playable>());
+		public abstract TimeStat Cooldown { get; }
 
-		public List<EnvironmentObject> Objects { get; } = new();
+		public bool IsReady => CoolDownRemaining.Ticks <= 0;
+
+		public abstract InternalCooldown? InternalCooldown { get; }
+
+		public TimeSpan CoolDownRemaining { get; private set; }
 
 		public void Update(TimeSpan timeElapsed)
 		{
-			Team.Update(timeElapsed);
-			foreach (var enemy in Enemies)
+			if (CoolDownRemaining > Cooldown.CurrentValue)
 			{
-				enemy.Update(timeElapsed);
+				// Cooldown was reduced
+				CoolDownRemaining = Cooldown.CurrentValue;
 			}
 
-			foreach (var environmentObject in Objects)
+			if (CoolDownRemaining.Ticks > 0)
 			{
-				environmentObject.Update(timeElapsed);
+				CoolDownRemaining -= timeElapsed;
 			}
+
+			InternalCooldown?.Update(timeElapsed);
 		}
+
+		public sealed override void Use(Environment environment)
+		{
+			CoolDownRemaining = Cooldown.CurrentValue;
+			OnUsed(environment);
+		}
+
+		protected abstract void OnUsed(Environment environment);
 	}
 }

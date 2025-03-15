@@ -18,19 +18,24 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 // =========================================================================
 
-using GitcSimulator.Core.Attacks;
-using GitcSimulator.Core.Elements;
 using GitcSimulator.Core.Lifeforms;
+using GitcSimulator.Core.Statistics;
 
-namespace GitcSimulator.Core.Abilities
+namespace GitcSimulator.Core.Attacks
 {
-	public interface IAbility
+	public abstract class Attack
 	{
-		ElementType ElementType { get; }
+		protected Attack(Lifeform user)
+		{
+			User = user;
+		}
 
-		AttackType AttackType { get; }
+		public abstract AttackType Type { get; }
 
-		double SimulateAttack(Lifeform attacker, Lifeform defender);
-		double Attack(Lifeform attacker, Lifeform defender);
+		public Lifeform User { get; }
+
+		public Stat Level { get; } = new(1);
+
+		public abstract void Use(Environment environment);
 	}
 }

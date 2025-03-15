@@ -21,6 +21,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using GitcSimulator.Core.Attacks;
 using GitcSimulator.Core.Elements;
 using GitcSimulator.Core.Statistics;
 
@@ -28,43 +29,65 @@ namespace GitcSimulator.Core.Lifeforms
 {
 	public class Lifeform : EnvironmentObject
 	{
-		public Lifeform(int level, double baseHp, double baseATK, double baseDEF)
+		public Lifeform(
+			string name,
+			int level,
+			double baseHP,
+			double baseATK,
+			double baseDEF)
 		{
-			Level = level;
-			Stats = new Stats(baseHp, baseATK, baseDEF);
+			Name = name;
+			Level = Math.Max(level, 1);
+			Stats = new Stats(baseHP, baseATK, baseDEF);
 			Stats.RES.ApplyToAll(s => s.BaseValue = 10); // default
 		}
 
 		public string Name { get; }
 
-		public int Level { get; }
+		public int Level { get; protected set; }
 
 		public Stats Stats { get; }
 
-		public List<Aura> Auras { get; } = new();
+		public IReadOnlyCollection<Aura> Auras { get; } = Enum.GetValues(typeof(AuraType))
+			.Cast<AuraType>()
+			.Select(a => new Aura(a))
+			.ToList();
+
+		public bool IsAlive => Stats.HP.BaseValue > 0;
 
 		public bool HasAura(AuraType elementType)
 		{
 			return Auras.Any(a => a.Type == elementType && a.Units > 0);
 		}
 
-		public void Die()
+		public void Die(Environment environment)
 		{
+			environment.Enemies.Remove(this);
 		}
 
-		public void ReceiveDamage(double damage)
+		public void ReceiveDamage(DMG dmg, Environment environment)
 		{
-			Stats.HP.BaseValue -= damage;
-
-			if (Stats.HP.BaseValue <= 0)
+			//var actualDMG = 
+			Stats.HP.BaseValue -= dmg.Dmg;
+			if (!IsAlive)
 			{
-				Die();
+				Die(environment);
 			}
 		}
 
 		public override void Update(TimeSpan timeElapsed)
 		{
-			throw new NotImplementedException();
+		}
+
+		// private ReactionType? GetReaction(ElementalInstance? elementalInstance)
+		// {
+		// 	if (elementalInstance == null) return null;
+		// 	if (elementalInstance.Units <= 0) return null;
+		// }
+		//
+		private double CalculateActualDMG(DMG dmg)
+		{
+			return dmg.Dmg;
 		}
 	}
 }

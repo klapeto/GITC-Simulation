@@ -6,7 +6,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GitcSimulator.Core", "GitcS
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{FAE727E9-3769-4664-9F69-8A771C7C0DB6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GitcSimulator.Core.Tests", "Tests\GitcSimulator.Core.Tests\GitcSimulator.Core.Tests.csproj", "{258BBD57-39E2-43E8-B93D-0D69AFB9EEC7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GitcSimulator.Core.Tests", "Tests\GitcSimulator.Core.Tests\GitcSimulator.Core.Tests.csproj", "{7BC786F4-154E-42B0-B365-2F56207A5A55}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Other Files", "Other Files", "{3ECF1EA2-6D5E-43E3-87DC-5495AA4A6BE0}"
+	ProjectSection(SolutionItems) = preProject
+		..\.editorconfig = ..\.editorconfig
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GitcSimulator.Data", "GitcSimulator.Data\GitcSimulator.Data.csproj", "{48CC8CC3-8875-490A-B362-96D8E1543542}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -22,12 +29,16 @@ Global
 		{843F0132-9EE0-452B-96C8-38004133A9F4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{843F0132-9EE0-452B-96C8-38004133A9F4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{843F0132-9EE0-452B-96C8-38004133A9F4}.Release|Any CPU.Build.0 = Release|Any CPU
-		{258BBD57-39E2-43E8-B93D-0D69AFB9EEC7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{258BBD57-39E2-43E8-B93D-0D69AFB9EEC7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{258BBD57-39E2-43E8-B93D-0D69AFB9EEC7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{258BBD57-39E2-43E8-B93D-0D69AFB9EEC7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7BC786F4-154E-42B0-B365-2F56207A5A55}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7BC786F4-154E-42B0-B365-2F56207A5A55}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7BC786F4-154E-42B0-B365-2F56207A5A55}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7BC786F4-154E-42B0-B365-2F56207A5A55}.Release|Any CPU.Build.0 = Release|Any CPU
+		{48CC8CC3-8875-490A-B362-96D8E1543542}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{48CC8CC3-8875-490A-B362-96D8E1543542}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{48CC8CC3-8875-490A-B362-96D8E1543542}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{48CC8CC3-8875-490A-B362-96D8E1543542}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{258BBD57-39E2-43E8-B93D-0D69AFB9EEC7} = {FAE727E9-3769-4664-9F69-8A771C7C0DB6}
+		{7BC786F4-154E-42B0-B365-2F56207A5A55} = {FAE727E9-3769-4664-9F69-8A771C7C0DB6}
 	EndGlobalSection
 EndGlobal

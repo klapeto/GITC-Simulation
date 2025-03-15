@@ -20,14 +20,16 @@
 
 using System;
 using System.Collections.Generic;
+using GitcSimulator.Core.Attacks;
 using GitcSimulator.Core.Elements;
 using GitcSimulator.Core.Lifeforms;
+using GitcSimulator.Core.Values;
 
 namespace GitcSimulator.Core.Reactions
 {
 	public static class ReactionCalculator
 	{
-		private readonly static IReadOnlyDictionary<ReactionType, double> ReactionMultipliers =
+		private static readonly IReadOnlyDictionary<ReactionType, double> ReactionMultipliers =
 			new Dictionary<ReactionType, double>
 			{
 				[ReactionType.Burning] = 0.25,
@@ -233,9 +235,183 @@ namespace GitcSimulator.Core.Reactions
 			return reactionTypes;
 		}
 
-		public static Reaction? CalculateReaction(ElementType attackElementType, Lifeform attacker, Lifeform defender)
+		public static Percent GetEmBonus(ReactionType reactionType, Lifeform attacker)
 		{
-			return null;
+			var em = attacker.Stats.ElementalMastery.CurrentValue;
+			switch (reactionType)
+			{
+				case ReactionType.VaporizeHtP:
+				case ReactionType.VaporizePtH:
+				case ReactionType.MeltPtC:
+				case ReactionType.MeltCtP:
+					return GetAmplifyingEmBonus(attacker);
+				case ReactionType.Burning:
+				case ReactionType.HydroSwirl:
+				case ReactionType.PyroSwirl:
+				case ReactionType.ElectroSwirl:
+				case ReactionType.CryoSwirl:
+				case ReactionType.SuperConduct:
+				case ReactionType.ElectroCharged:
+				case ReactionType.Bloom:
+				case ReactionType.Overloaded:
+				case ReactionType.Burgeon:
+				case ReactionType.Hyperbloom:
+				case ReactionType.Shatter:
+					return GetTransformativeEmBonus(attacker);
+				case ReactionType.Spread:
+				case ReactionType.Aggravate:
+					return GetCatalyzeEmBonus(attacker);
+				default:
+					return 1.0;
+			}
+		}
+
+		public static Percent GetReactionBonus(ReactionType reactionType, Lifeform attacker)
+		{
+			return attacker.Stats.ReactionDMG[reactionType].Bonus.CurrentValue;
+		}
+
+		public static ElementType GetElementTypeByReaction(ReactionType reactionType)
+		{
+			switch (reactionType)
+			{
+				case ReactionType.VaporizeHtP:
+				case ReactionType.HydroSwirl:
+				case ReactionType.HydroCrystalize:
+					return ElementType.Hydro;
+				case ReactionType.VaporizePtH:
+				case ReactionType.MeltPtC:
+				case ReactionType.Overloaded:
+				case ReactionType.Burning:
+				case ReactionType.PyroSwirl:
+				case ReactionType.PyroCrystalize:
+					return ElementType.Pyro;
+				case ReactionType.MeltCtP:
+				case ReactionType.SuperConduct:
+				case ReactionType.CryoSwirl:
+				case ReactionType.CryoCrystalize:
+					return ElementType.Cryo;
+				case ReactionType.ElectroCharged:
+				case ReactionType.Aggravate:
+				case ReactionType.ElectroSwirl:
+				case ReactionType.ElectroCrystalize:
+					return ElementType.Electro;
+				case ReactionType.Bloom:
+				case ReactionType.Burgeon:
+				case ReactionType.Hyperbloom:
+				case ReactionType.Quicken:
+				case ReactionType.Spread:
+					return ElementType.Dendro;
+				case ReactionType.Frozen:
+				case ReactionType.Shatter:
+					return ElementType.Physical;
+				default:
+					throw new ArgumentOutOfRangeException(nameof(reactionType), reactionType, null);
+			}
+		}
+
+		public static Reaction CalculateReaction(ReactionType reactionType, Lifeform attacker, Lifeform target, double additionalDMG = 0.0)
+		{
+			var reactionBonus = GetReactionBonus(reactionType, attacker);
+			additionalDMG += attacker.Stats.ReactionDMG[reactionType].Increase;
+
+			switch (reactionType)
+			{
+				case ReactionType.VaporizeHtP:
+				case ReactionType.VaporizePtH:
+				case ReactionType.MeltPtC:
+				case ReactionType.MeltCtP:
+					var multiplier = GetAmplifyingReactionMultiplier(reactionType);
+					var emBonus = GetAmplifyingEmBonus(attacker);
+					return new Reaction(reactionType, multiplier * (emBonus + reactionBonus), additionalDMG);
+				case ReactionType.Burning:
+				case ReactionType.HydroSwirl:
+				case ReactionType.PyroSwirl:
+				case ReactionType.ElectroSwirl:
+				case ReactionType.CryoSwirl:
+				case ReactionType.SuperConduct:
+				case ReactionType.ElectroCharged:
+				case ReactionType.Bloom:
+				case ReactionType.Overloaded:
+				case ReactionType.Burgeon:
+				case ReactionType.Hyperbloom:
+				case ReactionType.Shatter:
+					multiplier = GetTransformativeReactionMultiplier(reactionType);
+					var levelMultiplier = attacker is Playable
+						? LevelMultipliers.GetPlayerLevelMultiplier(attacker.Level)
+						: LevelMultipliers.GetEnvironmentLevelMultiplier(attacker.Level);
+					emBonus = GetTransformativeEmBonus(attacker);
+					var resMultiplier = AttackCalculator.CalculateResMultiplier(
+						target,
+						GetElementTypeByReaction(reactionType));
+					var dmg = ((multiplier * levelMultiplier * (emBonus + reactionBonus)) + additionalDMG)
+					          * resMultiplier;
+					var criticalChance = attacker.Stats.ReactionCRIT[reactionType].Rate.CurrentValue;
+
+					if (RNG.CriticalCheck(criticalChance))
+					{
+						dmg *= attacker.Stats.ReactionCRIT[reactionType].DMG.CurrentValue;
+					}
+
+					return new Reaction(reactionType, 1.0, dmg);
+				case ReactionType.Spread:
+				case ReactionType.Aggravate:
+					multiplier = GetCatalyzeMultiplier(reactionType);
+					emBonus = GetCatalyzeEmBonus(attacker);
+					levelMultiplier = attacker is Playable
+						? LevelMultipliers.GetPlayerLevelMultiplier(attacker.Level)
+						: LevelMultipliers.GetEnvironmentLevelMultiplier(attacker.Level);
+					dmg = multiplier * levelMultiplier * (emBonus + reactionBonus);
+					return new Reaction(reactionType, 1.0, dmg);
+				default:
+					return new Reaction(reactionType, 1.0, 0);
+			}
+		}
+
+		private static double GetCatalyzeMultiplier(ReactionType reactionType)
+		{
+			return reactionType switch
+			{
+				ReactionType.Aggravate => 1.15,
+				ReactionType.Spread => 1.25,
+				_ => 1.0
+			};
+		}
+
+		public static Percent GetAmplifyingReactionMultiplier(ReactionType reactionType)
+		{
+			return reactionType switch
+			{
+				ReactionType.VaporizeHtP or ReactionType.MeltPtC => 2.0,
+				ReactionType.VaporizePtH or ReactionType.MeltCtP => 1.5,
+				_ => 1.0
+			};
+		}
+
+		private static Percent GetTransformativeReactionMultiplier(ReactionType reactionType)
+		{
+			return ReactionMultipliers[reactionType];
+		}
+
+		private static Percent GetAmplifyingEmBonus(Lifeform attacker)
+		{
+			var em = attacker.Stats.ElementalMastery.CurrentValue;
+
+			return 2.78 * (em / (em + 1400));
+		}
+
+		private static Percent GetTransformativeEmBonus(Lifeform attacker)
+		{
+			var em = attacker.Stats.ElementalMastery.CurrentValue;
+
+			return 16.0 * (em / (em + 2000));
+		}
+
+		private static Percent GetCatalyzeEmBonus(Lifeform attacker)
+		{
+			var em = attacker.Stats.ElementalMastery.CurrentValue;
+
+			return 5.0 * em / (em + 1200);
 		}
 	}
 }

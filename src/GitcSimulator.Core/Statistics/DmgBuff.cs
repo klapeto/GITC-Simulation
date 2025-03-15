@@ -18,16 +18,12 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 // =========================================================================
 
-namespace GitcSimulator.Core.Attacks
+namespace GitcSimulator.Core.Statistics
 {
-	public enum AttackType
+	public class DmgBuff
 	{
-		Normal,
-		Charged,
-		Plunge,
-		PlungeCollision,
-		PlungeImpact,
-		ElementalSkill,
-		Burst
+		public Stat Increase { get; }
+
+		public Stat Bonus { get; }
 	}
 }

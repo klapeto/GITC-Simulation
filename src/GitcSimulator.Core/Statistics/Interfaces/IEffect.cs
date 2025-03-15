@@ -18,16 +18,14 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 // =========================================================================
 
-namespace GitcSimulator.Core.Attacks
+using GitcSimulator.Core.Lifeforms;
+
+namespace GitcSimulator.Core.Statistics.Interfaces
 {
-	public enum AttackType
+	public interface IEffect: IUpdateable
 	{
-		Normal,
-		Charged,
-		Plunge,
-		PlungeCollision,
-		PlungeImpact,
-		ElementalSkill,
-		Burst
+		void ApplyEffect(Lifeform lifeform);
+
+		void RemoveEffect(Lifeform lifeform);
 	}
 }

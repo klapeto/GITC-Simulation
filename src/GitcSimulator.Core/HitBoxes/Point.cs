@@ -18,16 +18,14 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 // =========================================================================
 
-namespace GitcSimulator.Core.Attacks
+namespace GitcSimulator.Core.HitBoxes
 {
-	public enum AttackType
+	public class Point
 	{
-		Normal,
-		Charged,
-		Plunge,
-		PlungeCollision,
-		PlungeImpact,
-		ElementalSkill,
-		Burst
+		public double X { get; set; }
+
+		public double Y { get; set; }
+
+		public double Z { get; set; }
 	}
 }

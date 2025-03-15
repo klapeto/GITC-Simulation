@@ -18,12 +18,25 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 // =========================================================================
 
-namespace GitcSimulator.Core.Statistics
-{
-	public class Buff
-	{
-		public FlatStat Increase { get; } = new(0);
+using System;
+using GitcSimulator.Core.Values;
 
-		public PercentStat Bonus { get; } = new(0);
+namespace GitcSimulator.Core.Statistics.Interfaces
+{
+	public interface IStat<T>
+	{
+		event EventHandler<T>? ValueChanged;
+
+		T CurrentValue { get; }
+
+		T BaseValue { get; }
+
+		void Add(Guid id, T value);
+
+		void Remove(Guid id);
+
+		void Add(Guid id, Percent value);
+
+		Percent ToPercent();
 	}
 }

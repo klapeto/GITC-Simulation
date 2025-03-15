@@ -18,16 +18,17 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 // =========================================================================
 
+using GitcSimulator.Core.Lifeforms;
+
 namespace GitcSimulator.Core.Attacks
 {
-	public enum AttackType
+	public abstract class BaseElementalSkill : UserTriggeredAttack
 	{
-		Normal,
-		Charged,
-		Plunge,
-		PlungeCollision,
-		PlungeImpact,
-		ElementalSkill,
-		Burst
+		public BaseElementalSkill(Lifeform user)
+			: base(user)
+		{
+		}
+
+		public override AttackType Type => AttackType.ElementalSkill;
 	}
 }

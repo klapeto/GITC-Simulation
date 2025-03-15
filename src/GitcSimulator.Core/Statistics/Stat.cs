@@ -18,33 +18,19 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 // =========================================================================
 
+using GitcSimulator.Core.Statistics.Converters;
+
 namespace GitcSimulator.Core.Statistics
 {
-	public abstract class Stat<T>
+	public class Stat : BaseStat<double, DoubleConverter>
 	{
-		private T _baseValue;
-
-		protected Stat(T baseValue)
-		{
-			BaseValue = baseValue;
-		}
-
-		protected Stat()
+		public Stat(double baseValue)
+			: base(baseValue)
 		{
 		}
 
-		public T CurrentValue { get; protected set; }
-
-		public T BaseValue
+		public Stat()
 		{
-			get => _baseValue;
-			set
-			{
-				_baseValue = value;
-				Update();
-			}
 		}
-
-		protected abstract void Update();
 	}
 }

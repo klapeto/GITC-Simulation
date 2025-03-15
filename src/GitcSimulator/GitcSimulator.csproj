@@ -4,5 +4,6 @@
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\GitcSimulator.Core\GitcSimulator.Core.csproj" />
+    <ProjectReference Include="..\GitcSimulator.Data\GitcSimulator.Data.csproj" />
   </ItemGroup>
 </Project>

@@ -28,71 +28,71 @@ namespace GitcSimulator.Core.Statistics
 	{
 		public Stats(double baseHp, double baseATK, double baseDEF)
 		{
-			MaxHP = new FlatStat(baseHp);
-			ATK = new FlatStat(baseATK);
-			DEF = new FlatStat(baseDEF);
+			MaxHP = new Stat(baseHp);
+			ATK = new Stat(baseATK);
+			DEF = new Stat(baseDEF);
 
-			HP = new FlatStat(baseHp);
+			HP = new Stat(baseHp);
 		}
 
-		public FlatStat HP { get; }
+		public Stat HP { get; }
 
-		public FlatStat MaxHP { get; }
+		public Stat MaxHP { get; }
 
-		public FlatStat ATK { get; }
+		public Stat ATK { get; }
 
-		public FlatStat DEF { get; }
+		public Stat DEF { get; }
 
-		public FlatStat ElementalMastery { get; } = new(0);
+		public Stat ElementalMastery { get; } = new(0);
 
 		public Crit CRIT { get; } = new(5, 50);
 
-		public PercentStat EnergyRecharge { get; } = new(100);
+		public Stat EnergyRecharge { get; } = new(100);
 
-		public Buff Healing { get; } = new();
+		public DmgBuff Healing { get; } = new();
 
-		public Buff IncomingHealing { get; } = new();
+		public DmgBuff IncomingHealing { get; } = new();
 
-		public ElementBatch<PercentStat> RES { get; } = new();
+		public ElementBatch<Stat> RES { get; } = new();
 
-		public PercentStat DEFIgnore { get; } = new(0);
+		public Stat DEFIgnore { get; } = new(0);
 
-		public PercentStat DEFReduction { get; } = new(0);
+		public Stat DEFReduction { get; } = new(0);
 
-		public PercentStat DMGReduction { get; } = new(0);
+		public Stat DMGReduction { get; } = new(0);
 
-		public Buff DMG { get; } = new();
+		public DmgBuff DMG { get; } = new();
 
-		public ElementBatch<Buff> ElementalDMG { get; } = new();
+		public ElementBatch<DmgBuff> ElementalDMG { get; } = new();
 
 		public ElementBatch<Crit> ElementalCRIT { get; } = new();
 
-		public ReactionBatch<Buff> ReactionDMG { get; } = new();
+		public ReactionBatch<DmgBuff> ReactionDMG { get; } = new();
 
 		public ReactionBatch<Crit> ReactionCRIT { get; } = new();
 
-		public AttackBatch<Buff> AttackDMG { get; } = new();
+		public AttackBatch<DmgBuff> AttackDMG { get; } = new();
 
 		public AttackBatch<Crit> AttackCRIT { get; } = new();
 
-		public FlatStat NormalAttackLevelBoost { get; } = new(0);
+		public Stat NormalAttackLevelBoost { get; } = new(0);
 
-		public FlatStat SkillLevelBoost { get; } = new(0);
+		public Stat SkillLevelBoost { get; } = new(0);
 
-		public FlatStat BurstLevelBoost { get; } = new(0);
+		public Stat BurstLevelBoost { get; } = new(0);
 
-		public FlatStat Stamina { get; } = new(120);
+		public Stat Stamina { get; } = new(120);
 
-		public FlatStat ChargedAttackStaminaConsumptionDecrease { get; } = new(0);
+		public Stat ChargedAttackStaminaConsumptionDecrease { get; } = new(0);
 
-		public FlatStat StaminaConsumptionDecrease { get; } = new(0);
+		public Stat StaminaConsumptionDecrease { get; } = new(0);
 
-		public FlatStat GlidingStaminaConsumptionDecrease { get; } = new(0);
+		public Stat GlidingStaminaConsumptionDecrease { get; } = new(0);
 
-		public PercentStat ATKSPD { get; } = new(0);
+		public Stat ATKSPD { get; } = new(0);
 
-		public PercentStat MovementSPD { get; } = new(0);
+		public Stat MovementSPD { get; } = new(0);
 
-		public PercentStat ShieldStrength { get; } = new(0);
+		public Stat ShieldStrength { get; } = new(0);
 	}
 }

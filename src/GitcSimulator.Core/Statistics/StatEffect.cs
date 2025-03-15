@@ -20,17 +20,46 @@
 
 using System;
 using GitcSimulator.Core.Lifeforms;
-using GitcSimulator.Data.Mizuki;
+using GitcSimulator.Core.Statistics.Interfaces;
+using GitcSimulator.Core.Values;
 
-namespace GitcSimulator
+namespace GitcSimulator.Core.Statistics
 {
-	public class Program
+	public class StatEffect<T> : IEffect
 	{
-		public static void Main(string[] args)
+		private readonly T? _flatModifier;
+		private readonly Guid _id = Guid.NewGuid();
+		private readonly Percent? _percentModifier;
+		private readonly Func<Stats, IStat<T>> _statGetter;
+
+		public StatEffect(Func<Stats, IStat<T>> statGetter, T? flatModifier, Percent? percentModifier)
 		{
-			var player = new Mizuki();
-			var enemy = new Enemy("Dummy", 100, 1000, 1000);
-			Console.WriteLine("End");
+			_statGetter = statGetter;
+			_flatModifier = flatModifier;
+			_percentModifier = percentModifier;
+		}
+
+		public void ApplyEffect(Lifeform lifeform)
+		{
+			var stat = _statGetter(lifeform.Stats);
+			if (_flatModifier != null)
+			{
+				stat.Add(_id, _flatModifier);
+			}
+
+			if (_percentModifier != null)
+			{
+				stat.Add(_id, _percentModifier);
+			}
+		}
+
+		public void RemoveEffect(Lifeform lifeform)
+		{
+			_statGetter(lifeform.Stats).Remove(_id);
+		}
+
+		public void Update(TimeSpan timeElapsed)
+		{
 		}
 	}
 }

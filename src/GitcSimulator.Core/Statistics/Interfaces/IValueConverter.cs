@@ -18,16 +18,12 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 // =========================================================================
 
-namespace GitcSimulator.Core.Attacks
+namespace GitcSimulator.Core.Statistics.Interfaces
 {
-	public enum AttackType
+	public interface IValueConverter<T>
 	{
-		Normal,
-		Charged,
-		Plunge,
-		PlungeCollision,
-		PlungeImpact,
-		ElementalSkill,
-		Burst
+		T FromDouble(double value);
+
+		double ToDouble(T value);
 	}
 }

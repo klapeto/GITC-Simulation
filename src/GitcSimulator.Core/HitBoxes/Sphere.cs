@@ -18,16 +18,22 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 // =========================================================================
 
-namespace GitcSimulator.Core.Attacks
+using System;
+
+namespace GitcSimulator.Core.HitBoxes
 {
-	public enum AttackType
+	public class Sphere
 	{
-		Normal,
-		Charged,
-		Plunge,
-		PlungeCollision,
-		PlungeImpact,
-		ElementalSkill,
-		Burst
+		public Point Location { get; set; }
+
+		public double Radius { get; set; }
+
+		public bool Contains(Point point)
+		{
+			var distance = Math.Sqrt(Math.Pow(point.X - Location.X, 2)
+			                         + Math.Pow(point.Y - Location.Y, 2)
+			                         + Math.Pow(point.Z - Location.Z, 2));
+			return distance <= Radius;
+		}
 	}
 }
