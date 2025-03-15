@@ -18,28 +18,23 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 // =========================================================================
 
-using GitcSimulator.Core.Lifeforms;
-
-namespace GitcSimulator.Core.Weapons.Interfaces
+namespace GitcSimulator.Core.Weapons.InitialWeapons
 {
-	public interface IWeapon
+	public class HuntersBow : BaseWeapon
 	{
-		string Name { get; }
-
-		int Level { get; }
-
-		double ATK { get; }
-
-		RefinementLevel RefinementLevel { get; }
-
-		AscensionLevel AscensionLevel { get; }
-
-		WeaponType Type { get; }
-
-		Quality Quality { get; }
-
-		void OnEquipped(Playable playable);
-
-		void OnUnEquipped(Playable playable);
+		public HuntersBow(
+			int level = 1,
+			AscensionLevel ascensionLevel = AscensionLevel.None,
+			RefinementLevel refinementLevel = RefinementLevel.R1)
+			: base(
+				"Hunter's Bow",
+				WeaponType.Bow,
+				Quality.OneStar,
+				level,
+				ascensionLevel,
+				refinementLevel,
+				MultiplierTier.Tier2)
+		{
+		}
 	}
 }

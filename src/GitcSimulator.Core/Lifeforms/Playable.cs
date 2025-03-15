@@ -24,12 +24,14 @@ using GitcSimulator.Core.Extensions;
 using GitcSimulator.Core.Reactions;
 using GitcSimulator.Core.Statistics;
 using GitcSimulator.Core.Weapons;
+using GitcSimulator.Core.Weapons.InitialWeapons;
+using GitcSimulator.Core.Weapons.Interfaces;
 
 namespace GitcSimulator.Core.Lifeforms
 {
 	public class Playable : Lifeform
 	{
-		private const int MaxLevel = 90;
+		private IWeapon? _weapon;
 
 		protected Playable(
 			string name,
@@ -79,6 +81,8 @@ namespace GitcSimulator.Core.Lifeforms
 			bonusStat.BaseValue += baseBonusStat * LevelMultipliers.GetBonusStatAscensionMultiplier(AscensionLevel);
 
 			Stats.HP.BaseValue = Stats.MaxHP.BaseValue;
+
+			EquipDefaultWeapon();
 		}
 
 		public bool IsOnField { get; internal set; }
@@ -90,7 +94,48 @@ namespace GitcSimulator.Core.Lifeforms
 		public Quality Quality { get; }
 
 		public AscensionLevel AscensionLevel { get; }
-		
+
+		public IWeapon Weapon
+		{
+			get => _weapon!;
+			set
+			{
+				if (value.Type != WeaponType)
+				{
+					throw new InvalidOperationException(
+						$"You cannot equip ${value.Name} on {Name}. Weapon type is incompatible.");
+				}
+
+				_weapon?.OnUnEquipped(this);
+				_weapon = value;
+				_weapon.OnEquipped(this);
+			}
+		}
+
+		private void EquipDefaultWeapon()
+		{
+			switch (WeaponType)
+			{
+				case WeaponType.Catalyst:
+					Weapon = new ApprenticesNotes();
+					break;
+				case WeaponType.Sword:
+					Weapon = new DullBlade();
+					break;
+				case WeaponType.Claymore:
+					Weapon = new WasterGreatsword();
+					break;
+				case WeaponType.Bow:
+					Weapon = new HuntersBow();
+					break;
+				case WeaponType.Polearm:
+					Weapon = new BeginnersProtector();
+					break;
+				default:
+					throw new ArgumentOutOfRangeException();
+			}
+		}
+
 		private Stat GetAscensionBonuStat(AscensionStat stat)
 		{
 			switch (stat)

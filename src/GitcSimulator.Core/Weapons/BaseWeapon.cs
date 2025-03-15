@@ -27,6 +27,7 @@ namespace GitcSimulator.Core.Weapons
 	public abstract class BaseWeapon : IWeapon
 	{
 		public BaseWeapon(
+			string name,
 			WeaponType weaponType,
 			Quality quality,
 			int level,
@@ -34,6 +35,7 @@ namespace GitcSimulator.Core.Weapons
 			RefinementLevel refinementLevel,
 			MultiplierTier multiplierTier)
 		{
+			Name = name;
 			Type = weaponType;
 			Quality = quality;
 			Level = level.SanitizeLevel();
@@ -41,6 +43,8 @@ namespace GitcSimulator.Core.Weapons
 			RefinementLevel = refinementLevel;
 			ATK = WeaponStatsCalculator.CalculateATK(level, Quality, multiplierTier, AscensionLevel);
 		}
+
+		public string Name { get; }
 
 		public int Level { get; }
 
@@ -54,8 +58,24 @@ namespace GitcSimulator.Core.Weapons
 
 		public Quality Quality { get; }
 
-		public abstract void OnEquiped(Playable playable);
+		public void OnEquipped(Playable playable)
+		{
+			playable.Stats.ATK.BaseValue += ATK;
+			OnEquippedImpl(playable);
+		}
 
-		public abstract void OnUnEquiped(Playable playable);
+		public void OnUnEquipped(Playable playable)
+		{
+			playable.Stats.ATK.BaseValue -= ATK;
+			OnUnEquippedImpl(playable);
+		}
+
+		protected virtual void OnEquippedImpl(Playable playable)
+		{
+		}
+
+		protected virtual void OnUnEquippedImpl(Playable playable)
+		{
+		}
 	}
 }

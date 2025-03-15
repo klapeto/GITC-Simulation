@@ -18,31 +18,23 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 // =========================================================================
 
-using System;
-using GitcSimulator.Core;
-using GitcSimulator.Core.Lifeforms;
-using GitcSimulator.Core.Weapons;
-
-namespace GitcSimulator.Data.Weapons
+namespace GitcSimulator.Core.Weapons.InitialWeapons
 {
-	public class ApprenticesNotes : BaseWeapon
+	public class BeginnersProtector : BaseWeapon
 	{
-		public ApprenticesNotes(
+		public BeginnersProtector(
 			int level = 1,
 			AscensionLevel ascensionLevel = AscensionLevel.None,
 			RefinementLevel refinementLevel = RefinementLevel.R1)
-			: base(WeaponType.Catalyst, Quality.OneStar, level, ascensionLevel, refinementLevel, MultiplierTier.Tier2)
+			: base(
+				"Beginner's Protector",
+				WeaponType.Polearm,
+				Quality.OneStar,
+				level,
+				ascensionLevel,
+				refinementLevel,
+				MultiplierTier.Tier2)
 		{
-		}
-
-		public override void OnEquiped(Playable playable)
-		{
-			throw new NotImplementedException();
-		}
-
-		public override void OnUnEquiped(Playable playable)
-		{
-			throw new NotImplementedException();
 		}
 	}
 }
