@@ -28,12 +28,17 @@ namespace GitcSimulator.Core
 		private readonly TimeStat _cooldown;
 		private TimeSpan _cooldownRemaining;
 
-		public Cooldown(TimeStat cooldown, bool ready)
+		public Cooldown(TimeStat cooldown, bool ready, TimeSpan? initialCooldown = null)
 		{
 			_cooldown = cooldown;
 			if (!ready)
 			{
 				_cooldownRemaining = _cooldown.CurrentValue;
+			}
+
+			if (initialCooldown.HasValue)
+			{
+				_cooldownRemaining = initialCooldown.Value;
 			}
 		}
 

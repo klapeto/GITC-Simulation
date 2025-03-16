@@ -21,6 +21,7 @@
 using System.Collections.Generic;
 using GitcSimulator.Core.HitBoxes;
 using GitcSimulator.Core.Lifeforms;
+using GitcSimulator.Core.Logging;
 using GitcSimulator.Core.Projectiles.Interfaces;
 
 namespace GitcSimulator.Core.Environments.Interfaces
@@ -38,5 +39,7 @@ namespace GitcSimulator.Core.Environments.Interfaces
 		Lifeform? GetClosestEnemy(Point location, double distance);
 
 		IEnumerable<Lifeform> GetClosestEnemies(Point location, double distance);
+
+		void Log(LogCategory logCategory, string message);
 	}
 }

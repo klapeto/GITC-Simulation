@@ -22,6 +22,7 @@ using System;
 using GitcSimulator.Core;
 using GitcSimulator.Core.Elements;
 using GitcSimulator.Core.Lifeforms;
+using GitcSimulator.Core.Logging;
 using GitcSimulator.Core.Reactions;
 using GitcSimulator.Core.Statistics;
 using GitcSimulator.Core.Values;
@@ -31,11 +32,12 @@ namespace GitcSimulator.Data.Characters.Mizuki.Abilities.ElementalSkill
 {
 	public class DreamdrifterEffect : TemporaryEffect
 	{
-		private readonly Cooldown _cooldown = new(new TimeStat(TimeSpan.FromSeconds(0.75)), false);
+		private readonly Cooldown _cooldown = new(new TimeStat(TimeSpan.FromSeconds(0.75)), false, TimeSpan.FromSeconds(0.25));
 		private readonly Percent _DMGMultiplier;
 		private readonly Guid _dreamdrifterId = Guid.NewGuid();
 		private readonly Cooldown _extensionCooldown = new(new TimeStat(TimeSpan.FromSeconds(0.3)), false);
 		private readonly int _extensionsRemaining = 2;
+		private int _projectilesLaunched = 0;
 
 		private readonly InternalCooldown _internalCooldown = new(
 			TimeSpan.FromSeconds(1.2),
@@ -63,6 +65,7 @@ namespace GitcSimulator.Data.Characters.Mizuki.Abilities.ElementalSkill
 					RemoveSwirlDMGBonus();
 					AddSwirlDMGBonus(d);
 				});
+			Environment.Current.Log(LogCategory.EffectApplied, "Dreamdrifter Effect");
 		}
 
 		public override void RemoveEffect(Lifeform lifeform)
@@ -70,6 +73,7 @@ namespace GitcSimulator.Data.Characters.Mizuki.Abilities.ElementalSkill
 			lifeform.Stats.ElementalMastery.Remove(_dreamdrifterId);
 			RemoveSwirlDMGBonus();
 			_user = null;
+			Environment.Current.Log(LogCategory.EffectRemoved, "Dreamdrifter Effect");
 		}
 
 		protected override void DoUpdate(TimeSpan timeElapsed)
@@ -101,6 +105,7 @@ namespace GitcSimulator.Data.Characters.Mizuki.Abilities.ElementalSkill
 			}
 
 			env.Projectiles.Add(new DreamdrifterProjectile(_user, enemy, _internalCooldown, _DMGMultiplier));
+			Environment.Current.Log(LogCategory.ProjectileLaunched, $"Dreamdrifter Projectile ({_projectilesLaunched++})");
 			return true;
 		}
 

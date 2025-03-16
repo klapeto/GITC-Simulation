@@ -22,15 +22,16 @@ namespace GitcSimulator.Core.Attacks
 {
 	public class DMG
 	{
-		public DMG(double dmg, ElementalInstance? elementalInstance)
+		public DMG(string source, double dmg, ElementalInstance? elementalInstance)
 		{
 			Dmg = dmg;
 			ElementalInstance = elementalInstance;
+			Source = source;
 		}
 
 		public ElementalInstance? ElementalInstance { get; }
-		
-		
+
+		public string Source { get; }
 
 		public double Dmg { get; }
 	}

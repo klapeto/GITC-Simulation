@@ -59,7 +59,7 @@ namespace GitcSimulator.Core.Projectiles
 			var nextDirection = Target.Location - Location;
 			nextDirection.Normalize();
 
-			if (_hitBox.Contains(Target.Location) || !IsInTheSameDirection(currentLocation, nextDirection))
+			if (_hitBox.Contains(Target.Location) || !IsInTheSameDirection(currentDirection, nextDirection))
 			{
 				if (Target.IsAlive)
 				{

@@ -18,33 +18,17 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 // =========================================================================
 
-using GitcSimulator.Core.Statistics.Converters;
-using GitcSimulator.Core.Statistics.Interfaces;
-
-namespace GitcSimulator.Core.Statistics
+namespace GitcSimulator.Core.Logging
 {
-	public class LevelStat : BaseStat<int, IntConverter>, ISnapshotAble<LevelStat>
+	public enum LogCategory
 	{
-		public LevelStat(int baseValue)
-			: base(baseValue)
-		{
-			if (baseValue < 1)
-			{
-				BaseValue = 1;
-			}
-		}
-
-		public LevelStat()
-			: base(1)
-		{
-		}
-
-		public override LevelStat Snapshot()
-		{
-			return new LevelStat
-			{
-				BaseValue = CurrentValue,
-			};
-		}
+		FightStart,
+		FightEnd,
+		DMG,
+		EffectApplied,
+		EffectRemoved,
+		ProjectileLaunched,
+		ProjectileHit,
+		Death,
 	}
 }

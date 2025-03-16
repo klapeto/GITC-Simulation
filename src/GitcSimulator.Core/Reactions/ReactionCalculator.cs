@@ -238,7 +238,6 @@ namespace GitcSimulator.Core.Reactions
 
 		public static Percent GetEmBonus(ReactionType reactionType, Stats attackerStats)
 		{
-			var em = attackerStats.ElementalMastery.CurrentValue;
 			switch (reactionType)
 			{
 				case ReactionType.VaporizeHtP:

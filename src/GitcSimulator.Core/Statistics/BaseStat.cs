@@ -158,7 +158,7 @@ namespace GitcSimulator.Core.Statistics
 
 			foreach (var percentModifier in _percentModifiers.Values)
 			{
-				_currentValue *= percentModifier;
+				_currentValue *= new Percent(100) + percentModifier;
 			}
 
 			foreach (var flatModifier in _flatModifiers.Values)

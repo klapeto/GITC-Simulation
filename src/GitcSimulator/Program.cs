@@ -19,10 +19,12 @@
 // =========================================================================
 
 using System;
+using GitcSimulator.Core.HitBoxes;
 using GitcSimulator.Core.Lifeforms;
+using GitcSimulator.Core.Logging;
 using GitcSimulator.Data.Characters.Mizuki;
-using GitcSimulator.Data.Weapons;
 using GitcSimulator.Data.Weapons.SkywardAtlas;
+using Environment = GitcSimulator.Core.Environments.Environment;
 
 namespace GitcSimulator
 {
@@ -30,11 +32,29 @@ namespace GitcSimulator
 	{
 		public static void Main(string[] args)
 		{
-			var player = new Mizuki();
-			var enemy = new Enemy("Dummy", 100, 1000, 1000);
+			var environment = Environment.Current;
 
-			player.Weapon = new SkywardAtlas(90);
-			Console.WriteLine("End");
+			var mizuki = new Mizuki
+			{
+				Weapon = new SkywardAtlas(90),
+				Location = new Point { X = 0, Y = 0 },
+			};
+
+			environment.Team.Playables.Add(mizuki);
+			environment.Enemies.Add(
+				new Enemy("Dummy", 100, 1000000, 1000)
+				{
+					Location = new Point { X = 0, Y = 3 },
+				});
+
+			environment.Log(LogCategory.FightStart, "Start");
+			mizuki.ElementalSkill.Use();
+			for (var i = 0.0; i < 30.0; i += 1.0 / 60.0)
+			{
+				environment.Update(TimeSpan.FromSeconds(1.0 / 60.0));
+			}
+
+			environment.Log(LogCategory.FightEnd, "End");
 		}
 	}
 }

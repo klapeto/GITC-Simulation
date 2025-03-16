@@ -30,7 +30,7 @@ using Environment = GitcSimulator.Core.Environments.Environment;
 
 namespace GitcSimulator.Data.Characters.Mizuki.Abilities.ElementalSkill
 {
-	public class ElementalSkill : BaseElementalSkill
+	public class AisaUtamakuraPilgrimage : BaseElementalSkill
 	{
 		private readonly Percent[] _continuousDMGMultipliers =
 		[
@@ -85,7 +85,7 @@ namespace GitcSimulator.Data.Characters.Mizuki.Abilities.ElementalSkill
 
 		private readonly Guid _id = Guid.NewGuid();
 
-		public ElementalSkill(Lifeform user)
+		public AisaUtamakuraPilgrimage(Lifeform user)
 			: base(user)
 		{
 		}
@@ -105,7 +105,8 @@ namespace GitcSimulator.Data.Characters.Mizuki.Abilities.ElementalSkill
 			var affectedEnemies = Environment
 				.Current
 				.Enemies
-				.Where(e => sphere.Contains(e.Location));
+				.Where(e => sphere.Contains(e.Location))
+				.ToArray();
 
 			foreach (var enemy in affectedEnemies)
 			{
@@ -115,12 +116,13 @@ namespace GitcSimulator.Data.Characters.Mizuki.Abilities.ElementalSkill
 
 			User.AddEffect(
 				_id,
-				new DreamdrifterEffect(_continuousDMGMultipliers[Level.CurrentValue], _swirlDMGBonus[Level.CurrentValue]));
+				new DreamdrifterEffect(_continuousDMGMultipliers[Level.CurrentValue - 1], _swirlDMGBonus[Level.CurrentValue-1]));
 		}
 
 		private DMG CalculateSkillStartDMG(Lifeform target)
 		{
 			return AttackCalculator.CalculateDMG(
+				"Aisa Utamakura Pilgrimage Start",
 				Type,
 				ElementType.Anemo,
 				User,
@@ -128,7 +130,7 @@ namespace GitcSimulator.Data.Characters.Mizuki.Abilities.ElementalSkill
 				target,
 				User.Stats.ATK,
 				GetMultiplier(),
-				100,
+				1.0,
 				0.0,
 				1.0,
 				null);

@@ -25,7 +25,7 @@ namespace GitcSimulator.Core
 {
 	public abstract class EnvironmentObject : IUpdateable
 	{
-		public Point Location { get; }
+		public Point Location { get; set; }
 
 		public abstract void Update(TimeSpan timeElapsed);
 	}

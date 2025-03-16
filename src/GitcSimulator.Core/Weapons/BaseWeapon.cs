@@ -18,14 +18,20 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 // =========================================================================
 
+using System;
+using GitcSimulator.Core.Elements;
 using GitcSimulator.Core.Extensions;
 using GitcSimulator.Core.Lifeforms;
+using GitcSimulator.Core.Statistics;
+using GitcSimulator.Core.Values;
 using GitcSimulator.Core.Weapons.Interfaces;
 
 namespace GitcSimulator.Core.Weapons
 {
 	public abstract class BaseWeapon : IWeapon
 	{
+		private readonly Guid _secondaryStatId = Guid.NewGuid();
+
 		public BaseWeapon(
 			string name,
 			WeaponType weaponType,
@@ -65,12 +71,21 @@ namespace GitcSimulator.Core.Weapons
 		public void OnEquipped(Playable playable)
 		{
 			playable.Stats.ATK.BaseValue += ATK;
+			if (SecondaryStat != null)
+			{
+				AddSecondaryValue(_secondaryStatId, playable.Stats, SecondaryStat);
+			}
+
 			OnEquippedImpl(playable);
 		}
 
 		public void OnUnEquipped(Playable playable)
 		{
 			playable.Stats.ATK.BaseValue -= ATK;
+			if (SecondaryStat != null)
+			{
+				RemoveSecondaryValue(_secondaryStatId, playable.Stats, SecondaryStat);
+			}
 			OnUnEquippedImpl(playable);
 		}
 
@@ -80,6 +95,72 @@ namespace GitcSimulator.Core.Weapons
 
 		protected virtual void OnUnEquippedImpl(Playable playable)
 		{
+		}
+
+		private static void RemoveSecondaryValue(Guid id, Stats stats, SecondaryStat secondaryStat)
+		{
+			switch (secondaryStat.Type)
+			{
+				case SecondaryStatType.ATK:
+					stats.ATK.Remove(id);
+					break;
+				case SecondaryStatType.DEF:
+					stats.DEF.Remove(id);
+					break;
+				case SecondaryStatType.CRITRate:
+					stats.CRIT.Rate.Remove(id);
+					break;
+				case SecondaryStatType.CRITDMG:
+					stats.CRIT.DMG.Remove(id);
+					break;
+				case SecondaryStatType.ElementalMastery:
+					stats.ElementalMastery.Remove(id);
+					break;
+				case SecondaryStatType.EnergyRecharge:
+					stats.EnergyRecharge.Remove(id);
+					break;
+				case SecondaryStatType.PhysicalDMGBonus:
+					stats.ElementalDMG[ElementType.Physical].Bonus.Remove(id);
+					break;
+				case SecondaryStatType.MaxHP:
+					stats.MaxHP.Remove(id);
+					break;
+				default:
+					throw new ArgumentOutOfRangeException(nameof(secondaryStat.Type), secondaryStat.Type, null);
+			}
+		}
+
+		private static void AddSecondaryValue(Guid id, Stats stats, SecondaryStat secondaryStat)
+		{
+			switch (secondaryStat.Type)
+			{
+				case SecondaryStatType.ATK:
+					stats.ATK.Add(id, new Percent(secondaryStat.Value));
+					break;
+				case SecondaryStatType.DEF:
+					stats.DEF.Add(id, new Percent(secondaryStat.Value));
+					break;
+				case SecondaryStatType.CRITRate:
+					stats.CRIT.Rate.Add(id, secondaryStat.Value);
+					break;
+				case SecondaryStatType.CRITDMG:
+					stats.CRIT.DMG.Add(id, secondaryStat.Value);
+					break;
+				case SecondaryStatType.ElementalMastery:
+					stats.ElementalMastery.Add(id, secondaryStat.Value);
+					break;
+				case SecondaryStatType.EnergyRecharge:
+					stats.EnergyRecharge.Add(id, secondaryStat.Value);
+					break;
+				case SecondaryStatType.PhysicalDMGBonus:
+					stats.ElementalDMG[ElementType.Physical].Bonus.Add(id, secondaryStat.Value);
+					break;
+				case SecondaryStatType.MaxHP:
+					stats.MaxHP.Add(id, new Percent(secondaryStat.Value));
+					break;
+				default:
+					throw new ArgumentOutOfRangeException(nameof(secondaryStat.Type), secondaryStat.Type, null);
+			}
 		}
 	}
 }

@@ -45,7 +45,7 @@ namespace GitcSimulator.Data.Characters.Mizuki
 				WeaponType.Catalyst,
 				AscensionStat.ElementalMastery)
 		{
-			ElementalSkill = new ElementalSkill(this);
+			ElementalSkill = new AisaUtamakuraPilgrimage(this);
 		}
 
 		public override UserTriggeredAttack ElementalSkill { get; }

@@ -21,6 +21,7 @@
 using System;
 using GitcSimulator.Core;
 using GitcSimulator.Core.Lifeforms;
+using GitcSimulator.Core.Logging;
 using GitcSimulator.Core.Statistics;
 using GitcSimulator.Core.Values;
 using GitcSimulator.Core.Weapons;
@@ -51,11 +52,13 @@ namespace GitcSimulator.Data.Weapons.SkywardAtlas
 		public override void ApplyEffect(Lifeform lifeform)
 		{
 			_user = lifeform;
+			Environment.Current.Log(LogCategory.EffectApplied, "Wandering Clouds Proc Effect");
 		}
 
 		public override void RemoveEffect(Lifeform lifeform)
 		{
 			_user = null;
+			Environment.Current.Log(LogCategory.EffectRemoved, "Wandering Clouds Proc Effect");
 		}
 
 		protected override void DoUpdate(TimeSpan timeElapsed)
@@ -88,6 +91,7 @@ namespace GitcSimulator.Data.Weapons.SkywardAtlas
 					_user,
 					enemy,
 					new Percent(ATKDMG[(int)_refinementLevel])));
+			Environment.Current.Log(LogCategory.ProjectileLaunched, "Wandering Clouds Proc Attack");
 			return true;
 		}
 	}

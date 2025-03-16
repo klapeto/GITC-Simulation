@@ -20,7 +20,9 @@
 
 using GitcSimulator.Core.Attacks;
 using GitcSimulator.Core.Elements;
+using GitcSimulator.Core.Environments;
 using GitcSimulator.Core.Lifeforms;
+using GitcSimulator.Core.Logging;
 using GitcSimulator.Core.Projectiles;
 using GitcSimulator.Core.Statistics;
 using GitcSimulator.Core.Values;
@@ -43,7 +45,9 @@ namespace GitcSimulator.Data.Weapons.SkywardAtlas
 
 		protected override void OnHit()
 		{
+			Environment.Current.Log(LogCategory.ProjectileHit, "Wandering Clouds Proc Attack");
 			var dmg = AttackCalculator.CalculateDMG(
+				"Wandering Clouds Projectile",
 				AttackType.Default,
 				ElementType.Physical,
 				_user,

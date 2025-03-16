@@ -25,7 +25,6 @@ using GitcSimulator.Core.Lifeforms;
 using GitcSimulator.Core.Lifeforms.EventArgs;
 using GitcSimulator.Core.Statistics;
 using GitcSimulator.Core.Statistics.Interfaces;
-using GitcSimulator.Core.Values;
 using GitcSimulator.Core.Weapons;
 
 namespace GitcSimulator.Data.Weapons.SkywardAtlas
@@ -34,7 +33,7 @@ namespace GitcSimulator.Data.Weapons.SkywardAtlas
 	{
 		private static readonly double[] ElementalDMGBonuses =
 		[
-			12, 15, 18, 21, 24
+			12, 15, 18, 21, 24,
 		];
 
 		private readonly Cooldown _cooldown = new(new TimeStat(TimeSpan.FromSeconds(30)), true);
@@ -58,7 +57,7 @@ namespace GitcSimulator.Data.Weapons.SkywardAtlas
 		public void ApplyEffect(Lifeform lifeform)
 		{
 			var dmgBonus = ElementalDMGBonuses[(int)_refinementLevel];
-			lifeform.Stats.ElementalDMG.ApplyToAll(s => s.Bonus.Add(_id, new Percent(dmgBonus)));
+			lifeform.Stats.ElementalDMG.ApplyToAll(s => s.Bonus.Add(_id, dmgBonus));
 			lifeform.Attacked += OnAttacked;
 		}
 

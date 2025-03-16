@@ -24,8 +24,10 @@ using System.Linq;
 using GitcSimulator.Core.Attacks;
 using GitcSimulator.Core.Elements;
 using GitcSimulator.Core.Lifeforms.EventArgs;
+using GitcSimulator.Core.Logging;
 using GitcSimulator.Core.Statistics;
 using GitcSimulator.Core.Statistics.Interfaces;
+using GitcSimulator.Core.Values;
 using Environment = GitcSimulator.Core.Environments.Environment;
 
 namespace GitcSimulator.Core.Lifeforms
@@ -44,7 +46,7 @@ namespace GitcSimulator.Core.Lifeforms
 			Name = name;
 			Level = Math.Max(level, 1);
 			Stats = new Stats(baseHP, baseATK, baseDEF);
-			Stats.RES.ApplyToAll(s => s.BaseValue = 10); // default
+			Stats.RES.ApplyToAll(s => s.BaseValue = new Percent(10)); // default
 		}
 
 		public string Name { get; }
@@ -84,10 +86,12 @@ namespace GitcSimulator.Core.Lifeforms
 		public void Die()
 		{
 			Environment.Current.Enemies.Remove(this);
+			Environment.Current.Log(LogCategory.Death, Name);
 		}
 
 		public void ReceiveDamage(DMG dmg)
 		{
+			Environment.Current.Log(LogCategory.DMG, $"({dmg.Source}) -> ({Name}) : {dmg.Dmg:F2}");
 			//var actualDMG = 
 			Stats.HP.BaseValue -= dmg.Dmg;
 			if (!IsAlive)

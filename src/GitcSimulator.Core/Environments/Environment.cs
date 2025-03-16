@@ -20,16 +20,20 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using GitcSimulator.Core.Environments.Interfaces;
 using GitcSimulator.Core.HitBoxes;
 using GitcSimulator.Core.Lifeforms;
+using GitcSimulator.Core.Logging;
 using GitcSimulator.Core.Projectiles.Interfaces;
 
 namespace GitcSimulator.Core.Environments
 {
 	public class Environment : IEnvironment
 	{
+		private TimeSpan _timeSpent;
+
 		public static IEnvironment Current { get; } = new Environment();
 
 		public List<Lifeform> Enemies { get; } = new();
@@ -48,6 +52,7 @@ namespace GitcSimulator.Core.Environments
 
 		public void Update(TimeSpan timeElapsed)
 		{
+			_timeSpent += timeElapsed;
 			Team.Update(timeElapsed);
 			foreach (var enemy in Enemies.ToArray())
 			{
@@ -79,6 +84,17 @@ namespace GitcSimulator.Core.Environments
 				.Select(e => (e.Location.DistanceTo(location), e))
 				.Where(t => t.Item1 <= distance)
 				.Select(t => t.e);
+		}
+
+		public void Log(LogCategory logCategory, string message)
+		{
+			Console.WriteLine($"[{GetLogTime()}] [{logCategory}] {message}");
+		}
+
+		private string GetLogTime()
+		{
+			return
+				$"{_timeSpent.Minutes}:{(_timeSpent.TotalSeconds - (_timeSpent.TotalSeconds / 60.0)).ToString("F2", CultureInfo.InvariantCulture)}";
 		}
 	}
 }

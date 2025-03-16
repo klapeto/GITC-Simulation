@@ -18,10 +18,12 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 // =========================================================================
 
+using System.Linq;
 using GitcSimulator.Core.Attacks;
 using GitcSimulator.Core.Elements;
 using GitcSimulator.Core.Environments;
 using GitcSimulator.Core.Lifeforms;
+using GitcSimulator.Core.Logging;
 using GitcSimulator.Core.Projectiles;
 using GitcSimulator.Core.Values;
 
@@ -38,7 +40,7 @@ namespace GitcSimulator.Data.Characters.Mizuki.Abilities.ElementalSkill
 			Lifeform target,
 			InternalCooldown internalCooldown,
 			Percent dmgMultiplier)
-			: base(user.Location, target, 0.6, 3.0)
+			: base(user.Location, target, 0.4, 0.5 / 6.0)
 		{
 			_user = user;
 			_internalCooldown = internalCooldown;
@@ -47,10 +49,14 @@ namespace GitcSimulator.Data.Characters.Mizuki.Abilities.ElementalSkill
 
 		protected override void OnHit()
 		{
-			var enemies = Environment.Current.GetClosestEnemies(Location, 4.0);
+			Environment.Current.Log(LogCategory.ProjectileHit, "Dreamdrifter Projectile");
+			var enemies = Environment.Current
+				.GetClosestEnemies(Location, 4.0)
+				.ToArray();
 			foreach (var enemy in enemies)
 			{
 				var dmg = AttackCalculator.CalculateDMG(
+					"Dreamdrifter Projectile",
 					AttackType.Default,
 					ElementType.Anemo,
 					_user,
@@ -58,7 +64,7 @@ namespace GitcSimulator.Data.Characters.Mizuki.Abilities.ElementalSkill
 					Target,
 					_user.Stats.ATK,
 					_DMGMultiplier,
-					100,
+					1.0,
 					0.0,
 					1.0,
 					_internalCooldown

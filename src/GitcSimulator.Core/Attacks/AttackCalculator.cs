@@ -37,10 +37,10 @@ namespace GitcSimulator.Core.Attacks
 			ElementType elementType)
 		{
 			return new Percent(100)
-					+ attackerStats.DMG.Bonus
-					+ attackerStats.AttackDMG[attackType].Bonus
-					+ attackerStats.ElementalDMG[elementType].Bonus
-					- defender.Stats.DMGReduction;
+			       + new Percent(attackerStats.DMG.Bonus)
+			       + new Percent(attackerStats.AttackDMG[attackType].Bonus)
+			       + new Percent(attackerStats.ElementalDMG[elementType].Bonus)
+			       - new Percent(defender.Stats.DMGReduction);
 		}
 
 		public static double CalculateDefMultiplier(Lifeform attacker, Stats attackerStats, Lifeform defender)
@@ -74,7 +74,7 @@ namespace GitcSimulator.Core.Attacks
 			                     + attackerStats.ElementalCRIT[elementType].Rate
 			                     + attackerStats.AttackCRIT[attackType].Rate;
 
-			if (!RNG.CriticalCheck(criticalChance))
+			if (!RNG.CriticalCheck(new Percent(criticalChance)))
 			{
 				return 1.0;
 			}
@@ -106,6 +106,7 @@ namespace GitcSimulator.Core.Attacks
 		}
 
 		public static DMG CalculateDMG(
+			string source,
 			AttackType type,
 			ElementType elementType,
 			Lifeform attacker,
@@ -157,6 +158,7 @@ namespace GitcSimulator.Core.Attacks
 			dmg *= CalculateCriticalDmgMultiplier(attackerStats, type, elementType);
 
 			return new DMG(
+				source,
 				dmg,
 				new ElementalInstance(elementType, applies ? elementalUnits : 0.0));
 		}
