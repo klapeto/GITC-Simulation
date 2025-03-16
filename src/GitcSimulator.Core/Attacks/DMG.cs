@@ -22,10 +22,11 @@ namespace GitcSimulator.Core.Attacks
 {
 	public class DMG
 	{
-		public DMG(string source, double dmg, ElementalInstance? elementalInstance)
+		public DMG(string source, double dmg, ElementalInstance? elementalInstance, bool critical)
 		{
 			Dmg = dmg;
 			ElementalInstance = elementalInstance;
+			Critical = critical;
 			Source = source;
 		}
 
@@ -34,5 +35,7 @@ namespace GitcSimulator.Core.Attacks
 		public string Source { get; }
 
 		public double Dmg { get; }
+
+		public bool Critical { get; }
 	}
 }

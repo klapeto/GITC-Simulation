@@ -18,8 +18,6 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 // =========================================================================
 
-using System.Collections.Generic;
-using System.Linq;
 using GitcSimulator.Core.Elements;
 using GitcSimulator.Core.Lifeforms;
 using GitcSimulator.Core.Reactions;
@@ -30,17 +28,17 @@ namespace GitcSimulator.Core.Attacks
 {
 	public class AttackCalculator
 	{
-		public static Percent CalculateDmgBonus(
+		public static double CalculateDmgBonus(
 			Stats attackerStats,
 			Lifeform defender,
 			AttackType attackType,
 			ElementType elementType)
 		{
-			return new Percent(100)
-			       + new Percent(attackerStats.DMG.Bonus)
-			       + new Percent(attackerStats.AttackDMG[attackType].Bonus)
-			       + new Percent(attackerStats.ElementalDMG[elementType].Bonus)
-			       - new Percent(defender.Stats.DMGReduction);
+			return (new Percent(100)
+			       + attackerStats.DMG.Bonus
+			       + attackerStats.AttackDMG[attackType].Bonus
+			       + attackerStats.ElementalDMG[elementType].Bonus
+			       - defender.Stats.DMGReduction).ToDouble();
 		}
 
 		public static double CalculateDefMultiplier(Lifeform attacker, Stats attackerStats, Lifeform defender)
@@ -55,36 +53,39 @@ namespace GitcSimulator.Core.Attacks
 
 		public static double CalculateResMultiplier(Lifeform defender, ElementType elementType)
 		{
-			var res = defender.Stats.RES[elementType].CurrentValue;
+			var res = defender.Stats.RES[elementType].CurrentValue.ToDouble();
 
 			return res switch
 			{
 				< 0.0 => 1 - (res / 2.0),
 				>= 0.0 and < 0.75 => 1 - res,
-				_ => 1.0 / ((4 * res) + 1)
+				_ => 1.0 / ((4 * res) + 1),
 			};
 		}
 
 		public static double CalculateCriticalDmgMultiplier(
 			Stats attackerStats,
 			AttackType attackType,
-			ElementType elementType)
+			ElementType elementType,
+			out bool critical)
 		{
 			var criticalChance = attackerStats.CRIT.Rate
 			                     + attackerStats.ElementalCRIT[elementType].Rate
 			                     + attackerStats.AttackCRIT[attackType].Rate;
 
-			if (!RNG.CriticalCheck(new Percent(criticalChance)))
+			if (!RNG.CriticalCheck(criticalChance))
 			{
+				critical = false;
 				return 1.0;
 			}
 
-			return new Percent(100)
+			critical = true;
+			return (new Percent(100)
 					+ attackerStats.CRIT.DMG
 					+ attackerStats.ElementalCRIT[elementType].DMG
-					+ attackerStats.AttackCRIT[attackType].DMG;
+					+ attackerStats.AttackCRIT[attackType].DMG).ToDouble();
 		}
-		
+
 		private static double CalculateAbilityInitialDmg(
 			Stats attackerStats,
 			AttackType attackType,
@@ -139,7 +140,7 @@ namespace GitcSimulator.Core.Attacks
 				{
 					var reaction = ReactionCalculator.CalculateReaction(reactionType, attacker, attackerStats, target);
 
-					if (reaction.OriginalDMGMultiplier > 1.0)
+					if (reaction.OriginalDMGMultiplier.ToDouble() > 1.0)
 					{
 						multiplier *= reaction.OriginalDMGMultiplier;
 					}
@@ -155,12 +156,13 @@ namespace GitcSimulator.Core.Attacks
 			dmg *= dmgBonus * defMultiplier * resMultiplier;
 
 			dmg *= reactionMultiplier;
-			dmg *= CalculateCriticalDmgMultiplier(attackerStats, type, elementType);
+			dmg *= CalculateCriticalDmgMultiplier(attackerStats, type, elementType, out var critical);
 
 			return new DMG(
 				source,
 				dmg,
-				new ElementalInstance(elementType, applies ? elementalUnits : 0.0));
+				new ElementalInstance(elementType, applies ? elementalUnits : 0.0),
+				critical);
 		}
 	}
 }

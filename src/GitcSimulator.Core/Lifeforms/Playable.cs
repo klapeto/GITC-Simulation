@@ -24,6 +24,8 @@ using GitcSimulator.Core.Elements;
 using GitcSimulator.Core.Extensions;
 using GitcSimulator.Core.Reactions;
 using GitcSimulator.Core.Statistics;
+using GitcSimulator.Core.Statistics.Interfaces;
+using GitcSimulator.Core.Values;
 using GitcSimulator.Core.Weapons;
 using GitcSimulator.Core.Weapons.InitialWeapons;
 using GitcSimulator.Core.Weapons.Interfaces;
@@ -79,7 +81,13 @@ namespace GitcSimulator.Core.Lifeforms
 				? LevelMultipliers.GetBonusStatBaseValue5Star(ascensionStat)
 				: LevelMultipliers.GetBonusStatBaseValue4Star(ascensionStat);
 
-			bonusStat.BaseValue += baseBonusStat * LevelMultipliers.GetBonusStatAscensionMultiplier(AscensionLevel);
+			var value = baseBonusStat * LevelMultipliers.GetBonusStatAscensionMultiplier(AscensionLevel);
+
+			bonusStat.Modify(new StatModifier
+			{
+				DoubleModifier = s => s.BaseValue += value,
+				PercentModifier = s => s.BaseValue += Percent.FromValue(value),
+			});
 
 			Stats.HP.BaseValue = Stats.MaxHP.BaseValue;
 
@@ -139,7 +147,7 @@ namespace GitcSimulator.Core.Lifeforms
 			}
 		}
 
-		private Stat GetAscensionBonusStat(AscensionStat stat)
+		private IStat GetAscensionBonusStat(AscensionStat stat)
 		{
 			switch (stat)
 			{

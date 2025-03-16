@@ -122,7 +122,7 @@ namespace GitcSimulator.Data.Characters.Mizuki.Abilities.ElementalSkill
 
 		private void AddSwirlDMGBonus(double elementalMastery)
 		{
-			var percent = _swirlDMGBonusMultiplier * elementalMastery;
+			var percent = Percent.FromValue(_swirlDMGBonusMultiplier * elementalMastery);
 			foreach (var playable in Environment.Current.Team.Playables)
 			{
 				playable.Stats.ReactionDMG[ReactionType.CryoSwirl].Bonus.Add(_dreamdrifterId, percent);

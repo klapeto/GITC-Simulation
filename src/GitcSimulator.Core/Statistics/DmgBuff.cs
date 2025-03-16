@@ -26,14 +26,14 @@ namespace GitcSimulator.Core.Statistics
 	{
 		public Stat Increase { get; private set; } = new();
 
-		public Stat Bonus { get; private set; } = new();
+		public PercentStat Bonus { get; private set; } = new();
 
 		public DmgBuff Snapshot()
 		{
 			return new DmgBuff
 			{
 				Increase = Increase.Snapshot(),
-				Bonus = Bonus.Snapshot()
+				Bonus = Bonus.Snapshot(),
 			};
 		}
 	}

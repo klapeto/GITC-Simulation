@@ -64,7 +64,7 @@ namespace GitcSimulator.Data.Characters.Mizuki.Abilities.ElementalSkill
 					Target,
 					_user.Stats.ATK,
 					_DMGMultiplier,
-					1.0,
+					new Percent(100),
 					0.0,
 					1.0,
 					_internalCooldown

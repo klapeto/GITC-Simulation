@@ -21,6 +21,8 @@
 using System;
 using GitcSimulator.Core;
 using GitcSimulator.Core.Lifeforms;
+using GitcSimulator.Core.Statistics;
+using GitcSimulator.Core.Values;
 using GitcSimulator.Core.Weapons;
 
 namespace GitcSimulator.Data.Weapons.SkywardAtlas
@@ -41,7 +43,7 @@ namespace GitcSimulator.Data.Weapons.SkywardAtlas
 				ascensionLevel,
 				refinementLevel,
 				MultiplierTier.Tier3,
-				new SecondaryStat(SecondaryStatType.ATK, 7.2))
+				new SecondaryStat(s => s.ATK, new Percent(7.2)))
 		{
 		}
 

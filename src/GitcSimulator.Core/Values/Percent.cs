@@ -27,17 +27,22 @@ namespace GitcSimulator.Core.Values
 			Percentage = percentage;
 		}
 
-		public double Percentage { get; set; }
+		public double Percentage { get; }
 
-		public static implicit operator double(Percent percent)
-		{
-			return percent.ToDouble();
-		}
+		// public static implicit operator double(Percent percent)
+		// {
+		// 	return percent.ToDouble();
+		// }
 
-		public static implicit operator Percent(double value)
+		public static Percent FromValue(double value)
 		{
 			return new Percent(value * 100);
 		}
+
+		// public static implicit operator Percent(double value)
+		// {
+		// 	return new Percent(value * 100);
+		// }
 
 		public static Percent operator -(Percent left)
 		{

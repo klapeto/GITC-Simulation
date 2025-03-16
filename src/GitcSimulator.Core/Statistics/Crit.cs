@@ -19,6 +19,7 @@
 // =========================================================================
 
 using GitcSimulator.Core.Statistics.Interfaces;
+using GitcSimulator.Core.Values;
 
 namespace GitcSimulator.Core.Statistics
 {
@@ -26,26 +27,26 @@ namespace GitcSimulator.Core.Statistics
 	{
 		public Crit()
 		{
-			Rate = new Stat(0);
-			DMG = new Stat(0);
+			Rate = new PercentStat(new Percent(0));
+			DMG = new PercentStat(new Percent(0));
 		}
 
-		public Crit(double rate, double dmg)
+		public Crit(Percent rate, Percent dmg)
 		{
-			Rate = new Stat(rate);
-			DMG = new Stat(dmg);
+			Rate = new PercentStat(rate);
+			DMG = new PercentStat(dmg);
 		}
 
-		public Stat Rate { get; private set; }
+		public PercentStat Rate { get; private set; }
 
-		public Stat DMG { get; private set;}
+		public PercentStat DMG { get; private set; }
 
 		public Crit Snapshot()
 		{
 			return new Crit
 			{
 				Rate = Rate.Snapshot(),
-				DMG = DMG.Snapshot()
+				DMG = DMG.Snapshot(),
 			};
 		}
 	}

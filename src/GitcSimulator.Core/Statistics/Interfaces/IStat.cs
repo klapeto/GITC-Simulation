@@ -23,22 +23,25 @@ using GitcSimulator.Core.Values;
 
 namespace GitcSimulator.Core.Statistics.Interfaces
 {
-	public interface IStat<T>
+
+	
+	public interface IStat
 	{
-		event EventHandler<T>? ValueChanged;
-
-		T CurrentValue { get; }
-
-		T BaseValue { get; }
-
-		void Add(Guid id, T value);
+		void Add(Guid id, Percent value);
 
 		void Remove(Guid id);
 
-		void Add(Guid id, Percent value);
+		void Modify(IStatModifier modifier);
+	}
+
+	public interface IStat<T> : IStat
+	{
+		T CurrentValue { get; }
+
+		T BaseValue { get; set; }
+
+		void Add(Guid id, T value);
 
 		void AddObserver(Guid id, Action<T> callback);
-		
-		Percent ToPercent();
 	}
 }

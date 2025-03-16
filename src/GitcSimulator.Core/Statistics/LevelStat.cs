@@ -46,5 +46,10 @@ namespace GitcSimulator.Core.Statistics
 				BaseValue = CurrentValue,
 			};
 		}
+		
+		public override void Modify(IStatModifier modifier)
+		{
+			modifier.Modify(this);
+		}
 	}
 }

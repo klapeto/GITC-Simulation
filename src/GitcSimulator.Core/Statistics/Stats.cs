@@ -24,6 +24,7 @@ using GitcSimulator.Core.Attacks;
 using GitcSimulator.Core.Elements;
 using GitcSimulator.Core.Reactions;
 using GitcSimulator.Core.Statistics.Interfaces;
+using GitcSimulator.Core.Values;
 
 namespace GitcSimulator.Core.Statistics
 {
@@ -48,21 +49,21 @@ namespace GitcSimulator.Core.Statistics
 
 		public Stat ElementalMastery { get; private set; } = new(0);
 
-		public Crit CRIT { get; private set; } = new(5, 50);
+		public Crit CRIT { get; private set; } = new(new Percent(5), new Percent(50));
 
-		public Stat EnergyRecharge { get; private set; } = new(100);
+		public PercentStat EnergyRecharge { get; private set; } = new(new Percent(100));
 
 		public DmgBuff Healing { get; private set; } = new();
 
 		public DmgBuff IncomingHealing { get; private set; } = new();
 
-		public ElementBatch<Stat> RES { get; private set; } = new();
+		public ElementBatch<PercentStat> RES { get; private set; } = new();
 
-		public Stat DEFIgnore { get; private set; } = new(0);
+		public PercentStat DEFIgnore { get; private set; } = new(new Percent(0));
 
-		public Stat DEFReduction { get; private set; } = new(0);
+		public PercentStat DEFReduction { get; private set; } = new(new Percent(0));
 
-		public Stat DMGReduction { get; private set; } = new(0);
+		public PercentStat DMGReduction { get; private set; } = new(new Percent(0));
 
 		public DmgBuff DMG { get; private set; } = new();
 
@@ -106,7 +107,7 @@ namespace GitcSimulator.Core.Statistics
 			stats.EnergyRecharge = EnergyRecharge.Snapshot();
 			stats.Healing = Healing.Snapshot();
 			stats.IncomingHealing = IncomingHealing.Snapshot();
-			stats.RES = SnapshotBatch<ElementBatch<Stat>, Stat, ElementType>(RES);
+			stats.RES = SnapshotBatch<ElementBatch<PercentStat>, PercentStat, ElementType>(RES);
 			stats.DEFIgnore = DEFIgnore.Snapshot();
 			stats.DEFReduction = DEFReduction.Snapshot();
 			stats.DMGReduction = DMGReduction.Snapshot();

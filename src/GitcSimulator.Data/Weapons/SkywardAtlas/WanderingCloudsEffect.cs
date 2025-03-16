@@ -25,6 +25,7 @@ using GitcSimulator.Core.Lifeforms;
 using GitcSimulator.Core.Lifeforms.EventArgs;
 using GitcSimulator.Core.Statistics;
 using GitcSimulator.Core.Statistics.Interfaces;
+using GitcSimulator.Core.Values;
 using GitcSimulator.Core.Weapons;
 
 namespace GitcSimulator.Data.Weapons.SkywardAtlas
@@ -57,7 +58,7 @@ namespace GitcSimulator.Data.Weapons.SkywardAtlas
 		public void ApplyEffect(Lifeform lifeform)
 		{
 			var dmgBonus = ElementalDMGBonuses[(int)_refinementLevel];
-			lifeform.Stats.ElementalDMG.ApplyToAll(s => s.Bonus.Add(_id, dmgBonus));
+			lifeform.Stats.ElementalDMG.ApplyToAll(s => s.Bonus.Add(_id, new Percent(dmgBonus)));
 			lifeform.Attacked += OnAttacked;
 		}
 

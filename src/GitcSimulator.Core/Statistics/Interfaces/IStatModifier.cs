@@ -19,33 +19,18 @@
 // =========================================================================
 
 using System;
-using GitcSimulator.Core.Statistics.Converters;
-using GitcSimulator.Core.Statistics.Interfaces;
+using GitcSimulator.Core.Values;
 
-namespace GitcSimulator.Core.Statistics
+namespace GitcSimulator.Core.Statistics.Interfaces
 {
-	public class TimeStat : BaseStat<TimeSpan, TimeSpanConverter>, ISnapshotAble<TimeStat>
+	public interface IStatModifier
 	{
-		public TimeStat(TimeSpan baseValue)
-			: base(baseValue)
-		{
-		}
+		void Modify(IStat<double> stat);
 
-		public TimeStat()
-		{
-		}
+		void Modify(IStat<Percent> stat);
 
-		public override TimeStat Snapshot()
-		{
-			return new TimeStat
-			{
-				BaseValue = CurrentValue,
-			};
-		}
+		void Modify(IStat<int> stat);
 
-		public override void Modify(IStatModifier modifier)
-		{
-			modifier.Modify(this);
-		}
+		void Modify(IStat<TimeSpan> stat);
 	}
 }

@@ -91,7 +91,7 @@ namespace GitcSimulator.Core.Lifeforms
 
 		public void ReceiveDamage(DMG dmg)
 		{
-			Environment.Current.Log(LogCategory.DMG, $"({dmg.Source}) -> ({Name}) : {dmg.Dmg:F2}");
+			Environment.Current.Log(LogCategory.DMG, $"({dmg.Source}) -> ({Name}) : {dmg.Dmg:F2} {(dmg.Critical ? "(CRIT)" : string.Empty)}");
 			//var actualDMG = 
 			Stats.HP.BaseValue -= dmg.Dmg;
 			if (!IsAlive)

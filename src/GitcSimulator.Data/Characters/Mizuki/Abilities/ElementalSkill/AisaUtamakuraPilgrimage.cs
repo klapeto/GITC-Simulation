@@ -130,7 +130,7 @@ namespace GitcSimulator.Data.Characters.Mizuki.Abilities.ElementalSkill
 				target,
 				User.Stats.ATK,
 				GetMultiplier(),
-				1.0,
+				new Percent(100.0),
 				0.0,
 				1.0,
 				null);

@@ -75,6 +75,8 @@ namespace GitcSimulator.Core.Statistics
 			Update();
 		}
 
+		public abstract void Modify(IStatModifier modifier);
+
 		public void AddObserver(Guid id, Action<T> callback)
 		{
 			_observers.Add(id, callback);

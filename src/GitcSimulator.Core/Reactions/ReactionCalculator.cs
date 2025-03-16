@@ -262,7 +262,7 @@ namespace GitcSimulator.Core.Reactions
 				case ReactionType.Aggravate:
 					return GetCatalyzeEmBonus(attackerStats);
 				default:
-					return 1.0;
+					return new Percent(100.0);
 			}
 		}
 
@@ -353,7 +353,7 @@ namespace GitcSimulator.Core.Reactions
 						dmg *= attacker.Stats.ReactionCRIT[reactionType].DMG.CurrentValue;
 					}
 
-					return new Reaction(reactionType, 1.0, dmg);
+					return new Reaction(reactionType, new Percent(100), dmg);
 				case ReactionType.Spread:
 				case ReactionType.Aggravate:
 					multiplier = GetCatalyzeMultiplier(reactionType);
@@ -362,19 +362,19 @@ namespace GitcSimulator.Core.Reactions
 						? LevelMultipliers.GetPlayerLevelMultiplier(attacker.Level)
 						: LevelMultipliers.GetEnvironmentLevelMultiplier(attacker.Level);
 					dmg = multiplier * levelMultiplier * (emBonus + reactionBonus);
-					return new Reaction(reactionType, 1.0, dmg);
+					return new Reaction(reactionType, new Percent(100), dmg);
 				default:
-					return new Reaction(reactionType, 1.0, 0);
+					return new Reaction(reactionType, new Percent(100), 0);
 			}
 		}
 
-		private static double GetCatalyzeMultiplier(ReactionType reactionType)
+		private static Percent GetCatalyzeMultiplier(ReactionType reactionType)
 		{
 			return reactionType switch
 			{
-				ReactionType.Aggravate => 1.15,
-				ReactionType.Spread => 1.25,
-				_ => 1.0
+				ReactionType.Aggravate => Percent.FromValue(1.15),
+				ReactionType.Spread => Percent.FromValue(1.25),
+				_ => Percent.FromValue(1.0)
 			};
 		}
 
@@ -382,36 +382,36 @@ namespace GitcSimulator.Core.Reactions
 		{
 			return reactionType switch
 			{
-				ReactionType.VaporizeHtP or ReactionType.MeltPtC => 2.0,
-				ReactionType.VaporizePtH or ReactionType.MeltCtP => 1.5,
-				_ => 1.0
+				ReactionType.VaporizeHtP or ReactionType.MeltPtC => Percent.FromValue(2.0),
+				ReactionType.VaporizePtH or ReactionType.MeltCtP => Percent.FromValue(1.5),
+				_ => Percent.FromValue(1.0)
 			};
 		}
 
 		private static Percent GetTransformativeReactionMultiplier(ReactionType reactionType)
 		{
-			return ReactionMultipliers[reactionType];
+			return Percent.FromValue(ReactionMultipliers[reactionType]);
 		}
 
 		private static Percent GetAmplifyingEmBonus(Stats attackerStats)
 		{
 			var em = attackerStats.ElementalMastery.CurrentValue;
 
-			return 2.78 * (em / (em + 1400));
+			return Percent.FromValue(2.78 * (em / (em + 1400)));
 		}
 
 		private static Percent GetTransformativeEmBonus(Stats attackerStats)
 		{
 			var em = attackerStats.ElementalMastery.CurrentValue;
 
-			return 16.0 * (em / (em + 2000));
+			return Percent.FromValue(16.0 * (em / (em + 2000)));
 		}
 
 		private static Percent GetCatalyzeEmBonus(Stats attackerStats)
 		{
 			var em = attackerStats.ElementalMastery.CurrentValue;
 
-			return 5.0 * em / (em + 1200);
+			return Percent.FromValue(5.0 * em / (em + 1200));
 		}
 	}
 }

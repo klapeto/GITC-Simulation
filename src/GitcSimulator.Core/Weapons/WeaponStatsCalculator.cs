@@ -20,6 +20,8 @@
 
 using System;
 using System.Linq;
+using GitcSimulator.Core.Statistics;
+using GitcSimulator.Core.Values;
 
 namespace GitcSimulator.Core.Weapons
 {
@@ -36,7 +38,13 @@ namespace GitcSimulator.Core.Weapons
 				.Last(t => t.MinLevel <= level)
 				.Multiplier;
 
-			return new SecondaryStat(secondaryStat.Type, Math.Round(secondaryStat.Value * multiplier, 1));
+			secondaryStat.Value.Modify(
+				new StatModifier
+				{
+					DoubleModifier = s => s.BaseValue = Math.Round(s.BaseValue * multiplier, 4),
+					PercentModifier = s => s.BaseValue = Percent.FromValue(Math.Round(s.BaseValue * multiplier, 4)),
+				});
+			return secondaryStat;
 		}
 
 		public static double CalculateATK(

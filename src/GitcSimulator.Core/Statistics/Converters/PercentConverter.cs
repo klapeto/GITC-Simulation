@@ -18,34 +18,21 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 // =========================================================================
 
-using System;
-using GitcSimulator.Core.Statistics.Converters;
 using GitcSimulator.Core.Statistics.Interfaces;
+using GitcSimulator.Core.Values;
 
-namespace GitcSimulator.Core.Statistics
+namespace GitcSimulator.Core.Statistics.Converters
 {
-	public class TimeStat : BaseStat<TimeSpan, TimeSpanConverter>, ISnapshotAble<TimeStat>
+	public class PercentConverter : IValueConverter<Percent>
 	{
-		public TimeStat(TimeSpan baseValue)
-			: base(baseValue)
+		public Percent FromDouble(double value)
 		{
+			return new Percent(value * 100.0);
 		}
 
-		public TimeStat()
+		public double ToDouble(Percent value)
 		{
-		}
-
-		public override TimeStat Snapshot()
-		{
-			return new TimeStat
-			{
-				BaseValue = CurrentValue,
-			};
-		}
-
-		public override void Modify(IStatModifier modifier)
-		{
-			modifier.Modify(this);
+			return value.ToDouble();
 		}
 	}
 }

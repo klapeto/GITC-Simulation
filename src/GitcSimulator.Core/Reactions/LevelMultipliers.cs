@@ -56,7 +56,7 @@ namespace GitcSimulator.Core.Reactions
 			{
 				case AscensionStat.PhysicalDMGBonus:
 				case AscensionStat.DEF:
-					return new Percent(7.5);
+					return new Percent(7.5).ToDouble();
 				case AscensionStat.AnemoDMGBonus:
 				case AscensionStat.GeoDMGBonus:
 				case AscensionStat.ElectroDMGBonus:
@@ -66,9 +66,9 @@ namespace GitcSimulator.Core.Reactions
 				case AscensionStat.DendroDMGBonus:
 				case AscensionStat.ATK:
 				case AscensionStat.MaxHP:
-					return new Percent(6);
+					return new Percent(6).ToDouble();
 				case AscensionStat.EnergyRecharge:
-					return new Percent(6.7);
+					return new Percent(6.7).ToDouble();
 				case AscensionStat.ElementalMastery:
 					return 24;
 				// case AscensionStat.HealingBonus:
@@ -88,7 +88,7 @@ namespace GitcSimulator.Core.Reactions
 			{
 				case AscensionStat.PhysicalDMGBonus:
 				case AscensionStat.DEF:
-					return new Percent(9);
+					return new Percent(9).ToDouble();
 				case AscensionStat.AnemoDMGBonus:
 				case AscensionStat.GeoDMGBonus:
 				case AscensionStat.ElectroDMGBonus:
@@ -98,17 +98,17 @@ namespace GitcSimulator.Core.Reactions
 				case AscensionStat.DendroDMGBonus:
 				case AscensionStat.ATK:
 				case AscensionStat.MaxHP:
-					return new Percent(7.2);
+					return new Percent(7.2).ToDouble();
 				case AscensionStat.EnergyRecharge:
-					return new Percent(8);
+					return new Percent(8).ToDouble();
 				case AscensionStat.ElementalMastery:
 					return 28.8;
 				case AscensionStat.HealingBonus:
-					return new Percent(5.5);
+					return new Percent(5.5).ToDouble();
 				case AscensionStat.CRITRate:
-					return new Percent(4.8);
+					return new Percent(4.8).ToDouble();
 				case AscensionStat.CRITDamage:
-					return new Percent(9.6);
+					return new Percent(9.6).ToDouble();
 				default:
 					throw new ArgumentOutOfRangeException(nameof(stat), stat, null);
 			}
