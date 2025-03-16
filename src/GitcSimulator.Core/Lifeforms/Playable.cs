@@ -19,6 +19,7 @@
 // =========================================================================
 
 using System;
+using GitcSimulator.Core.Attacks;
 using GitcSimulator.Core.Elements;
 using GitcSimulator.Core.Extensions;
 using GitcSimulator.Core.Reactions;
@@ -29,7 +30,7 @@ using GitcSimulator.Core.Weapons.Interfaces;
 
 namespace GitcSimulator.Core.Lifeforms
 {
-	public class Playable : Lifeform
+	public abstract class Playable : Lifeform
 	{
 		private IWeapon? _weapon;
 
@@ -94,6 +95,8 @@ namespace GitcSimulator.Core.Lifeforms
 		public Quality Quality { get; }
 
 		public AscensionLevel AscensionLevel { get; }
+		
+		public abstract UserTriggeredAttack ElementalSkill { get; }
 
 		public IWeapon Weapon
 		{

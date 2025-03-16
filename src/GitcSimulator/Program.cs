@@ -33,7 +33,7 @@ namespace GitcSimulator
 			var player = new Mizuki();
 			var enemy = new Enemy("Dummy", 100, 1000, 1000);
 
-			var atlas = new SkywardAtlas(90);
+			player.Weapon = new SkywardAtlas(90);
 			Console.WriteLine("End");
 		}
 	}

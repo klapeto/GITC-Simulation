@@ -18,24 +18,28 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 // =========================================================================
 
-using GitcSimulator.Core.Lifeforms;
-using GitcSimulator.Core.Statistics;
+using GitcSimulator.Core.Statistics.Converters;
+using GitcSimulator.Core.Statistics.Interfaces;
 
-namespace GitcSimulator.Core.Attacks
+namespace GitcSimulator.Core.Statistics
 {
-	public abstract class Attack
+	public class LevelStat : BaseStat<int, IntConverter>, ISnapshotAble<LevelStat>
 	{
-		protected Attack(Lifeform user)
+		public LevelStat(int baseValue)
+			: base(baseValue)
 		{
-			User = user;
 		}
 
-		public abstract AttackType Type { get; }
+		public LevelStat()
+		{
+		}
 
-		public Lifeform User { get; }
-
-		public LevelStat Level { get; } = new(1);
-
-		public abstract void Use();
+		public override LevelStat Snapshot()
+		{
+			return new LevelStat
+			{
+				BaseValue = CurrentValue,
+			};
+		}
 	}
 }

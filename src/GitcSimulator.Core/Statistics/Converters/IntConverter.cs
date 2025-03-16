@@ -18,24 +18,20 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 // =========================================================================
 
-using GitcSimulator.Core.Lifeforms;
-using GitcSimulator.Core.Statistics;
+using GitcSimulator.Core.Statistics.Interfaces;
 
-namespace GitcSimulator.Core.Attacks
+namespace GitcSimulator.Core.Statistics.Converters
 {
-	public abstract class Attack
+	public class IntConverter : IValueConverter<int>
 	{
-		protected Attack(Lifeform user)
+		public int FromDouble(double value)
 		{
-			User = user;
+			return (int)value;
 		}
 
-		public abstract AttackType Type { get; }
-
-		public Lifeform User { get; }
-
-		public LevelStat Level { get; } = new(1);
-
-		public abstract void Use();
+		public double ToDouble(int value)
+		{
+			return value;
+		}
 	}
 }

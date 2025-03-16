@@ -32,9 +32,9 @@ namespace GitcSimulator.Data.Characters.Mizuki.Abilities.ElementalSkill
 	public class DreamdrifterEffect : TemporaryEffect
 	{
 		private readonly Cooldown _cooldown = new(new TimeStat(TimeSpan.FromSeconds(0.75)), false);
-		private readonly Cooldown _extensionCooldown = new(new TimeStat(TimeSpan.FromSeconds(0.3)), false);
 		private readonly Percent _DMGMultiplier;
 		private readonly Guid _dreamdrifterId = Guid.NewGuid();
+		private readonly Cooldown _extensionCooldown = new(new TimeStat(TimeSpan.FromSeconds(0.3)), false);
 		private readonly int _extensionsRemaining = 2;
 
 		private readonly InternalCooldown _internalCooldown = new(
@@ -44,6 +44,7 @@ namespace GitcSimulator.Data.Characters.Mizuki.Abilities.ElementalSkill
 			"ElementalSkill");
 
 		private readonly Percent _swirlDMGBonusMultiplier;
+		private Lifeform? _user;
 
 		public DreamdrifterEffect(Percent dmgMultiplier, Percent swirlDMGBonusMultiplier)
 			: base(TimeSpan.FromSeconds(5))
@@ -54,6 +55,7 @@ namespace GitcSimulator.Data.Characters.Mizuki.Abilities.ElementalSkill
 
 		public override void ApplyEffect(Lifeform lifeform)
 		{
+			_user = lifeform;
 			lifeform.Stats.ElementalMastery.AddObserver(
 				_dreamdrifterId,
 				d =>
@@ -67,6 +69,7 @@ namespace GitcSimulator.Data.Characters.Mizuki.Abilities.ElementalSkill
 		{
 			lifeform.Stats.ElementalMastery.Remove(_dreamdrifterId);
 			RemoveSwirlDMGBonus();
+			_user = null;
 		}
 
 		protected override void DoUpdate(TimeSpan timeElapsed)
@@ -76,13 +79,29 @@ namespace GitcSimulator.Data.Characters.Mizuki.Abilities.ElementalSkill
 
 			if (_cooldown.TryTrigger())
 			{
-				LaunchAttack();
+				if (!TryLaunchAttack())
+				{
+					_cooldown.Reset();
+				}
 			}
 		}
 
-		private void LaunchAttack()
+		private bool TryLaunchAttack()
 		{
-			
+			if (_user == null)
+			{
+				return false;
+			}
+
+			var env = Environment.Current;
+			var enemy = env.GetClosestEnemy(_user.Location, 10.0); // TODO: find real distance
+			if (enemy == null)
+			{
+				return false;
+			}
+
+			env.Projectiles.Add(new DreamdrifterProjectile(_user, enemy, _internalCooldown, _DMGMultiplier));
+			return true;
 		}
 
 		private void RemoveSwirlDMGBonus()

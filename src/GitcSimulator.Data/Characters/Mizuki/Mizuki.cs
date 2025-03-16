@@ -19,9 +19,11 @@
 // =========================================================================
 
 using GitcSimulator.Core;
+using GitcSimulator.Core.Attacks;
 using GitcSimulator.Core.Elements;
 using GitcSimulator.Core.Lifeforms;
 using GitcSimulator.Core.Weapons;
+using GitcSimulator.Data.Characters.Mizuki.Abilities.ElementalSkill;
 
 namespace GitcSimulator.Data.Characters.Mizuki
 {
@@ -43,6 +45,9 @@ namespace GitcSimulator.Data.Characters.Mizuki
 				WeaponType.Catalyst,
 				AscensionStat.ElementalMastery)
 		{
+			ElementalSkill = new ElementalSkill(this);
 		}
+
+		public override UserTriggeredAttack ElementalSkill { get; }
 	}
 }

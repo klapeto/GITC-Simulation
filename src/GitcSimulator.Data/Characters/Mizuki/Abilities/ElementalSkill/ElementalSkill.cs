@@ -32,6 +32,23 @@ namespace GitcSimulator.Data.Characters.Mizuki.Abilities.ElementalSkill
 {
 	public class ElementalSkill : BaseElementalSkill
 	{
+		private readonly Percent[] _continuousDMGMultipliers =
+		[
+			new(44.91),
+			new(48.28),
+			new(51.65),
+			new(56.14),
+			new(59.51),
+			new(62.88),
+			new(67.37),
+			new(71.86),
+			new(76.35),
+			new(80.84),
+			new(85.33),
+			new(89.82),
+			new(95.44),
+		];
+
 		private readonly Percent[] _multipliers =
 		[
 			new(57.74),
@@ -46,14 +63,27 @@ namespace GitcSimulator.Data.Characters.Mizuki.Abilities.ElementalSkill
 			new(103.94),
 			new(109.71),
 			new(115.49),
-			new(122.71)
+			new(122.71),
 		];
 
-		private InternalCooldown _continuousDamageInternalCooldown = new(
-			TimeSpan.FromSeconds(1.2),
-			[true, false],
-			false,
-			"ElementalSkill");
+		private readonly Percent[] _swirlDMGBonus =
+		[
+			new(0.18),
+			new(0.21),
+			new(0.24),
+			new(0.27),
+			new(0.3),
+			new(0.33),
+			new(0.36),
+			new(0.39),
+			new(0.42),
+			new(0.45),
+			new(0.48),
+			new(0.51),
+			new(0.54),
+		];
+
+		private readonly Guid _id = Guid.NewGuid();
 
 		public ElementalSkill(Lifeform user)
 			: base(user)
@@ -69,7 +99,7 @@ namespace GitcSimulator.Data.Characters.Mizuki.Abilities.ElementalSkill
 			var sphere = new Sphere
 			{
 				Location = User.Location,
-				Radius = 5.5
+				Radius = 5.5,
 			};
 
 			var affectedEnemies = Environment
@@ -82,6 +112,10 @@ namespace GitcSimulator.Data.Characters.Mizuki.Abilities.ElementalSkill
 				var dmg = CalculateSkillStartDMG(enemy);
 				enemy.ReceiveDamage(dmg);
 			}
+
+			User.AddEffect(
+				_id,
+				new DreamdrifterEffect(_continuousDMGMultipliers[Level.CurrentValue], _swirlDMGBonus[Level.CurrentValue]));
 		}
 
 		private DMG CalculateSkillStartDMG(Lifeform target)
@@ -102,7 +136,7 @@ namespace GitcSimulator.Data.Characters.Mizuki.Abilities.ElementalSkill
 
 		private Percent GetMultiplier()
 		{
-			return (int)Level >= _multipliers.Length ? _multipliers.Last() : _multipliers[(int)Level.CurrentValue - 1];
+			return (int)Level >= _multipliers.Length ? _multipliers.Last() : _multipliers[Level.CurrentValue - 1];
 		}
 	}
 }
