@@ -18,28 +18,10 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 // =========================================================================
 
-using GitcSimulator.Core.Statistics.Converters;
-using GitcSimulator.Core.Statistics.Interfaces;
-
-namespace GitcSimulator.Core.Statistics
+namespace GitcSimulator.Core.Statistics.Interfaces
 {
-	public class Stat : BaseStat<double, DoubleConverter>, ISnapshotAble<Stat>
+	public interface ISnapshotAble<out T>
 	{
-		public Stat(double baseValue)
-			: base(baseValue)
-		{
-		}
-
-		public Stat()
-		{
-		}
-
-		public override Stat Snapshot()
-		{
-			return new Stat
-			{
-				BaseValue = CurrentValue,
-			};
-		}
+		T Snapshot();
 	}
 }

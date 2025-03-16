@@ -36,6 +36,6 @@ namespace GitcSimulator.Core.Attacks
 
 		public Stat Level { get; } = new(1);
 
-		public abstract void Use(Environment environment);
+		public abstract void Use();
 	}
 }

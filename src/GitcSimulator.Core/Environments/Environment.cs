@@ -1,0 +1,84 @@
+// =========================================================================
+// 
+// GITC Simulator
+// 
+// Copyright (C) 2025 Ioannis Panagiotopoulos
+// 
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Affero General Public License as
+// published by the Free Software Foundation, either version 3 of the
+// License, or (at your option) any later version.
+// 
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Affero General Public License for more details.
+// 
+// You should have received a copy of the GNU Affero General Public License
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+// =========================================================================
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using GitcSimulator.Core.Environments.Interfaces;
+using GitcSimulator.Core.HitBoxes;
+using GitcSimulator.Core.Lifeforms;
+using GitcSimulator.Core.Projectiles.Interfaces;
+
+namespace GitcSimulator.Core.Environments
+{
+	public class Environment : IEnvironment
+	{
+		public static IEnvironment Current { get; } = new Environment();
+
+		public List<Lifeform> Enemies { get; } = new();
+
+		public Team Team { get; } = new(Array.Empty<Playable>());
+
+		public List<EnvironmentObject> Objects { get; } = new();
+
+		public List<IProjectile> Projectiles { get; } = new();
+
+		public Lifeform? GetClosestEnemy(Point location, double distance)
+		{
+			return GetClosestEnemies(location, distance)
+				.FirstOrDefault();
+		}
+
+		public void Update(TimeSpan timeElapsed)
+		{
+			Team.Update(timeElapsed);
+			foreach (var enemy in Enemies.ToArray())
+			{
+				enemy.Update(timeElapsed);
+				if (!enemy.IsAlive)
+				{
+					Enemies.Remove(enemy);
+				}
+			}
+
+			foreach (var environmentObject in Objects)
+			{
+				environmentObject.Update(timeElapsed);
+			}
+
+			foreach (var projectile in Projectiles.ToArray())
+			{
+				projectile.Update(timeElapsed);
+				if (!projectile.IsAlive)
+				{
+					Projectiles.Remove(projectile);
+				}
+			}
+		}
+
+		public IEnumerable<Lifeform> GetClosestEnemies(Point location, double distance)
+		{
+			return Enemies
+				.Select(e => (e.Location.DistanceTo(location), e))
+				.Where(t => t.Item1 <= distance)
+				.Select(t => t.e);
+		}
+	}
+}

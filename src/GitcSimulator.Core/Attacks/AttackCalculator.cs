@@ -31,23 +31,23 @@ namespace GitcSimulator.Core.Attacks
 	public class AttackCalculator
 	{
 		public static Percent CalculateDmgBonus(
-			Lifeform attacker,
+			Stats attackerStats,
 			Lifeform defender,
 			AttackType attackType,
 			ElementType elementType)
 		{
 			return new Percent(100)
-					+ attacker.Stats.DMG.Bonus
-					+ attacker.Stats.AttackDMG[attackType].Bonus
-					+ attacker.Stats.ElementalDMG[elementType].Bonus
+					+ attackerStats.DMG.Bonus
+					+ attackerStats.AttackDMG[attackType].Bonus
+					+ attackerStats.ElementalDMG[elementType].Bonus
 					- defender.Stats.DMGReduction;
 		}
 
-		public static double CalculateDefMultiplier(Lifeform attacker, Lifeform defender)
+		public static double CalculateDefMultiplier(Lifeform attacker, Stats attackerStats, Lifeform defender)
 		{
 			var actualDef = defender.Stats.DEF
-							* (new Percent(100.0) - attacker.Stats.DEFIgnore)
-							* (new Percent(100.0) - attacker.Stats.DEFReduction);
+							* (new Percent(100.0) - attackerStats.DEFIgnore)
+							* (new Percent(100.0) - attackerStats.DEFReduction);
 
 			var defDmgReduction = actualDef / (actualDef + (5 * attacker.Level) + 500.0);
 			return 1.0 - defDmgReduction;
@@ -66,13 +66,13 @@ namespace GitcSimulator.Core.Attacks
 		}
 
 		public static double CalculateCriticalDmgMultiplier(
-			Lifeform attacker,
+			Stats attackerStats,
 			AttackType attackType,
 			ElementType elementType)
 		{
-			var criticalChance = attacker.Stats.CRIT.Rate
-								+ attacker.Stats.ElementalCRIT[elementType].Rate
-								+ attacker.Stats.AttackCRIT[attackType].Rate;
+			var criticalChance = attackerStats.CRIT.Rate
+			                     + attackerStats.ElementalCRIT[elementType].Rate
+			                     + attackerStats.AttackCRIT[attackType].Rate;
 
 			if (!RNG.CriticalCheck(criticalChance))
 			{
@@ -80,13 +80,13 @@ namespace GitcSimulator.Core.Attacks
 			}
 
 			return new Percent(100)
-					+ attacker.Stats.CRIT.DMG
-					+ attacker.Stats.ElementalCRIT[elementType].DMG
-					+ attacker.Stats.AttackCRIT[attackType].DMG;
+					+ attackerStats.CRIT.DMG
+					+ attackerStats.ElementalCRIT[elementType].DMG
+					+ attackerStats.AttackCRIT[attackType].DMG;
 		}
 		
 		private static double CalculateAbilityInitialDmg(
-			Lifeform attacker,
+			Stats attackerStats,
 			AttackType attackType,
 			ElementType elementType,
 			Stat stat,
@@ -97,9 +97,9 @@ namespace GitcSimulator.Core.Attacks
 			var baseDmg = stat * abilityMultiplier;
 
 			var dmg = (baseDmg * baseDmgMultiplier)
-			          + attacker.Stats.DMG.Increase
-			          + attacker.Stats.AttackDMG[attackType].Increase
-			          + attacker.Stats.ElementalDMG[elementType].Increase
+			          + attackerStats.DMG.Increase
+			          + attackerStats.AttackDMG[attackType].Increase
+			          + attackerStats.ElementalDMG[elementType].Increase
 			          + additionalDmg;
 
 			return dmg;
@@ -109,6 +109,7 @@ namespace GitcSimulator.Core.Attacks
 			AttackType type,
 			ElementType elementType,
 			Lifeform attacker,
+			Stats attackerStats,
 			Lifeform target,
 			Stat scaleStat,
 			Percent multiplier,
@@ -121,7 +122,7 @@ namespace GitcSimulator.Core.Attacks
 			var reactionMultiplier = 1.0;
 
 			var dmg = CalculateAbilityInitialDmg(
-				attacker,
+				attackerStats,
 				type,
 				elementType,
 				scaleStat,
@@ -135,7 +136,7 @@ namespace GitcSimulator.Core.Attacks
 
 				foreach (var reactionType in reactionTypes)
 				{
-					var reaction = ReactionCalculator.CalculateReaction(reactionType, attacker, target);
+					var reaction = ReactionCalculator.CalculateReaction(reactionType, attacker, attackerStats, target);
 
 					if (reaction.OriginalDMGMultiplier > 1.0)
 					{
@@ -146,14 +147,14 @@ namespace GitcSimulator.Core.Attacks
 				}
 			}
 
-			var dmgBonus = CalculateDmgBonus(attacker, target, type, elementType);
-			var defMultiplier = CalculateDefMultiplier(attacker, target);
+			var dmgBonus = CalculateDmgBonus(attackerStats, target, type, elementType);
+			var defMultiplier = CalculateDefMultiplier(attacker, attackerStats, target);
 			var resMultiplier = CalculateResMultiplier(target, elementType);
 
 			dmg *= dmgBonus * defMultiplier * resMultiplier;
 
 			dmg *= reactionMultiplier;
-			dmg *= CalculateCriticalDmgMultiplier(attacker, type, elementType);
+			dmg *= CalculateCriticalDmgMultiplier(attackerStats, type, elementType);
 
 			return new DMG(
 				dmg,

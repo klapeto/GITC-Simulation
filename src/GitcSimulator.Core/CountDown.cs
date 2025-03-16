@@ -18,28 +18,35 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 // =========================================================================
 
-using GitcSimulator.Core.Statistics.Converters;
-using GitcSimulator.Core.Statistics.Interfaces;
+using System;
 
-namespace GitcSimulator.Core.Statistics
+namespace GitcSimulator.Core
 {
-	public class Stat : BaseStat<double, DoubleConverter>, ISnapshotAble<Stat>
+	public class CountDown : IUpdateable
 	{
-		public Stat(double baseValue)
-			: base(baseValue)
+		private TimeSpan _remainingTime;
+
+		public CountDown(TimeSpan remainingTime)
 		{
+			_remainingTime = remainingTime;
 		}
 
-		public Stat()
-		{
-		}
+		public bool IsOver => _remainingTime < TimeSpan.Zero;
 
-		public override Stat Snapshot()
+		public void Update(TimeSpan timeElapsed)
 		{
-			return new Stat
+			if (!IsOver)
 			{
-				BaseValue = CurrentValue,
-			};
+				_remainingTime -= timeElapsed;
+			}
+		}
+
+		public void Increase(TimeSpan time)
+		{
+			if (!IsOver)
+			{
+				_remainingTime += time;
+			}
 		}
 	}
 }

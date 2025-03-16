@@ -38,6 +38,8 @@ namespace GitcSimulator.Core.Weapons.Interfaces
 
 		Quality Quality { get; }
 
+		SecondaryStat? SecondaryStat { get; }
+
 		void OnEquipped(Playable playable);
 
 		void OnUnEquipped(Playable playable);

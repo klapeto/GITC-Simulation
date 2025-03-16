@@ -19,11 +19,26 @@
 // =========================================================================
 
 using System;
+using System.Linq;
 
 namespace GitcSimulator.Core.Weapons
 {
 	public static class WeaponStatsCalculator
 	{
+		public static SecondaryStat? CalculateSecondaryStat(int level, SecondaryStat? secondaryStat)
+		{
+			if (secondaryStat == null)
+			{
+				return null;
+			}
+
+			var multiplier = WeaponMultipliers.SecondaryStatMultipliers
+				.Last(t => t.MinLevel <= level)
+				.Multiplier;
+
+			return new SecondaryStat(secondaryStat.Type, Math.Round(secondaryStat.Value * multiplier, 1));
+		}
+
 		public static double CalculateATK(
 			int level,
 			Quality quality,

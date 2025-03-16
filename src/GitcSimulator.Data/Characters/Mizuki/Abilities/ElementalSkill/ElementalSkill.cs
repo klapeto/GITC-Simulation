@@ -26,7 +26,7 @@ using GitcSimulator.Core.HitBoxes;
 using GitcSimulator.Core.Lifeforms;
 using GitcSimulator.Core.Statistics;
 using GitcSimulator.Core.Values;
-using Environment = GitcSimulator.Core.Environment;
+using Environment = GitcSimulator.Core.Environments.Environment;
 
 namespace GitcSimulator.Data.Characters.Mizuki.Abilities.ElementalSkill
 {
@@ -64,7 +64,7 @@ namespace GitcSimulator.Data.Characters.Mizuki.Abilities.ElementalSkill
 
 		public override InternalCooldown? InternalCooldown => null;
 
-		protected override void OnUsed(Environment environment)
+		protected override void OnUsed()
 		{
 			var sphere = new Sphere
 			{
@@ -72,14 +72,15 @@ namespace GitcSimulator.Data.Characters.Mizuki.Abilities.ElementalSkill
 				Radius = 5.5
 			};
 
-			var affectedEnemies = environment
+			var affectedEnemies = Environment
+				.Current
 				.Enemies
 				.Where(e => sphere.Contains(e.Location));
 
 			foreach (var enemy in affectedEnemies)
 			{
 				var dmg = CalculateSkillStartDMG(enemy);
-				enemy.ReceiveDamage(dmg, environment);
+				enemy.ReceiveDamage(dmg);
 			}
 		}
 
@@ -89,6 +90,7 @@ namespace GitcSimulator.Data.Characters.Mizuki.Abilities.ElementalSkill
 				Type,
 				ElementType.Anemo,
 				User,
+				User.Stats,
 				target,
 				User.Stats.ATK,
 				GetMultiplier(),

@@ -18,28 +18,44 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 // =========================================================================
 
-using GitcSimulator.Core.Statistics.Converters;
-using GitcSimulator.Core.Statistics.Interfaces;
+using GitcSimulator.Core.Attacks;
+using GitcSimulator.Core.Elements;
+using GitcSimulator.Core.Lifeforms;
+using GitcSimulator.Core.Projectiles;
+using GitcSimulator.Core.Statistics;
+using GitcSimulator.Core.Values;
 
-namespace GitcSimulator.Core.Statistics
+namespace GitcSimulator.Data.Weapons.SkywardAtlas
 {
-	public class Stat : BaseStat<double, DoubleConverter>, ISnapshotAble<Stat>
+	public class WanderingCloudsProjectile : HomingProjectile
 	{
-		public Stat(double baseValue)
-			: base(baseValue)
+		private readonly Percent _ATKPercent;
+		private readonly Stats _stats;
+		private readonly Lifeform _user;
+
+		public WanderingCloudsProjectile(Lifeform user, Lifeform target, Percent atkPercent)
+			: base(user.Location, target, 0.3, 6.0)
 		{
+			_user = user;
+			_ATKPercent = atkPercent;
+			_stats = user.Stats.Snapshot();
 		}
 
-		public Stat()
+		protected override void OnHit()
 		{
-		}
-
-		public override Stat Snapshot()
-		{
-			return new Stat
-			{
-				BaseValue = CurrentValue,
-			};
+			var dmg = AttackCalculator.CalculateDMG(
+				AttackType.Default,
+				ElementType.Physical,
+				_user,
+				_stats,
+				Target,
+				_stats.ATK,
+				_ATKPercent,
+				new Percent(100),
+				0.0,
+				0.0,
+				null);
+			Target.ReceiveDamage(dmg);
 		}
 	}
 }

@@ -18,32 +18,17 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 // =========================================================================
 
-using System;
-using System.Collections.Generic;
-using GitcSimulator.Core.Lifeforms;
-
-namespace GitcSimulator.Core
+namespace GitcSimulator.Core.Weapons
 {
-	public class Environment : IUpdateable
+	public enum SecondaryStatType
 	{
-		public List<Lifeform> Enemies { get; } = new();
-
-		public Team Team { get; } = new(Array.Empty<Playable>());
-
-		public List<EnvironmentObject> Objects { get; } = new();
-
-		public void Update(TimeSpan timeElapsed)
-		{
-			Team.Update(timeElapsed);
-			foreach (var enemy in Enemies)
-			{
-				enemy.Update(timeElapsed);
-			}
-
-			foreach (var environmentObject in Objects)
-			{
-				environmentObject.Update(timeElapsed);
-			}
-		}
+		ATK,
+		DEF,
+		CRITRate,
+		CRITDMG,
+		ElementalMastery,
+		EnergyRecharge,
+		PhysicalDMGBonus,
+		MaxHP,
 	}
 }

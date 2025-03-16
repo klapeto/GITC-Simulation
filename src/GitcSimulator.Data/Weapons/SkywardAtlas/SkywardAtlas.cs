@@ -18,28 +18,41 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 // =========================================================================
 
-using GitcSimulator.Core.Statistics.Converters;
-using GitcSimulator.Core.Statistics.Interfaces;
+using System;
+using GitcSimulator.Core;
+using GitcSimulator.Core.Lifeforms;
+using GitcSimulator.Core.Weapons;
 
-namespace GitcSimulator.Core.Statistics
+namespace GitcSimulator.Data.Weapons.SkywardAtlas
 {
-	public class Stat : BaseStat<double, DoubleConverter>, ISnapshotAble<Stat>
+	public class SkywardAtlas : BaseWeapon
 	{
-		public Stat(double baseValue)
-			: base(baseValue)
+		private readonly Guid _effectId = Guid.NewGuid();
+
+		public SkywardAtlas(
+			int level = 1,
+			AscensionLevel ascensionLevel = AscensionLevel.None,
+			RefinementLevel refinementLevel = RefinementLevel.R1)
+			: base(
+				"Skyward Atlas",
+				WeaponType.Catalyst,
+				Quality.FiveStars,
+				level,
+				ascensionLevel,
+				refinementLevel,
+				MultiplierTier.Tier3,
+				new SecondaryStat(SecondaryStatType.ATK, 7.2))
 		{
 		}
 
-		public Stat()
+		protected override void OnEquippedImpl(Playable playable)
 		{
+			playable.AddEffect(_effectId, new WanderingCloudsEffect(RefinementLevel));
 		}
 
-		public override Stat Snapshot()
+		protected override void OnUnEquippedImpl(Playable playable)
 		{
-			return new Stat
-			{
-				BaseValue = CurrentValue,
-			};
+			playable.RemoveEffect(_effectId);
 		}
 	}
 }

@@ -18,9 +18,11 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 // =========================================================================
 
+using GitcSimulator.Core.Statistics.Interfaces;
+
 namespace GitcSimulator.Core.Statistics
 {
-	public class Crit
+	public class Crit : ISnapshotAble<Crit>
 	{
 		public Crit()
 		{
@@ -34,8 +36,17 @@ namespace GitcSimulator.Core.Statistics
 			DMG = new Stat(dmg);
 		}
 
-		public Stat Rate { get; }
+		public Stat Rate { get; private set; }
 
-		public Stat DMG { get; }
+		public Stat DMG { get; private set;}
+
+		public Crit Snapshot()
+		{
+			return new Crit
+			{
+				Rate = Rate.Snapshot(),
+				DMG = DMG.Snapshot()
+			};
+		}
 	}
 }

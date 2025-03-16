@@ -39,6 +39,8 @@ namespace GitcSimulator.Core.Statistics
 			_percentModifier = percentModifier;
 		}
 
+		public bool IsActive => true;
+
 		public void ApplyEffect(Lifeform lifeform)
 		{
 			var stat = _statGetter(lifeform.Stats);

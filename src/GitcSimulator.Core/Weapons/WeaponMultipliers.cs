@@ -24,39 +24,63 @@ namespace GitcSimulator.Core.Weapons
 {
 	public static class WeaponMultipliers
 	{
+		public static readonly (int MinLevel, double Multiplier)[]
+			SecondaryStatMultipliers =
+			[
+				(1, 1.0),
+				(5, 1.162),
+				(10, 1.363),
+				(15, 1.565),
+				(20, 1.767),
+				(25, 1.969),
+				(30, 2.171),
+				(35, 2.373),
+				(40, 2.575),
+				(45, 2.777),
+				(50, 2.979),
+				(55, 3.181),
+				(60, 3.383),
+				(65, 3.585),
+				(70, 3.786),
+				(75, 3.988),
+				(80, 4.190),
+				(85, 4.392),
+				(90, 4.594),
+			];
+
 		public static readonly IReadOnlyDictionary<Quality, IReadOnlyDictionary<MultiplierTier, double>>
 			BaseATKValues = new Dictionary<Quality, IReadOnlyDictionary<MultiplierTier, double>>
 			{
 				[Quality.OneStar] = new Dictionary<MultiplierTier, double>
 				{
-					[MultiplierTier.Tier2] = 23.245,
+					[MultiplierTier.Tier2] = 23.245
 				},
 				[Quality.TwoStars] = new Dictionary<MultiplierTier, double>
 				{
-					[MultiplierTier.Tier2] = 32.93,
+					[MultiplierTier.Tier2] = 32.93
 				},
 				[Quality.ThreeStars] = new Dictionary<MultiplierTier, double>
 				{
 					[MultiplierTier.Tier1] = 37.6075,
 					[MultiplierTier.Tier2] = 38.7413,
-					[MultiplierTier.Tier3] = 39.8751,
+					[MultiplierTier.Tier3] = 39.8751
 				},
 				[Quality.FourStars] = new Dictionary<MultiplierTier, double>
 				{
 					[MultiplierTier.Tier1] = 41.0671,
 					[MultiplierTier.Tier2] = 42.401,
 					[MultiplierTier.Tier3] = 43.7349,
-					[MultiplierTier.Tier4] = 45.0687,
+					[MultiplierTier.Tier4] = 45.0687
 				},
 				[Quality.FiveStars] = new Dictionary<MultiplierTier, double>
 				{
 					[MultiplierTier.Tier1] = 44.3358,
 					[MultiplierTier.Tier2] = 45.9364,
 					[MultiplierTier.Tier3] = 47.537,
-					[MultiplierTier.Tier4] = 49.1377,
-				},
+					[MultiplierTier.Tier4] = 49.1377
+				}
 			};
-		
+
 		public static readonly IReadOnlyDictionary<Quality, IReadOnlyDictionary<AscensionLevel, double>>
 			AscensionValues = new Dictionary<Quality, IReadOnlyDictionary<AscensionLevel, double>>
 			{
@@ -66,7 +90,7 @@ namespace GitcSimulator.Core.Weapons
 					[AscensionLevel.First] = 11.7,
 					[AscensionLevel.Second] = 23.3,
 					[AscensionLevel.Third] = 35.0,
-					[AscensionLevel.Fourth] = 46.7,
+					[AscensionLevel.Fourth] = 46.7
 				},
 				[Quality.TwoStars] = new Dictionary<AscensionLevel, double>
 				{
@@ -74,7 +98,7 @@ namespace GitcSimulator.Core.Weapons
 					[AscensionLevel.First] = 11.7,
 					[AscensionLevel.Second] = 23.3,
 					[AscensionLevel.Third] = 35.0,
-					[AscensionLevel.Fourth] = 46.7,
+					[AscensionLevel.Fourth] = 46.7
 				},
 				[Quality.ThreeStars] = new Dictionary<AscensionLevel, double>
 				{
@@ -84,7 +108,7 @@ namespace GitcSimulator.Core.Weapons
 					[AscensionLevel.Third] = 58.4,
 					[AscensionLevel.Fourth] = 77.8,
 					[AscensionLevel.Fifth] = 97.3,
-					[AscensionLevel.Sixth] = 116.7,
+					[AscensionLevel.Sixth] = 116.7
 				},
 				[Quality.FourStars] = new Dictionary<AscensionLevel, double>
 				{
@@ -94,7 +118,7 @@ namespace GitcSimulator.Core.Weapons
 					[AscensionLevel.Third] = 77.8,
 					[AscensionLevel.Fourth] = 103.7,
 					[AscensionLevel.Fifth] = 129.7,
-					[AscensionLevel.Sixth] = 155.6,
+					[AscensionLevel.Sixth] = 155.6
 				},
 				[Quality.FiveStars] = new Dictionary<AscensionLevel, double>
 				{
@@ -104,8 +128,8 @@ namespace GitcSimulator.Core.Weapons
 					[AscensionLevel.Third] = 93.4,
 					[AscensionLevel.Fourth] = 124.5,
 					[AscensionLevel.Fifth] = 155.6,
-					[AscensionLevel.Sixth] = 186.7,
-				},
+					[AscensionLevel.Sixth] = 186.7
+				}
 			};
 
 		public static readonly IReadOnlyDictionary<MultiplierTier, double[]> ThreeStarMultipliers =
@@ -388,8 +412,8 @@ namespace GitcSimulator.Core.Weapons
 					8.068,
 					8.150,
 					8.232,
-					8.314,
-				],
+					8.314
+				]
 			};
 
 		public static readonly IReadOnlyDictionary<MultiplierTier, double[]> FourStarMultipliers =
@@ -765,8 +789,8 @@ namespace GitcSimulator.Core.Weapons
 					9.975,
 					10.085,
 					10.195,
-					10.305,
-				],
+					10.305
+				]
 			};
 
 		public static readonly IReadOnlyDictionary<MultiplierTier, double[]> FiveStarMultipliers =
@@ -1142,8 +1166,8 @@ namespace GitcSimulator.Core.Weapons
 					10.892,
 					11.018,
 					11.145,
-					11.272,
-				],
+					11.272
+				]
 			};
 	}
 }

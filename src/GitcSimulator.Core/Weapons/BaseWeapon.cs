@@ -33,7 +33,8 @@ namespace GitcSimulator.Core.Weapons
 			int level,
 			AscensionLevel ascensionLevel,
 			RefinementLevel refinementLevel,
-			MultiplierTier multiplierTier)
+			MultiplierTier multiplierTier,
+			SecondaryStat? secondaryStat = null)
 		{
 			Name = name;
 			Type = weaponType;
@@ -42,6 +43,7 @@ namespace GitcSimulator.Core.Weapons
 			AscensionLevel = ascensionLevel.Sanitize(level);
 			RefinementLevel = refinementLevel;
 			ATK = WeaponStatsCalculator.CalculateATK(level, Quality, multiplierTier, AscensionLevel);
+			SecondaryStat = WeaponStatsCalculator.CalculateSecondaryStat(level, secondaryStat);
 		}
 
 		public string Name { get; }
@@ -57,6 +59,8 @@ namespace GitcSimulator.Core.Weapons
 		public WeaponType Type { get; }
 
 		public Quality Quality { get; }
+
+		public SecondaryStat? SecondaryStat { get; }
 
 		public void OnEquipped(Playable playable)
 		{

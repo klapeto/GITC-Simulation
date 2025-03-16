@@ -22,6 +22,7 @@ namespace GitcSimulator.Core.Attacks
 {
 	public enum AttackType
 	{
+		Default,
 		Normal,
 		Charged,
 		Plunge,

@@ -27,6 +27,11 @@ namespace GitcSimulator.Core
 	{
 		public static Random Random { get; } = new();
 
+		public static bool CoinFlip()
+		{
+			return Random.Next(0, 2) == 0;
+		}
+
 		public static bool CriticalCheck(Percent criticalChance)
 		{
 			return Random.Next(0, 100) <= criticalChance.Percentage;

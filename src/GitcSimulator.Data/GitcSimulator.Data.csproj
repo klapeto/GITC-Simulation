@@ -4,8 +4,4 @@
       <ProjectReference Include="..\GitcSimulator.Core\GitcSimulator.Core.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Weapons\" />
-    </ItemGroup>
-
 </Project>

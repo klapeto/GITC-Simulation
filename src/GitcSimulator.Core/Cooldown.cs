@@ -19,61 +19,48 @@
 // =========================================================================
 
 using System;
+using GitcSimulator.Core.Statistics;
 
-namespace GitcSimulator.Core.HitBoxes
+namespace GitcSimulator.Core
 {
-	public struct Point
+	public class Cooldown : IUpdateable
 	{
-		public double X { get; set; }
+		private readonly TimeStat _cooldown;
+		private TimeSpan _cooldownRemaining;
 
-		public double Y { get; set; }
-
-		public double Z { get; set; }
-
-		public static Point operator +(Point left, Point right)
+		public Cooldown(TimeStat cooldown, bool ready)
 		{
-			return new Point
+			_cooldown = cooldown;
+			if (!ready)
 			{
-				X = left.X + right.X,
-				Y = left.Y + right.Y,
-				Z = left.Z + right.Z
-			};
+				_cooldownRemaining = _cooldown.CurrentValue;
+			}
 		}
 
-		public static Point operator *(Point left, double right)
+		public bool IsReady => _cooldownRemaining.Ticks <= 0;
+
+		public void Update(TimeSpan timeElapsed)
 		{
-			return new Point
+			if (!IsReady)
 			{
-				X = left.X * right,
-				Y = left.Y * right,
-				Z = left.Z * right
-			};
+				_cooldownRemaining -= timeElapsed;
+			}
 		}
 
-		public static Point operator -(Point left, Point right)
+		public void Reset()
 		{
-			return new Point
+			_cooldownRemaining = TimeSpan.Zero;
+		}
+
+		public bool TryTrigger()
+		{
+			if (!IsReady)
 			{
-				X = left.X - right.X,
-				Y = left.Y - right.Y,
-				Z = left.Z - right.Z
-			};
-		}
+				return false;
+			}
 
-		public double DistanceTo(Point point)
-		{
-			var dx = X - point.X;
-			var dy = Y - point.Y;
-			var dz = Z - point.Z;
-			return Math.Sqrt((dx * dx) + (dy * dy) + (dz * dz));
-		}
-
-		public void Normalize()
-		{
-			var distance = Math.Sqrt((X * X) + (Y * Y) + (Z * Z));
-			X /= distance;
-			Y /= distance;
-			Z /= distance;
+			_cooldownRemaining = _cooldown.CurrentValue;
+			return true;
 		}
 	}
 }

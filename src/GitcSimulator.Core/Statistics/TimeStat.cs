@@ -20,10 +20,11 @@
 
 using System;
 using GitcSimulator.Core.Statistics.Converters;
+using GitcSimulator.Core.Statistics.Interfaces;
 
 namespace GitcSimulator.Core.Statistics
 {
-	public class TimeStat : BaseStat<TimeSpan, TimeSpanConverter>
+	public class TimeStat : BaseStat<TimeSpan, TimeSpanConverter>, ISnapshotAble<TimeStat>
 	{
 		public TimeStat(TimeSpan baseValue)
 			: base(baseValue)
@@ -32,6 +33,14 @@ namespace GitcSimulator.Core.Statistics
 
 		public TimeStat()
 		{
+		}
+
+		public override TimeStat Snapshot()
+		{
+			return new TimeStat
+			{
+				BaseValue = CurrentValue,
+			};
 		}
 	}
 }

@@ -22,8 +22,10 @@ using GitcSimulator.Core.Lifeforms;
 
 namespace GitcSimulator.Core.Statistics.Interfaces
 {
-	public interface IEffect: IUpdateable
+	public interface IEffect : IUpdateable
 	{
+		bool IsActive { get; }
+
 		void ApplyEffect(Lifeform lifeform);
 
 		void RemoveEffect(Lifeform lifeform);

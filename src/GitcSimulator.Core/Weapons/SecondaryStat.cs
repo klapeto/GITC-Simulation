@@ -20,8 +20,16 @@
 
 namespace GitcSimulator.Core.Weapons
 {
-	public enum SecondaryStat
+	public class SecondaryStat
 	{
-		
+		public SecondaryStat(SecondaryStatType type, double value)
+		{
+			Type = type;
+			Value = value;
+		}
+
+		public SecondaryStatType Type { get; }
+
+		public double Value { get; }
 	}
 }

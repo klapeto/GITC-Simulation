@@ -56,12 +56,12 @@ namespace GitcSimulator.Core.Attacks
 			InternalCooldown?.Update(timeElapsed);
 		}
 
-		public sealed override void Use(Environment environment)
+		public sealed override void Use()
 		{
 			CoolDownRemaining = Cooldown.CurrentValue;
-			OnUsed(environment);
+			OnUsed();
 		}
 
-		protected abstract void OnUsed(Environment environment);
+		protected abstract void OnUsed();
 	}
 }

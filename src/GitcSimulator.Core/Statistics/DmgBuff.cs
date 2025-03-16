@@ -18,12 +18,23 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 // =========================================================================
 
+using GitcSimulator.Core.Statistics.Interfaces;
+
 namespace GitcSimulator.Core.Statistics
 {
-	public class DmgBuff
+	public class DmgBuff : ISnapshotAble<DmgBuff>
 	{
-		public Stat Increase { get; }
+		public Stat Increase { get; private set; } = new();
 
-		public Stat Bonus { get; }
+		public Stat Bonus { get; private set; } = new();
+
+		public DmgBuff Snapshot()
+		{
+			return new DmgBuff
+			{
+				Increase = Increase.Snapshot(),
+				Bonus = Bonus.Snapshot()
+			};
+		}
 	}
 }

@@ -23,12 +23,17 @@ using System.Collections.Generic;
 using System.Linq;
 using GitcSimulator.Core.Attacks;
 using GitcSimulator.Core.Elements;
+using GitcSimulator.Core.Lifeforms.EventArgs;
 using GitcSimulator.Core.Statistics;
+using GitcSimulator.Core.Statistics.Interfaces;
+using Environment = GitcSimulator.Core.Environments.Environment;
 
 namespace GitcSimulator.Core.Lifeforms
 {
 	public class Lifeform : EnvironmentObject
 	{
+		private readonly Dictionary<Guid, IEffect> _effects = new();
+
 		public Lifeform(
 			string name,
 			int level,
@@ -55,28 +60,56 @@ namespace GitcSimulator.Core.Lifeforms
 
 		public bool IsAlive => Stats.HP.BaseValue > 0;
 
+		public void AddEffect(Guid id, IEffect effect)
+		{
+			_effects.Add(id, effect);
+			effect.ApplyEffect(this);
+		}
+
+		public void RemoveEffect(Guid id)
+		{
+			if (_effects.TryGetValue(id, out var effect))
+			{
+				effect.RemoveEffect(this);
+			}
+
+			_effects.Remove(id);
+		}
+
 		public bool HasAura(AuraType elementType)
 		{
 			return Auras.Any(a => a.Type == elementType && a.Units > 0);
 		}
 
-		public void Die(Environment environment)
+		public void Die()
 		{
-			environment.Enemies.Remove(this);
+			Environment.Current.Enemies.Remove(this);
 		}
 
-		public void ReceiveDamage(DMG dmg, Environment environment)
+		public void ReceiveDamage(DMG dmg)
 		{
 			//var actualDMG = 
 			Stats.HP.BaseValue -= dmg.Dmg;
 			if (!IsAlive)
 			{
-				Die(environment);
+				Die();
 			}
 		}
 
 		public override void Update(TimeSpan timeElapsed)
 		{
+			foreach (var effect in _effects
+				         .ToDictionary(e => e.Key, e => e.Value))
+			{
+				if (effect.Value.IsActive)
+				{
+					effect.Value.Update(timeElapsed);
+				}
+				else
+				{
+					RemoveEffect(effect.Key);
+				}
+			}
 		}
 
 		// private ReactionType? GetReaction(ElementalInstance? elementalInstance)
@@ -89,5 +122,7 @@ namespace GitcSimulator.Core.Lifeforms
 		{
 			return dmg.Dmg;
 		}
+
+		public event EventHandler<AttackEventArgs> Attacked;
 	}
 }

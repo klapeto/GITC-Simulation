@@ -18,28 +18,20 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 // =========================================================================
 
-using GitcSimulator.Core.Statistics.Converters;
-using GitcSimulator.Core.Statistics.Interfaces;
+using GitcSimulator.Core.Attacks;
 
-namespace GitcSimulator.Core.Statistics
+namespace GitcSimulator.Core.Lifeforms.EventArgs
 {
-	public class Stat : BaseStat<double, DoubleConverter>, ISnapshotAble<Stat>
+	public class AttackEventArgs : System.EventArgs
 	{
-		public Stat(double baseValue)
-			: base(baseValue)
+		public AttackEventArgs(AttackType type, Lifeform target)
 		{
+			Type = type;
+			Target = target;
 		}
 
-		public Stat()
-		{
-		}
+		public AttackType Type { get; }
 
-		public override Stat Snapshot()
-		{
-			return new Stat
-			{
-				BaseValue = CurrentValue,
-			};
-		}
+		public Lifeform Target { get; }
 	}
 }

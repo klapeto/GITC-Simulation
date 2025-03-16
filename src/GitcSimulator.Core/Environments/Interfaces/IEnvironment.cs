@@ -18,28 +18,25 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 // =========================================================================
 
-using GitcSimulator.Core.Statistics.Converters;
-using GitcSimulator.Core.Statistics.Interfaces;
+using System.Collections.Generic;
+using GitcSimulator.Core.HitBoxes;
+using GitcSimulator.Core.Lifeforms;
+using GitcSimulator.Core.Projectiles.Interfaces;
 
-namespace GitcSimulator.Core.Statistics
+namespace GitcSimulator.Core.Environments.Interfaces
 {
-	public class Stat : BaseStat<double, DoubleConverter>, ISnapshotAble<Stat>
+	public interface IEnvironment : IUpdateable
 	{
-		public Stat(double baseValue)
-			: base(baseValue)
-		{
-		}
+		List<Lifeform> Enemies { get; }
 
-		public Stat()
-		{
-		}
+		Team Team { get; }
 
-		public override Stat Snapshot()
-		{
-			return new Stat
-			{
-				BaseValue = CurrentValue,
-			};
-		}
+		List<EnvironmentObject> Objects { get; }
+
+		List<IProjectile> Projectiles { get; }
+
+		Lifeform? GetClosestEnemy(Point location, double distance);
+
+		IEnumerable<Lifeform> GetClosestEnemies(Point location, double distance);
 	}
 }

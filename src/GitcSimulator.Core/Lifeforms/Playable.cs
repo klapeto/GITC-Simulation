@@ -73,7 +73,7 @@ namespace GitcSimulator.Core.Lifeforms
 			Stats.ATK.BaseValue = (baseATK * levelMultiplier) + ascensionValueATK;
 			Stats.DEF.BaseValue = (baseDEF * levelMultiplier) + ascensionValueDEF;
 
-			var bonusStat = GetAscensionBonuStat(ascensionStat);
+			var bonusStat = GetAscensionBonusStat(ascensionStat);
 			var baseBonusStat = quality == Quality.FiveStars
 				? LevelMultipliers.GetBonusStatBaseValue5Star(ascensionStat)
 				: LevelMultipliers.GetBonusStatBaseValue4Star(ascensionStat);
@@ -136,7 +136,7 @@ namespace GitcSimulator.Core.Lifeforms
 			}
 		}
 
-		private Stat GetAscensionBonuStat(AscensionStat stat)
+		private Stat GetAscensionBonusStat(AscensionStat stat)
 		{
 			switch (stat)
 			{

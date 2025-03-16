@@ -25,12 +25,13 @@ using GitcSimulator.Core.Values;
 
 namespace GitcSimulator.Core.Statistics
 {
-	public class BaseStat<T, TConverter> :
+	public abstract class BaseStat<T, TConverter> :
 		IStat<T>
 		where TConverter : IValueConverter<T>, new()
 	{
 		private readonly Dictionary<Guid, T> _flatModifiers = new();
 		private readonly Dictionary<Guid, Percent> _percentModifiers = new();
+		private readonly Dictionary<Guid, Action<T>> _observers = new();
 		private T _baseValue;
 
 		private double _currentValue;
@@ -72,6 +73,12 @@ namespace GitcSimulator.Core.Statistics
 			_flatModifiers.Remove(id);
 			_percentModifiers.Remove(id);
 			Update();
+		}
+
+		public void AddObserver(Guid id, Action<T> callback)
+		{
+			_observers.Add(id, callback);
+			callback(CurrentValue);
 		}
 
 		public Percent ToPercent()
@@ -160,6 +167,13 @@ namespace GitcSimulator.Core.Statistics
 			}
 
 			ValueChanged?.Invoke(this, CurrentValue);
+
+			foreach (var observer in _observers.Values)
+			{
+				observer(CurrentValue);
+			}
 		}
+
+		public abstract IStat<T> Snapshot();
 	}
 }

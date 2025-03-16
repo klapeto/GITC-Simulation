@@ -19,6 +19,7 @@
 // =========================================================================
 
 using System;
+using System.Diagnostics;
 using System.Linq;
 
 namespace GitcSimulator.Core
@@ -27,9 +28,10 @@ namespace GitcSimulator.Core
 		where TValue : new()
 		where TType : Enum
 	{
-		protected readonly TValue[] Values = Enum.GetValues(typeof(TType)).Cast<int>().Select(s => new TValue()).ToArray();
-
 		public TValue this[TType elementType] => Values[(int)(object)elementType];
+
+		public TValue[] Values { get; private set; } =
+			Enum.GetValues(typeof(TType)).Cast<int>().Select(s => new TValue()).ToArray();
 
 		public void ApplyToAll(Action<TValue> action)
 		{
@@ -37,6 +39,12 @@ namespace GitcSimulator.Core
 			{
 				action(statistic);
 			}
+		}
+
+		public void ReplaceValues(TValue[] values)
+		{
+			Debug.Assert(values.Length == Values.Length, "Values count mismatch");
+			Values = values;
 		}
 	}
 }

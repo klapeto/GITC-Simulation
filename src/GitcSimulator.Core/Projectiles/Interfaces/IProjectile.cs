@@ -18,28 +18,14 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 // =========================================================================
 
-using GitcSimulator.Core.Statistics.Converters;
-using GitcSimulator.Core.Statistics.Interfaces;
+using GitcSimulator.Core.HitBoxes;
 
-namespace GitcSimulator.Core.Statistics
+namespace GitcSimulator.Core.Projectiles.Interfaces
 {
-	public class Stat : BaseStat<double, DoubleConverter>, ISnapshotAble<Stat>
+	public interface IProjectile : IUpdateable
 	{
-		public Stat(double baseValue)
-			: base(baseValue)
-		{
-		}
+		Point Location { get; }
 
-		public Stat()
-		{
-		}
-
-		public override Stat Snapshot()
-		{
-			return new Stat
-			{
-				BaseValue = CurrentValue,
-			};
-		}
+		bool IsAlive { get; }
 	}
 }

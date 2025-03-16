@@ -21,6 +21,8 @@
 using System;
 using GitcSimulator.Core.Lifeforms;
 using GitcSimulator.Data.Characters.Mizuki;
+using GitcSimulator.Data.Weapons;
+using GitcSimulator.Data.Weapons.SkywardAtlas;
 
 namespace GitcSimulator
 {
@@ -31,6 +33,7 @@ namespace GitcSimulator
 			var player = new Mizuki();
 			var enemy = new Enemy("Dummy", 100, 1000, 1000);
 
+			var atlas = new SkywardAtlas(90);
 			Console.WriteLine("End");
 		}
 	}

@@ -18,28 +18,36 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 // =========================================================================
 
-using GitcSimulator.Core.Statistics.Converters;
+using System;
+using GitcSimulator.Core.Lifeforms;
 using GitcSimulator.Core.Statistics.Interfaces;
 
 namespace GitcSimulator.Core.Statistics
 {
-	public class Stat : BaseStat<double, DoubleConverter>, ISnapshotAble<Stat>
+	public abstract class TemporaryEffect : IEffect
 	{
-		public Stat(double baseValue)
-			: base(baseValue)
+		protected readonly CountDown CountDown;
+
+		public TemporaryEffect(TimeSpan duration)
 		{
+			CountDown = new CountDown(duration);
 		}
 
-		public Stat()
+		public void Update(TimeSpan timeElapsed)
 		{
-		}
-
-		public override Stat Snapshot()
-		{
-			return new Stat
+			CountDown.Update(timeElapsed);
+			if (!CountDown.IsOver)
 			{
-				BaseValue = CurrentValue,
-			};
+				DoUpdate(timeElapsed);
+			}
 		}
+
+		public bool IsActive => !CountDown.IsOver;
+
+		public abstract void ApplyEffect(Lifeform lifeform);
+
+		public abstract void RemoveEffect(Lifeform lifeform);
+
+		protected abstract void DoUpdate(TimeSpan timeElapsed);
 	}
 }

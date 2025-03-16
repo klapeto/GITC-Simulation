@@ -37,6 +37,8 @@ namespace GitcSimulator.Core.Statistics.Interfaces
 
 		void Add(Guid id, Percent value);
 
+		void AddObserver(Guid id, Action<T> callback);
+		
 		Percent ToPercent();
 	}
 }
