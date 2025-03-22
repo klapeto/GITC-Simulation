@@ -27,13 +27,12 @@ namespace GitcSimulator.Core.Attacks
 	public abstract class BaseAttack : IUpdateable
 	{
 		private readonly CountDown _hitLagCountDown;
-		private int _level;
 
 		protected BaseAttack(Lifeform user, TimeSpan animationDuration, TimeSpan hitLag)
 		{
 			User = user;
 			Animation = new Animation(animationDuration);
-			_hitLagCountDown = new CountDown(hitLag);
+			_hitLagCountDown = new CountDown(hitLag, false);
 		}
 
 		public Animation Animation { get; }
@@ -42,23 +41,32 @@ namespace GitcSimulator.Core.Attacks
 
 		public bool IsOver => Animation.IsOver && _hitLagCountDown.IsOver;
 
+		protected int Level { get; private set; }
+
 		protected Lifeform User { get; }
 
 		public void Update(TimeSpan timeElapsed)
 		{
-			_hitLagCountDown.Update(timeElapsed);
-			Animation.Update(timeElapsed);
-			if (Animation.IsOver)
+			if (!Animation.IsOver)
 			{
-				_hitLagCountDown.Reset();
-				OnReleased();
+				Animation.Update(timeElapsed);
+				if (Animation.IsOver)
+				{
+					_hitLagCountDown.Reset();
+					OnReleased();
+				}
+			}
+
+			if (IsHitLagUp)
+			{
+				_hitLagCountDown.Update(timeElapsed);
 			}
 		}
 
 		public void Invoke(int level)
 		{
 			Animation.Start();
-			_level = level;
+			Level = level;
 		}
 
 		protected abstract void OnReleased();

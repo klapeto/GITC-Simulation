@@ -26,7 +26,7 @@ namespace GitcSimulator.Core.Attacks
 {
 	public abstract class BaseNormalAttack : BaseTalent, IUpdateable
 	{
-		private readonly CountDown _buffer = new(TimeSpan.FromMilliseconds(1000));
+		private readonly CountDown _buffer = new(TimeSpan.FromMilliseconds(1000), false);
 		private int _attackIndex;
 
 		private BaseAttack? _currentAttack;
@@ -48,6 +48,7 @@ namespace GitcSimulator.Core.Attacks
 				{
 					if (!_buffer.IsOver)
 					{
+						_buffer.Clear();	// Could this be better if it was a queue? Since this is a simulation...
 						SetNextAttack();
 						_currentAttack.Invoke(Level.CurrentValue);
 					}
@@ -73,9 +74,11 @@ namespace GitcSimulator.Core.Attacks
 					SetNextAttack();
 					_currentAttack.Invoke(Level.CurrentValue);
 				}
+				else
+				{
+					_buffer.Reset();
+				}
 			}
-
-			_buffer.Reset();
 		}
 
 		private void SetNoAttack()

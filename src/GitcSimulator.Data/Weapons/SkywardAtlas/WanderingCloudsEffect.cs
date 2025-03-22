@@ -21,6 +21,7 @@
 using System;
 using GitcSimulator.Core;
 using GitcSimulator.Core.Attacks;
+using GitcSimulator.Core.Elements;
 using GitcSimulator.Core.Lifeforms;
 using GitcSimulator.Core.Lifeforms.EventArgs;
 using GitcSimulator.Core.Values;
@@ -57,14 +58,20 @@ namespace GitcSimulator.Data.Weapons.SkywardAtlas
 		public void ApplyEffect(Lifeform lifeform)
 		{
 			var dmgBonus = ElementalDMGBonuses[(int)_refinementLevel];
-			lifeform.Attributes.ElementalDMG.ApplyToAll(s => s.Bonus.Add(_id, new Percent(dmgBonus)));
-			lifeform.Attacked += OnAttacked;
+			lifeform.Attributes.ElementalDMG[ElementType.Anemo].Bonus.Add(_id, new Percent(dmgBonus));
+			lifeform.Attributes.ElementalDMG[ElementType.Geo].Bonus.Add(_id, new Percent(dmgBonus));
+			lifeform.Attributes.ElementalDMG[ElementType.Electro].Bonus.Add(_id, new Percent(dmgBonus));
+			lifeform.Attributes.ElementalDMG[ElementType.Hydro].Bonus.Add(_id, new Percent(dmgBonus));
+			lifeform.Attributes.ElementalDMG[ElementType.Pyro].Bonus.Add(_id, new Percent(dmgBonus));
+			lifeform.Attributes.ElementalDMG[ElementType.Cryo].Bonus.Add(_id, new Percent(dmgBonus));
+			lifeform.Attributes.ElementalDMG[ElementType.Dendro].Bonus.Add(_id, new Percent(dmgBonus));
+			lifeform.NormalAttackHit += OnAttacked;
 		}
 
 		public void RemoveEffect(Lifeform lifeform)
 		{
 			lifeform.Attributes.ElementalDMG.ApplyToAll(s => s.Bonus.Remove(_id));
-			lifeform.Attacked -= OnAttacked;
+			lifeform.NormalAttackHit -= OnAttacked;
 		}
 
 		private void OnAttacked(object? sender, AttackEventArgs e)

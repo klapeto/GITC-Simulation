@@ -35,7 +35,7 @@ namespace GitcSimulator.Data.Weapons.SkywardAtlas
 		private readonly Lifeform _user;
 
 		public WanderingCloudsProjectile(Lifeform user, Lifeform target, Percent atkPercent)
-			: base(user.Bounds.Location, target, 0.3, 6.0)
+			: base(user.Bounds.Location, target, 0.5, 10.0)
 		{
 			_user = user;
 			_ATKPercent = atkPercent;

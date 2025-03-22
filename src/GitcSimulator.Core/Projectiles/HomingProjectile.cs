@@ -30,12 +30,13 @@ namespace GitcSimulator.Core.Projectiles
 	{
 		protected readonly Lifeform Target;
 		private readonly double _velocity;
+		private Circle _bounds;
 
 		public HomingProjectile(Point startLocation, Lifeform target, double radius, double velocity)
 		{
 			Target = target;
 			_velocity = velocity;
-			Bounds = new Circle(startLocation, radius);
+			_bounds = new Circle(startLocation, radius);
 		}
 
 		public void Update(TimeSpan timeElapsed)
@@ -45,17 +46,14 @@ namespace GitcSimulator.Core.Projectiles
 				return;
 			}
 
-			var currentLocation = Bounds.Location;
+			var currentBounds = Bounds;
 
-			var currentDirection = Target.Bounds.Location - currentLocation;
+			var currentDirection = Target.Bounds.Location - currentBounds.Location;
 			currentDirection.Normalize();
 
-			Bounds.Offset(currentDirection * _velocity);
+			_bounds.Offset(currentDirection * _velocity);
 
-			var nextDirection = Target.Bounds.Location - Bounds.Location;
-			nextDirection.Normalize();
-
-			if (Bounds.Contains(Target.Bounds.Location) || !IsInTheSameDirection(currentDirection, nextDirection))
+			if (CollisionHelper.Collides(currentBounds, _bounds, Target.Bounds))
 			{
 				if (Target.IsAlive)
 				{
@@ -66,7 +64,7 @@ namespace GitcSimulator.Core.Projectiles
 			}
 		}
 
-		public Circle Bounds { get; }
+		public Circle Bounds => _bounds;
 
 		public bool IsAlive { get; private set; } = true;
 

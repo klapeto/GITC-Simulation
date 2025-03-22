@@ -36,6 +36,7 @@ namespace GitcSimulator.Core.Lifeforms
 	public class Lifeform : IEnvironmentObject
 	{
 		private readonly Dictionary<Guid, IEffect> _effects = new();
+		private Point _lookDirection;
 
 		public Lifeform(
 			string name,
@@ -54,27 +55,51 @@ namespace GitcSimulator.Core.Lifeforms
 
 		public string Name { get; }
 
+		public Point Location => Bounds.Location;
+
 		public int Level { get; protected set; }
 
 		public Attributes Attributes { get; }
 
-		public Point LookDirection { get; private set; }
-		
-		public InternalCooldownManager InternalCooldownManager { get; } = new InternalCooldownManager();
+		public Point LookDirection
+		{
+			get => _lookDirection;
+			private set => _lookDirection = value;
+		}
+
+		public InternalCooldownManager InternalCooldownManager { get; } = new();
 
 		public IReadOnlyCollection<Aura> Auras { get; } = Enum.GetValues(typeof(AuraType))
 			.Cast<AuraType>()
 			.Select(a => new Aura(a))
 			.ToList();
 
+		public Poise Poise { get; set; } = Poise.Melee();
+
 		public bool IsAlive => Attributes.HP.BaseValue > 0;
 
-		public Poise Poise { get; set; } = Poise.Melee();
+		public virtual void Update(TimeSpan timeElapsed)
+		{
+			foreach (var effect in _effects
+				         .ToDictionary(e => e.Key, e => e.Value))
+			{
+				if (effect.Value.IsActive)
+				{
+					effect.Value.Update(timeElapsed);
+				}
+				else
+				{
+					RemoveEffect(effect.Key);
+				}
+			}
+		}
+
+		public Circle Bounds { get; set; } = new(new Point(0, 0), 0.5);
 
 		public void LookAt(Point point)
 		{
-			LookDirection = point - Bounds.Location;
-			LookDirection.Normalize();
+			_lookDirection = point - Bounds.Location;
+			_lookDirection.Normalize();
 		}
 
 		public void AddEffect(Guid id, IEffect effect)
@@ -118,22 +143,6 @@ namespace GitcSimulator.Core.Lifeforms
 			}
 		}
 
-		public void Update(TimeSpan timeElapsed)
-		{
-			foreach (var effect in _effects
-				         .ToDictionary(e => e.Key, e => e.Value))
-			{
-				if (effect.Value.IsActive)
-				{
-					effect.Value.Update(timeElapsed);
-				}
-				else
-				{
-					RemoveEffect(effect.Key);
-				}
-			}
-		}
-
 		// private ReactionType? GetReaction(ElementalInstance? elementalInstance)
 		// {
 		// 	if (elementalInstance == null) return null;
@@ -157,6 +166,11 @@ namespace GitcSimulator.Core.Lifeforms
 
 		public event EventHandler<AttackEventArgs> Attacked;
 
-		public Circle Bounds { get; set; } = new Circle(new Point(0, 0), 0.5);
+		public event EventHandler<AttackEventArgs> NormalAttackHit;
+
+		internal void OnNormalAttackHit(Lifeform target)
+		{
+			NormalAttackHit?.Invoke(this, new AttackEventArgs(AttackType.Normal, target));
+		}
 	}
 }

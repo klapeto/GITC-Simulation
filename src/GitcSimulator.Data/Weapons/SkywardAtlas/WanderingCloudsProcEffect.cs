@@ -30,7 +30,7 @@ namespace GitcSimulator.Data.Weapons.SkywardAtlas
 {
 	public class WanderingCloudsProcEffect : TemporaryEffect
 	{
-		private const double _maxDistance = 6;
+		private const double MaxDistance = 6;
 
 		private static readonly double[] ATKDMG =
 		[
@@ -79,7 +79,7 @@ namespace GitcSimulator.Data.Weapons.SkywardAtlas
 				return false;
 			}
 
-			var enemy = Environment.Current.GetClosestEnemy(_user.Bounds.Location, _maxDistance);
+			var enemy = Environment.Current.GetClosestEnemy(_user.Location, MaxDistance);
 			if (enemy == null)
 			{
 				return false;

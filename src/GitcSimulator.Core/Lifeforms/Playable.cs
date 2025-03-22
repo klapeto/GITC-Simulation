@@ -82,15 +82,17 @@ namespace GitcSimulator.Core.Lifeforms
 
 			var value = baseBonusStat * LevelMultipliers.GetBonusStatAscensionMultiplier(AscensionLevel);
 
-			bonusStat.Modify(new AttributeModifier
-			{
-				DoubleModifier = s => s.BaseValue += value,
-				PercentModifier = s => s.BaseValue += Percent.FromValue(value),
-			});
+			bonusStat.Modify(
+				new AttributeModifier
+				{
+					DoubleModifier = s => s.BaseValue += value,
+					PercentModifier = s => s.BaseValue += Percent.FromValue(value),
+				});
 
 			Attributes.HP.BaseValue = Attributes.MaxHP.BaseValue;
 
 			EquipDefaultWeapon();
+			AddStandardICDs();
 		}
 
 		public bool IsOnField { get; internal set; }
@@ -102,8 +104,11 @@ namespace GitcSimulator.Core.Lifeforms
 		public Quality Quality { get; }
 
 		public AscensionLevel AscensionLevel { get; }
-		
+
+		public abstract BaseNormalAttack NormalAttack { get; }
+
 		public abstract CooldownedTalent ElementalSkill { get; }
+		public abstract CooldownedTalent ElementalBurst { get; }
 
 		public IWeapon Weapon
 		{
@@ -120,6 +125,16 @@ namespace GitcSimulator.Core.Lifeforms
 				_weapon = value;
 				_weapon.OnEquipped(this);
 			}
+		}
+
+		private void AddStandardICDs()
+		{
+			InternalCooldownManager.Add(
+				new InternalCooldown(TimeSpan.FromSeconds(2.5), [true, false, false], true, "Normal Attack"));
+			InternalCooldownManager.Add(
+				new InternalCooldown(TimeSpan.FromSeconds(2.5), [true, false, false], true, "Elemental Skill"));
+			InternalCooldownManager.Add(
+				new InternalCooldown(TimeSpan.FromSeconds(2.5), [true, false, false], true, "Elemental Burst"));
 		}
 
 		private void EquipDefaultWeapon()
@@ -169,6 +184,13 @@ namespace GitcSimulator.Core.Lifeforms
 				default:
 					throw new ArgumentOutOfRangeException(nameof(stat), stat, null);
 			}
+		}
+
+		public override void Update(TimeSpan timeElapsed)
+		{
+			base.Update(timeElapsed);
+			NormalAttack.Update(timeElapsed);
+			ElementalSkill.Update(timeElapsed);
 		}
 	}
 }

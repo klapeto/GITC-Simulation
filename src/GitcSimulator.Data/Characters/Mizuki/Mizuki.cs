@@ -23,7 +23,9 @@ using GitcSimulator.Core.Attacks;
 using GitcSimulator.Core.Elements;
 using GitcSimulator.Core.Lifeforms;
 using GitcSimulator.Core.Weapons;
+using GitcSimulator.Data.Characters.Mizuki.Abilities.Burst;
 using GitcSimulator.Data.Characters.Mizuki.Abilities.ElementalSkill;
+using GitcSimulator.Data.Characters.Mizuki.Abilities.NormalAttack;
 
 namespace GitcSimulator.Data.Characters.Mizuki
 {
@@ -45,9 +47,15 @@ namespace GitcSimulator.Data.Characters.Mizuki
 				WeaponType.Catalyst,
 				AscensionStat.ElementalMastery)
 		{
+			NormalAttack = new PureHeartPureDreams(this);
 			ElementalSkill = new AisaUtamakuraPilgrimage(this);
+			ElementalBurst = new AnrakuSecretSpringTherapy(this);
 		}
 
+		public override BaseNormalAttack NormalAttack { get; }
+
 		public override CooldownedTalent ElementalSkill { get; }
+
+		public override CooldownedTalent ElementalBurst { get; }
 	}
 }

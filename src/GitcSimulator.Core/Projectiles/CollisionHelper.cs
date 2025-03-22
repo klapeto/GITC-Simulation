@@ -19,46 +19,25 @@
 // =========================================================================
 
 using System;
+using GitcSimulator.Core.Geometry;
 
-namespace GitcSimulator.Core
+namespace GitcSimulator.Core.Projectiles
 {
-	public class CountDown : IUpdateable
+	public class CollisionHelper
 	{
-		private readonly TimeSpan _originalTime;
-		private TimeSpan _remainingTime;
-
-		public CountDown(TimeSpan remainingTime, bool ready = true)
+		public static bool Collides(Circle previousBounds, Circle currentBounds, Circle otherBounds)
 		{
-			_remainingTime = ready ? remainingTime : TimeSpan.Zero;
-			_originalTime = remainingTime;
+			var previousDirection = otherBounds.Location - previousBounds.Location;
+			var currentDirection = otherBounds.Location - currentBounds.Location;
+
+			return currentBounds.Contains(otherBounds.Location) ||
+			       !IsInTheSameDirection(currentDirection, previousDirection);
 		}
 
-		public bool IsOver => _remainingTime <= TimeSpan.Zero;
-
-		public void Update(TimeSpan timeElapsed)
+		private static bool IsInTheSameDirection(Point dir1, Point dir2)
 		{
-			if (!IsOver)
-			{
-				_remainingTime -= timeElapsed;
-			}
-		}
-
-		public void Reset()
-		{
-			_remainingTime = _originalTime;
-		}
-		
-		public void Clear()
-		{
-			_remainingTime = TimeSpan.Zero;
-		}
-
-		public void Increase(TimeSpan time)
-		{
-			if (!IsOver)
-			{
-				_remainingTime += time;
-			}
+			return Math.Sign(dir1.X) == Math.Sign(dir2.X)
+			       && Math.Sign(dir1.Y) == Math.Sign(dir2.Y);
 		}
 	}
 }

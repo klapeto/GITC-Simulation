@@ -30,20 +30,17 @@ namespace GitcSimulator.Data.Characters.Mizuki.Abilities.NormalAttack
 	public class PureHeartPureDreamsAttack : RangedAttack
 	{
 		private readonly InternalCooldown _internalCooldown;
-		private readonly LevelAttribute _level;
 		private readonly Percent[] _multipliers;
 		private readonly double _poise;
 
 		public PureHeartPureDreamsAttack(
 			Lifeform user,
 			TimeSpan animationDuration,
-			LevelAttribute level,
 			Percent[] multipliers,
 			InternalCooldown internalCooldown,
 			double poise)
 			: base(user, animationDuration)
 		{
-			_level = level;
 			_multipliers = multipliers;
 			_internalCooldown = internalCooldown;
 			_poise = poise;
@@ -54,7 +51,7 @@ namespace GitcSimulator.Data.Characters.Mizuki.Abilities.NormalAttack
 			return new PureHeartPureDreamsProjectile(
 				User,
 				User.LookDirection,
-				_multipliers[_level.CurrentValue],
+				_multipliers[Level - 1],
 				_internalCooldown,
 				_poise);
 		}

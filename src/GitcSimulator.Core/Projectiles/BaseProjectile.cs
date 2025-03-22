@@ -33,6 +33,7 @@ namespace GitcSimulator.Core.Projectiles
 		private readonly Point _direction;
 
 		private readonly Point _initialPosition;
+		private Circle _bounds = new(default, 1.0);
 
 		public BaseProjectile(
 			Lifeform user,
@@ -44,43 +45,51 @@ namespace GitcSimulator.Core.Projectiles
 			Bounds.MoveTo(_initialPosition);
 		}
 
-		public double Speed { get; init; } = 2.0;
+		public double Speed { get; init; } = 10.0;
 
-		public double MaxRange { get; init; } = 10.0;
+		public double MaxRange { get; init; } = 20.0;
 
 		protected Lifeform User { get; }
 
-		public Circle Bounds { get; init; } = new(default, 1.0);
+		public Circle Bounds
+		{
+			get => _bounds;
+			init => _bounds = value;
+		}
+
+		private TimeSpan _timePassed;
 
 		public void Update(TimeSpan timeElapsed)
 		{
+			_timePassed += timeElapsed;
 			if (!IsAlive)
 			{
 				return;
 			}
 
-			Bounds.Offset(
-				_direction.X * (Speed * timeElapsed.TotalSeconds),
-				_direction.Y * (Speed * timeElapsed.TotalSeconds)
+			var previousBounds = Bounds;
+			_bounds.Offset(
+				(Speed * timeElapsed.TotalSeconds) * _direction.X,
+				(Speed * timeElapsed.TotalSeconds) * _direction.Y
 			);
 
-			if (Bounds.Location.DistanceTo(_initialPosition) >= MaxRange)
+			var enemy = Environment.Current.Enemies
+				.FirstOrDefault(e => CollisionHelper.Collides(previousBounds, _bounds, e.Bounds));
+			if (enemy != null)
+			{
+				IsAlive = false;
+				enemy.ReceiveDamage(OnHit(enemy));
+				User.OnNormalAttackHit(enemy);
+				return;
+			}
+
+			if (_bounds.Location.DistanceTo(_initialPosition) >= MaxRange)
 			{
 				IsAlive = false;
 			}
-			else
-			{
-				var enemy = Environment.Current.Enemies
-					.FirstOrDefault(e => e.Bounds.Intersects(Bounds));
-				if (enemy != null)
-				{
-					IsAlive = false;
-					enemy.ReceiveDamage(OnHit(enemy));
-				}
-			}
 		}
 
-		public bool IsAlive { get; private set; }
+		public bool IsAlive { get; private set; } = true;
 
 		protected abstract DMG OnHit(Lifeform target);
 	}

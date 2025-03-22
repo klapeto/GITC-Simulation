@@ -42,15 +42,20 @@ namespace GitcSimulator
 
 			mizuki.ElementalSkill.Level.BaseValue = 2;
 
-			environment.Team.Playables.Add(mizuki);
-			environment.Enemies.Add(
+			var enemy =
 				new Enemy("Dummy", 100, 1000000, 1000)
 				{
-					Bounds = new Circle(new Point(0, 0), 0.6),
-				});
+					Bounds = new Circle(new Point(4, 4), 0.6),
+				};
+
+			environment.Team.Playables.Add(mizuki);
+			environment.Enemies.Add(enemy);
+
+			mizuki.LookAt(enemy.Location);
 
 			environment.Log(LogCategory.FightStart, "Start");
-			mizuki.ElementalSkill.Use();
+			mizuki.NormalAttack.Use();
+			mizuki.NormalAttack.Use();
 			for (var i = 0.0; i < 30.0; i += 1.0 / 60.0)
 			{
 				environment.Update(TimeSpan.FromSeconds(1.0 / 60.0));
