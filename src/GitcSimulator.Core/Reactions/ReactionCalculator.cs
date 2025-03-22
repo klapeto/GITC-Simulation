@@ -23,7 +23,6 @@ using System.Collections.Generic;
 using GitcSimulator.Core.Attacks;
 using GitcSimulator.Core.Elements;
 using GitcSimulator.Core.Lifeforms;
-using GitcSimulator.Core.Statistics;
 using GitcSimulator.Core.Values;
 
 namespace GitcSimulator.Core.Reactions
@@ -236,7 +235,7 @@ namespace GitcSimulator.Core.Reactions
 			return reactionTypes;
 		}
 
-		public static Percent GetEmBonus(ReactionType reactionType, Stats attackerStats)
+		public static Percent GetEmBonus(ReactionType reactionType, Attributes attackerAttributes)
 		{
 			switch (reactionType)
 			{
@@ -244,7 +243,7 @@ namespace GitcSimulator.Core.Reactions
 				case ReactionType.VaporizePtH:
 				case ReactionType.MeltPtC:
 				case ReactionType.MeltCtP:
-					return GetAmplifyingEmBonus(attackerStats);
+					return GetAmplifyingEmBonus(attackerAttributes);
 				case ReactionType.Burning:
 				case ReactionType.HydroSwirl:
 				case ReactionType.PyroSwirl:
@@ -257,18 +256,18 @@ namespace GitcSimulator.Core.Reactions
 				case ReactionType.Burgeon:
 				case ReactionType.Hyperbloom:
 				case ReactionType.Shatter:
-					return GetTransformativeEmBonus(attackerStats);
+					return GetTransformativeEmBonus(attackerAttributes);
 				case ReactionType.Spread:
 				case ReactionType.Aggravate:
-					return GetCatalyzeEmBonus(attackerStats);
+					return GetCatalyzeEmBonus(attackerAttributes);
 				default:
 					return new Percent(100.0);
 			}
 		}
 
-		public static Percent GetReactionBonus(ReactionType reactionType, Stats attackerStats)
+		public static Percent GetReactionBonus(ReactionType reactionType, Attributes attackerAttributes)
 		{
-			return attackerStats.ReactionDMG[reactionType].Bonus.CurrentValue;
+			return attackerAttributes.ReactionDMG[reactionType].Bonus.CurrentValue;
 		}
 
 		public static ElementType GetElementTypeByReaction(ReactionType reactionType)
@@ -310,10 +309,10 @@ namespace GitcSimulator.Core.Reactions
 			}
 		}
 
-		public static Reaction CalculateReaction(ReactionType reactionType, Lifeform attacker, Stats attackerStats, Lifeform target, double additionalDMG = 0.0)
+		public static Reaction CalculateReaction(ReactionType reactionType, Lifeform attacker, Attributes attackerAttributes, Lifeform target, double additionalDMG = 0.0)
 		{
-			var reactionBonus = GetReactionBonus(reactionType, attackerStats);
-			additionalDMG += attackerStats.ReactionDMG[reactionType].Increase;
+			var reactionBonus = GetReactionBonus(reactionType, attackerAttributes);
+			additionalDMG += attackerAttributes.ReactionDMG[reactionType].Increase;
 
 			switch (reactionType)
 			{
@@ -322,7 +321,7 @@ namespace GitcSimulator.Core.Reactions
 				case ReactionType.MeltPtC:
 				case ReactionType.MeltCtP:
 					var multiplier = GetAmplifyingReactionMultiplier(reactionType);
-					var emBonus = GetAmplifyingEmBonus(attackerStats);
+					var emBonus = GetAmplifyingEmBonus(attackerAttributes);
 					return new Reaction(reactionType, multiplier * (emBonus + reactionBonus), additionalDMG);
 				case ReactionType.Burning:
 				case ReactionType.HydroSwirl:
@@ -340,24 +339,24 @@ namespace GitcSimulator.Core.Reactions
 					var levelMultiplier = attacker is Playable
 						? LevelMultipliers.GetPlayerLevelMultiplier(attacker.Level)
 						: LevelMultipliers.GetEnvironmentLevelMultiplier(attacker.Level);
-					emBonus = GetTransformativeEmBonus(attackerStats);
+					emBonus = GetTransformativeEmBonus(attackerAttributes);
 					var resMultiplier = AttackCalculator.CalculateResMultiplier(
 						target,
 						GetElementTypeByReaction(reactionType));
 					var dmg = ((multiplier * levelMultiplier * (emBonus + reactionBonus)) + additionalDMG)
 					          * resMultiplier;
-					var criticalChance = attacker.Stats.ReactionCRIT[reactionType].Rate.CurrentValue;
+					var criticalChance = attacker.Attributes.ReactionCRIT[reactionType].Rate.CurrentValue;
 
 					if (RNG.CriticalCheck(criticalChance))
 					{
-						dmg *= attacker.Stats.ReactionCRIT[reactionType].DMG.CurrentValue;
+						dmg *= attacker.Attributes.ReactionCRIT[reactionType].DMG.CurrentValue;
 					}
 
 					return new Reaction(reactionType, new Percent(100), dmg);
 				case ReactionType.Spread:
 				case ReactionType.Aggravate:
 					multiplier = GetCatalyzeMultiplier(reactionType);
-					emBonus = GetCatalyzeEmBonus(attackerStats);
+					emBonus = GetCatalyzeEmBonus(attackerAttributes);
 					levelMultiplier = attacker is Playable
 						? LevelMultipliers.GetPlayerLevelMultiplier(attacker.Level)
 						: LevelMultipliers.GetEnvironmentLevelMultiplier(attacker.Level);
@@ -393,23 +392,23 @@ namespace GitcSimulator.Core.Reactions
 			return Percent.FromValue(ReactionMultipliers[reactionType]);
 		}
 
-		private static Percent GetAmplifyingEmBonus(Stats attackerStats)
+		private static Percent GetAmplifyingEmBonus(Attributes attackerAttributes)
 		{
-			var em = attackerStats.ElementalMastery.CurrentValue;
+			var em = attackerAttributes.ElementalMastery.CurrentValue;
 
 			return Percent.FromValue(2.78 * (em / (em + 1400)));
 		}
 
-		private static Percent GetTransformativeEmBonus(Stats attackerStats)
+		private static Percent GetTransformativeEmBonus(Attributes attackerAttributes)
 		{
-			var em = attackerStats.ElementalMastery.CurrentValue;
+			var em = attackerAttributes.ElementalMastery.CurrentValue;
 
 			return Percent.FromValue(16.0 * (em / (em + 2000)));
 		}
 
-		private static Percent GetCatalyzeEmBonus(Stats attackerStats)
+		private static Percent GetCatalyzeEmBonus(Attributes attackerAttributes)
 		{
-			var em = attackerStats.ElementalMastery.CurrentValue;
+			var em = attackerAttributes.ElementalMastery.CurrentValue;
 
 			return Percent.FromValue(5.0 * em / (em + 1200));
 		}

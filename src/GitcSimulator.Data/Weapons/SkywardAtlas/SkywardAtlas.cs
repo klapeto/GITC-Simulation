@@ -21,7 +21,6 @@
 using System;
 using GitcSimulator.Core;
 using GitcSimulator.Core.Lifeforms;
-using GitcSimulator.Core.Statistics;
 using GitcSimulator.Core.Values;
 using GitcSimulator.Core.Weapons;
 

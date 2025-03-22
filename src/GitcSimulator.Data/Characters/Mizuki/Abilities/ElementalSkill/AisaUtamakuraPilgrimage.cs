@@ -20,11 +20,11 @@
 
 using System;
 using System.Linq;
+using GitcSimulator.Core.Animations;
 using GitcSimulator.Core.Attacks;
 using GitcSimulator.Core.Elements;
-using GitcSimulator.Core.HitBoxes;
+using GitcSimulator.Core.Geometry;
 using GitcSimulator.Core.Lifeforms;
-using GitcSimulator.Core.Statistics;
 using GitcSimulator.Core.Values;
 using Environment = GitcSimulator.Core.Environments.Environment;
 
@@ -48,6 +48,8 @@ namespace GitcSimulator.Data.Characters.Mizuki.Abilities.ElementalSkill
 			new(89.82),
 			new(95.44),
 		];
+
+		private readonly Guid _id = Guid.NewGuid();
 
 		private readonly Percent[] _multipliers =
 		[
@@ -83,29 +85,25 @@ namespace GitcSimulator.Data.Characters.Mizuki.Abilities.ElementalSkill
 			new(0.54),
 		];
 
-		private readonly Guid _id = Guid.NewGuid();
-
 		public AisaUtamakuraPilgrimage(Lifeform user)
 			: base(user)
 		{
 		}
 
-		public override TimeStat Cooldown { get; } = new(TimeSpan.FromSeconds(15));
+		public override TimeAttribute Cooldown { get; } = new(TimeSpan.FromSeconds(15));
 
-		public override InternalCooldown? InternalCooldown => null;
+		public InternalCooldown? InternalCooldown => null;
+
+		public Animation? Animation { get; protected set; } = new(TimeSpan.FromSeconds(0.533));
 
 		protected override void OnUsed()
 		{
-			var sphere = new Sphere
-			{
-				Location = User.Location,
-				Radius = 5.5,
-			};
+			var sphere = new Circle(User.Bounds.Location, 5.5);
 
 			var affectedEnemies = Environment
 				.Current
 				.Enemies
-				.Where(e => sphere.Contains(e.Location))
+				.Where(e => sphere.Contains(e.Bounds.Location))
 				.ToArray();
 
 			foreach (var enemy in affectedEnemies)
@@ -116,24 +114,28 @@ namespace GitcSimulator.Data.Characters.Mizuki.Abilities.ElementalSkill
 
 			User.AddEffect(
 				_id,
-				new DreamdrifterEffect(_continuousDMGMultipliers[Level.CurrentValue - 1], _swirlDMGBonus[Level.CurrentValue-1]));
+				new DreamdrifterEffect(
+					_continuousDMGMultipliers[Level.CurrentValue - 1],
+					_swirlDMGBonus[Level.CurrentValue - 1]));
 		}
 
 		private DMG CalculateSkillStartDMG(Lifeform target)
 		{
 			return AttackCalculator.CalculateDMG(
-				"Aisa Utamakura Pilgrimage Start",
-				Type,
+				"Aisa Utamakura Pilgrimage",
+				AttackType.ElementalSkill,
 				ElementType.Anemo,
 				User,
-				User.Stats,
+				User.Attributes,
 				target,
-				User.Stats.ATK,
+				User.Attributes.ATK,
 				GetMultiplier(),
 				new Percent(100.0),
 				0.0,
 				1.0,
-				null);
+				null,
+				30,
+				false);
 		}
 
 		private Percent GetMultiplier()

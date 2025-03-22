@@ -48,6 +48,6 @@ namespace GitcSimulator.Data.Characters.Mizuki
 			ElementalSkill = new AisaUtamakuraPilgrimage(this);
 		}
 
-		public override UserTriggeredAttack ElementalSkill { get; }
+		public override CooldownedTalent ElementalSkill { get; }
 	}
 }

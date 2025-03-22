@@ -19,27 +19,23 @@
 // =========================================================================
 
 using System;
-using GitcSimulator.Core.HitBoxes;
+using GitcSimulator.Core.Geometry;
 using GitcSimulator.Core.Lifeforms;
 using GitcSimulator.Core.Projectiles.Interfaces;
+using Point = GitcSimulator.Core.Geometry.Point;
 
 namespace GitcSimulator.Core.Projectiles
 {
 	public abstract class HomingProjectile : IProjectile
 	{
 		protected readonly Lifeform Target;
-		private readonly Sphere _hitBox;
 		private readonly double _velocity;
 
 		public HomingProjectile(Point startLocation, Lifeform target, double radius, double velocity)
 		{
 			Target = target;
 			_velocity = velocity;
-			_hitBox = new Sphere
-			{
-				Radius = radius,
-				Location = startLocation,
-			};
+			Bounds = new Circle(startLocation, radius);
 		}
 
 		public void Update(TimeSpan timeElapsed)
@@ -49,17 +45,17 @@ namespace GitcSimulator.Core.Projectiles
 				return;
 			}
 
-			var currentLocation = Location;
+			var currentLocation = Bounds.Location;
 
-			var currentDirection = Target.Location - currentLocation;
+			var currentDirection = Target.Bounds.Location - currentLocation;
 			currentDirection.Normalize();
 
-			_hitBox.Location += currentDirection * _velocity;
+			Bounds.Offset(currentDirection * _velocity);
 
-			var nextDirection = Target.Location - Location;
+			var nextDirection = Target.Bounds.Location - Bounds.Location;
 			nextDirection.Normalize();
 
-			if (_hitBox.Contains(Target.Location) || !IsInTheSameDirection(currentDirection, nextDirection))
+			if (Bounds.Contains(Target.Bounds.Location) || !IsInTheSameDirection(currentDirection, nextDirection))
 			{
 				if (Target.IsAlive)
 				{
@@ -70,7 +66,7 @@ namespace GitcSimulator.Core.Projectiles
 			}
 		}
 
-		public Point Location => _hitBox.Location;
+		public Circle Bounds { get; }
 
 		public bool IsAlive { get; private set; } = true;
 
@@ -79,8 +75,7 @@ namespace GitcSimulator.Core.Projectiles
 		private static bool IsInTheSameDirection(Point dir1, Point dir2)
 		{
 			return Math.Sign(dir1.X) == Math.Sign(dir2.X)
-			       && Math.Sign(dir1.Y) == Math.Sign(dir2.Y)
-			       && Math.Sign(dir1.Z) == Math.Sign(dir2.Z);
+			       && Math.Sign(dir1.Y) == Math.Sign(dir2.Y);
 		}
 	}
 }

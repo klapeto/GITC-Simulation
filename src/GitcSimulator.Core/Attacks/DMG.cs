@@ -20,22 +20,33 @@
 
 namespace GitcSimulator.Core.Attacks
 {
-	public class DMG
+	public class DMG : BasicDMG
 	{
-		public DMG(string source, double dmg, ElementalInstance? elementalInstance, bool critical)
+		public DMG(
+			string source,
+			string name,
+			double dmg,
+			ElementalInstance? elementalInstance,
+			bool critical,
+			double poise,
+			bool blunt)
+			: base(dmg, critical)
 		{
-			Dmg = dmg;
 			ElementalInstance = elementalInstance;
-			Critical = critical;
+			Poise = poise;
+			Blunt = blunt;
 			Source = source;
+			Name = name;
 		}
 
 		public ElementalInstance? ElementalInstance { get; }
 
+		public string Name { get; }
+
 		public string Source { get; }
 
-		public double Dmg { get; }
+		public double Poise { get; }
 
-		public bool Critical { get; }
+		public bool Blunt { get; }
 	}
 }

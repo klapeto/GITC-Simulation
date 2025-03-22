@@ -19,10 +19,9 @@
 // =========================================================================
 
 using System.Collections.Generic;
-using GitcSimulator.Core.HitBoxes;
+using GitcSimulator.Core.Geometry;
 using GitcSimulator.Core.Lifeforms;
 using GitcSimulator.Core.Logging;
-using GitcSimulator.Core.Projectiles.Interfaces;
 
 namespace GitcSimulator.Core.Environments.Interfaces
 {
@@ -32,9 +31,7 @@ namespace GitcSimulator.Core.Environments.Interfaces
 
 		Team Team { get; }
 
-		List<EnvironmentObject> Objects { get; }
-
-		List<IProjectile> Projectiles { get; }
+		List<IEnvironmentObject> Objects { get; }
 
 		Lifeform? GetClosestEnemy(Point location, double distance);
 

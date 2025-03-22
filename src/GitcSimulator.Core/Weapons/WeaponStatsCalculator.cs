@@ -20,7 +20,6 @@
 
 using System;
 using System.Linq;
-using GitcSimulator.Core.Statistics;
 using GitcSimulator.Core.Values;
 
 namespace GitcSimulator.Core.Weapons
@@ -39,7 +38,7 @@ namespace GitcSimulator.Core.Weapons
 				.Multiplier;
 
 			secondaryStat.Value.Modify(
-				new StatModifier
+				new AttributeModifier
 				{
 					DoubleModifier = s => s.BaseValue = Math.Round(s.BaseValue * multiplier, 4),
 					PercentModifier = s => s.BaseValue = Percent.FromValue(Math.Round(s.BaseValue * multiplier, 4)),

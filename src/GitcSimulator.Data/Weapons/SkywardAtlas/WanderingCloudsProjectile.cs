@@ -24,7 +24,6 @@ using GitcSimulator.Core.Environments;
 using GitcSimulator.Core.Lifeforms;
 using GitcSimulator.Core.Logging;
 using GitcSimulator.Core.Projectiles;
-using GitcSimulator.Core.Statistics;
 using GitcSimulator.Core.Values;
 
 namespace GitcSimulator.Data.Weapons.SkywardAtlas
@@ -32,15 +31,15 @@ namespace GitcSimulator.Data.Weapons.SkywardAtlas
 	public class WanderingCloudsProjectile : HomingProjectile
 	{
 		private readonly Percent _ATKPercent;
-		private readonly Stats _stats;
+		private readonly Attributes _attributes;
 		private readonly Lifeform _user;
 
 		public WanderingCloudsProjectile(Lifeform user, Lifeform target, Percent atkPercent)
-			: base(user.Location, target, 0.3, 6.0)
+			: base(user.Bounds.Location, target, 0.3, 6.0)
 		{
 			_user = user;
 			_ATKPercent = atkPercent;
-			_stats = user.Stats.Snapshot();
+			_attributes = user.Attributes.Snapshot();
 		}
 
 		protected override void OnHit()
@@ -51,14 +50,16 @@ namespace GitcSimulator.Data.Weapons.SkywardAtlas
 				AttackType.Default,
 				ElementType.Physical,
 				_user,
-				_stats,
+				_attributes,
 				Target,
-				_stats.ATK,
+				_attributes.ATK,
 				_ATKPercent,
 				new Percent(100),
 				0.0,
 				0.0,
-				null);
+				null,
+				0,
+				false);
 			Target.ReceiveDamage(dmg);
 		}
 	}

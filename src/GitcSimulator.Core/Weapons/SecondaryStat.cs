@@ -19,50 +19,50 @@
 // =========================================================================
 
 using System;
-using GitcSimulator.Core.Statistics;
-using GitcSimulator.Core.Statistics.Interfaces;
 using GitcSimulator.Core.Values;
+using GitcSimulator.Core.Values.Interfaces;
+using Attribute = GitcSimulator.Core.Values.Attribute;
 
 namespace GitcSimulator.Core.Weapons
 {
 	public class SecondaryStat
 	{
 		private readonly Guid _secondaryId = Guid.NewGuid();
-		private readonly StatModifier _statModifier;
+		private readonly AttributeModifier _attributeModifier;
 
-		public SecondaryStat(Func<Stats, IStat> statGetter, double value)
+		public SecondaryStat(Func<Attributes, IAttribute> statGetter, double value)
 		{
-			Value = new Stat(value);
+			Value = new Attribute(value);
 			StatGetter = statGetter;
-			_statModifier = new StatModifier
+			_attributeModifier = new AttributeModifier
 			{
-				DoubleModifier = s => s.Add(_secondaryId, ((Stat)Value).BaseValue),
+				DoubleModifier = s => s.Add(_secondaryId, ((Attribute)Value).BaseValue),
 			};
 		}
 
-		public SecondaryStat(Func<Stats, IStat> statGetter, Percent value)
+		public SecondaryStat(Func<Attributes, IAttribute> statGetter, Percent value)
 		{
-			Value = new PercentStat(value);
+			Value = new PercentAttribute(value);
 			StatGetter = statGetter;
-			_statModifier = new StatModifier
+			_attributeModifier = new AttributeModifier
 			{
-				DoubleModifier = s => s.Add(_secondaryId, ((PercentStat)Value).BaseValue),
-				PercentModifier = s => s.Add(_secondaryId, ((PercentStat)Value).BaseValue),
+				DoubleModifier = s => s.Add(_secondaryId, ((PercentAttribute)Value).BaseValue),
+				PercentModifier = s => s.Add(_secondaryId, ((PercentAttribute)Value).BaseValue),
 			};
 		}
 
-		public Func<Stats, IStat> StatGetter { get; }
+		public Func<Attributes, IAttribute> StatGetter { get; }
 
-		public IStat Value { get; }
+		public IAttribute Value { get; }
 
-		public void Apply(IStat stat)
+		public void Apply(IAttribute attribute)
 		{
-			stat.Modify(_statModifier);
+			attribute.Modify(_attributeModifier);
 		}
 
-		public void Remove(IStat stat)
+		public void Remove(IAttribute attribute)
 		{
-			stat.Remove(_secondaryId);
+			attribute.Remove(_secondaryId);
 		}
 	}
 }

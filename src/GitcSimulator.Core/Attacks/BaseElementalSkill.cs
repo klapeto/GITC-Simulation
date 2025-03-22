@@ -22,13 +22,11 @@ using GitcSimulator.Core.Lifeforms;
 
 namespace GitcSimulator.Core.Attacks
 {
-	public abstract class BaseElementalSkill : UserTriggeredAttack
+	public abstract class BaseElementalSkill : CooldownedTalent
 	{
 		public BaseElementalSkill(Lifeform user)
 			: base(user)
 		{
 		}
-
-		public override AttackType Type => AttackType.ElementalSkill;
 	}
 }

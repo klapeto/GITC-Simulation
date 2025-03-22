@@ -21,7 +21,6 @@
 using System;
 using System.Linq;
 using GitcSimulator.Core.Lifeforms;
-using GitcSimulator.Core.Statistics;
 using GitcSimulator.Core.Values;
 
 namespace GitcSimulator.Core.Reactions

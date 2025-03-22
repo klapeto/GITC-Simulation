@@ -23,9 +23,8 @@ using GitcSimulator.Core.Attacks;
 using GitcSimulator.Core.Elements;
 using GitcSimulator.Core.Extensions;
 using GitcSimulator.Core.Reactions;
-using GitcSimulator.Core.Statistics;
-using GitcSimulator.Core.Statistics.Interfaces;
 using GitcSimulator.Core.Values;
+using GitcSimulator.Core.Values.Interfaces;
 using GitcSimulator.Core.Weapons;
 using GitcSimulator.Core.Weapons.InitialWeapons;
 using GitcSimulator.Core.Weapons.Interfaces;
@@ -72,9 +71,9 @@ namespace GitcSimulator.Core.Lifeforms
 			var ascensionValueATK = maxAscensionValueATK * ascensionMultiplier;
 			var ascensionValueDEF = maxAscensionValueDEF * ascensionMultiplier;
 
-			Stats.MaxHP.BaseValue = (baseHP * levelMultiplier) + ascensionValueHP;
-			Stats.ATK.BaseValue = (baseATK * levelMultiplier) + ascensionValueATK;
-			Stats.DEF.BaseValue = (baseDEF * levelMultiplier) + ascensionValueDEF;
+			Attributes.MaxHP.BaseValue = (baseHP * levelMultiplier) + ascensionValueHP;
+			Attributes.ATK.BaseValue = (baseATK * levelMultiplier) + ascensionValueATK;
+			Attributes.DEF.BaseValue = (baseDEF * levelMultiplier) + ascensionValueDEF;
 
 			var bonusStat = GetAscensionBonusStat(ascensionStat);
 			var baseBonusStat = quality == Quality.FiveStars
@@ -83,13 +82,13 @@ namespace GitcSimulator.Core.Lifeforms
 
 			var value = baseBonusStat * LevelMultipliers.GetBonusStatAscensionMultiplier(AscensionLevel);
 
-			bonusStat.Modify(new StatModifier
+			bonusStat.Modify(new AttributeModifier
 			{
 				DoubleModifier = s => s.BaseValue += value,
 				PercentModifier = s => s.BaseValue += Percent.FromValue(value),
 			});
 
-			Stats.HP.BaseValue = Stats.MaxHP.BaseValue;
+			Attributes.HP.BaseValue = Attributes.MaxHP.BaseValue;
 
 			EquipDefaultWeapon();
 		}
@@ -104,7 +103,7 @@ namespace GitcSimulator.Core.Lifeforms
 
 		public AscensionLevel AscensionLevel { get; }
 		
-		public abstract UserTriggeredAttack ElementalSkill { get; }
+		public abstract CooldownedTalent ElementalSkill { get; }
 
 		public IWeapon Weapon
 		{
@@ -147,26 +146,26 @@ namespace GitcSimulator.Core.Lifeforms
 			}
 		}
 
-		private IStat GetAscensionBonusStat(AscensionStat stat)
+		private IAttribute GetAscensionBonusStat(AscensionStat stat)
 		{
 			switch (stat)
 			{
-				case AscensionStat.PhysicalDMGBonus: return Stats.ElementalDMG[ElementType.Physical].Bonus;
-				case AscensionStat.AnemoDMGBonus: return Stats.ElementalDMG[ElementType.Anemo].Bonus;
-				case AscensionStat.GeoDMGBonus: return Stats.ElementalDMG[ElementType.Geo].Bonus;
-				case AscensionStat.ElectroDMGBonus: return Stats.ElementalDMG[ElementType.Electro].Bonus;
-				case AscensionStat.HydroDMGBonus: return Stats.ElementalDMG[ElementType.Hydro].Bonus;
-				case AscensionStat.PyroDMGBonus: return Stats.ElementalDMG[ElementType.Pyro].Bonus;
-				case AscensionStat.CryoDMGBonus: return Stats.ElementalDMG[ElementType.Cryo].Bonus;
-				case AscensionStat.DendroDMGBonus: return Stats.ElementalDMG[ElementType.Dendro].Bonus;
-				case AscensionStat.ATK: return Stats.ATK;
-				case AscensionStat.MaxHP: return Stats.MaxHP;
-				case AscensionStat.DEF: return Stats.DEF;
-				case AscensionStat.EnergyRecharge: return Stats.EnergyRecharge;
-				case AscensionStat.ElementalMastery: return Stats.ElementalMastery;
-				case AscensionStat.HealingBonus: return Stats.Healing.Bonus;
-				case AscensionStat.CRITRate: return Stats.CRIT.Rate;
-				case AscensionStat.CRITDamage: return Stats.CRIT.DMG;
+				case AscensionStat.PhysicalDMGBonus: return Attributes.ElementalDMG[ElementType.Physical].Bonus;
+				case AscensionStat.AnemoDMGBonus: return Attributes.ElementalDMG[ElementType.Anemo].Bonus;
+				case AscensionStat.GeoDMGBonus: return Attributes.ElementalDMG[ElementType.Geo].Bonus;
+				case AscensionStat.ElectroDMGBonus: return Attributes.ElementalDMG[ElementType.Electro].Bonus;
+				case AscensionStat.HydroDMGBonus: return Attributes.ElementalDMG[ElementType.Hydro].Bonus;
+				case AscensionStat.PyroDMGBonus: return Attributes.ElementalDMG[ElementType.Pyro].Bonus;
+				case AscensionStat.CryoDMGBonus: return Attributes.ElementalDMG[ElementType.Cryo].Bonus;
+				case AscensionStat.DendroDMGBonus: return Attributes.ElementalDMG[ElementType.Dendro].Bonus;
+				case AscensionStat.ATK: return Attributes.ATK;
+				case AscensionStat.MaxHP: return Attributes.MaxHP;
+				case AscensionStat.DEF: return Attributes.DEF;
+				case AscensionStat.EnergyRecharge: return Attributes.EnergyRecharge;
+				case AscensionStat.ElementalMastery: return Attributes.ElementalMastery;
+				case AscensionStat.HealingBonus: return Attributes.Healing.Bonus;
+				case AscensionStat.CRITRate: return Attributes.CRIT.Rate;
+				case AscensionStat.CRITDamage: return Attributes.CRIT.DMG;
 				default:
 					throw new ArgumentOutOfRangeException(nameof(stat), stat, null);
 			}

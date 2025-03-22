@@ -21,8 +21,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using GitcSimulator.Core.Statistics;
-using GitcSimulator.Core.Statistics.Interfaces;
+using GitcSimulator.Core.Values.Interfaces;
 
 namespace GitcSimulator.Core.Lifeforms
 {

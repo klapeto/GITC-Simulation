@@ -23,10 +23,9 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using GitcSimulator.Core.Environments.Interfaces;
-using GitcSimulator.Core.HitBoxes;
+using GitcSimulator.Core.Geometry;
 using GitcSimulator.Core.Lifeforms;
 using GitcSimulator.Core.Logging;
-using GitcSimulator.Core.Projectiles.Interfaces;
 
 namespace GitcSimulator.Core.Environments
 {
@@ -40,9 +39,7 @@ namespace GitcSimulator.Core.Environments
 
 		public Team Team { get; } = new(Array.Empty<Playable>());
 
-		public List<EnvironmentObject> Objects { get; } = new();
-
-		public List<IProjectile> Projectiles { get; } = new();
+		public List<IEnvironmentObject> Objects { get; } = new();
 
 		public Lifeform? GetClosestEnemy(Point location, double distance)
 		{
@@ -63,17 +60,12 @@ namespace GitcSimulator.Core.Environments
 				}
 			}
 
-			foreach (var environmentObject in Objects)
+			foreach (var environmentObject in Objects.ToArray())
 			{
 				environmentObject.Update(timeElapsed);
-			}
-
-			foreach (var projectile in Projectiles.ToArray())
-			{
-				projectile.Update(timeElapsed);
-				if (!projectile.IsAlive)
+				if (!environmentObject.IsAlive)
 				{
-					Projectiles.Remove(projectile);
+					Objects.Remove(environmentObject);
 				}
 			}
 		}
@@ -81,7 +73,7 @@ namespace GitcSimulator.Core.Environments
 		public IEnumerable<Lifeform> GetClosestEnemies(Point location, double distance)
 		{
 			return Enemies
-				.Select(e => (e.Location.DistanceTo(location), e))
+				.Select(e => (e.Bounds.Location.DistanceTo(location), e))
 				.Where(t => t.Item1 <= distance)
 				.Select(t => t.e);
 		}

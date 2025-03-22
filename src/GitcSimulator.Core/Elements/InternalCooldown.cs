@@ -27,17 +27,18 @@ namespace GitcSimulator.Core.Elements
 	{
 		private readonly bool _repeating;
 		private readonly bool[] _sequence;
-		private readonly TimeSpan _time;
 		private int _sequenceIndex;
 		private TimeSpan _timeElapsed;
 
 		public InternalCooldown(TimeSpan time, bool[] sequence, bool repeating, string tag)
 		{
-			_time = time;
+			Time = time;
 			_sequence = sequence;
 			_repeating = repeating;
 			Tag = tag;
 		}
+
+		public TimeSpan Time { get; }
 
 		public bool CanApply { get; private set; }
 
@@ -46,7 +47,7 @@ namespace GitcSimulator.Core.Elements
 		public void Update(TimeSpan timeElapsed)
 		{
 			_timeElapsed += timeElapsed;
-			if (_timeElapsed >= _time)
+			if (_timeElapsed >= Time)
 			{
 				CanApply = true;
 				_timeElapsed = TimeSpan.Zero;
@@ -75,7 +76,7 @@ namespace GitcSimulator.Core.Elements
 
 		public override int GetHashCode()
 		{
-			return HashCode.Combine(_sequence, _time, Tag);
+			return HashCode.Combine(_sequence, Time, Tag);
 		}
 
 		public void OnAttacked()
@@ -96,7 +97,7 @@ namespace GitcSimulator.Core.Elements
 
 		private bool Equals(InternalCooldown other)
 		{
-			return _sequence.SequenceEqual(other._sequence) && _time.Equals(other._time) && Tag == other.Tag;
+			return _sequence.SequenceEqual(other._sequence) && Time.Equals(other.Time) && Tag == other.Tag;
 		}
 	}
 }

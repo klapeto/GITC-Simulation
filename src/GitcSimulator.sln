@@ -14,6 +14,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Other Files", "Other Files"
 		..\FileLayout.xml = ..\FileLayout.xml
 		Directory.Build.props = Directory.Build.props
 		Style.xml = Style.xml
+		stylecop.json = stylecop.json
+		Analyzers.ruleset = Analyzers.ruleset
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GitcSimulator.Data", "GitcSimulator.Data\GitcSimulator.Data.csproj", "{48CC8CC3-8875-490A-B362-96D8E1543542}"

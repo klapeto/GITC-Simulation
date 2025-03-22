@@ -22,7 +22,6 @@ using System;
 using GitcSimulator.Core.Elements;
 using GitcSimulator.Core.Extensions;
 using GitcSimulator.Core.Lifeforms;
-using GitcSimulator.Core.Statistics;
 using GitcSimulator.Core.Values;
 using GitcSimulator.Core.Weapons.Interfaces;
 
@@ -68,10 +67,10 @@ namespace GitcSimulator.Core.Weapons
 
 		public void OnEquipped(Playable playable)
 		{
-			playable.Stats.ATK.BaseValue += ATK;
+			playable.Attributes.ATK.BaseValue += ATK;
 			if (SecondaryStat != null)
 			{
-				AddSecondaryValue(playable.Stats, SecondaryStat);
+				AddSecondaryValue(playable.Attributes, SecondaryStat);
 			}
 
 			OnEquippedImpl(playable);
@@ -79,10 +78,10 @@ namespace GitcSimulator.Core.Weapons
 
 		public void OnUnEquipped(Playable playable)
 		{
-			playable.Stats.ATK.BaseValue -= ATK;
+			playable.Attributes.ATK.BaseValue -= ATK;
 			if (SecondaryStat != null)
 			{
-				RemoveSecondaryValue(playable.Stats, SecondaryStat);
+				RemoveSecondaryValue(playable.Attributes, SecondaryStat);
 			}
 			OnUnEquippedImpl(playable);
 		}
@@ -95,14 +94,14 @@ namespace GitcSimulator.Core.Weapons
 		{
 		}
 
-		private static void RemoveSecondaryValue( Stats stats, SecondaryStat secondaryStat)
+		private static void RemoveSecondaryValue( Attributes attributes, SecondaryStat secondaryStat)
 		{
-			secondaryStat.Remove(secondaryStat.StatGetter(stats));
+			secondaryStat.Remove(secondaryStat.StatGetter(attributes));
 		}
 
-		private static void AddSecondaryValue(Stats stats, SecondaryStat secondaryStat)
+		private static void AddSecondaryValue(Attributes attributes, SecondaryStat secondaryStat)
 		{
-			secondaryStat.Apply(secondaryStat.StatGetter(stats));
+			secondaryStat.Apply(secondaryStat.StatGetter(attributes));
 		}
 	}
 }

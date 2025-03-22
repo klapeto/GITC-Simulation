@@ -19,7 +19,7 @@
 // =========================================================================
 
 using System;
-using GitcSimulator.Core.HitBoxes;
+using GitcSimulator.Core.Geometry;
 using GitcSimulator.Core.Lifeforms;
 using GitcSimulator.Core.Logging;
 using GitcSimulator.Data.Characters.Mizuki;
@@ -37,14 +37,16 @@ namespace GitcSimulator
 			var mizuki = new Mizuki
 			{
 				Weapon = new SkywardAtlas(90),
-				Location = new Point { X = 0, Y = 0 },
+				Bounds = new Circle(new Point(0, 0), 0.6),
 			};
+
+			mizuki.ElementalSkill.Level.BaseValue = 2;
 
 			environment.Team.Playables.Add(mizuki);
 			environment.Enemies.Add(
 				new Enemy("Dummy", 100, 1000000, 1000)
 				{
-					Location = new Point { X = 0, Y = 3 },
+					Bounds = new Circle(new Point(0, 0), 0.6),
 				});
 
 			environment.Log(LogCategory.FightStart, "Start");

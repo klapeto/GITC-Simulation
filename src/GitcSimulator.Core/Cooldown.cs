@@ -19,16 +19,16 @@
 // =========================================================================
 
 using System;
-using GitcSimulator.Core.Statistics;
+using GitcSimulator.Core.Values;
 
 namespace GitcSimulator.Core
 {
 	public class Cooldown : IUpdateable
 	{
-		private readonly TimeStat _cooldown;
+		private readonly TimeAttribute _cooldown;
 		private TimeSpan _cooldownRemaining;
 
-		public Cooldown(TimeStat cooldown, bool ready, TimeSpan? initialCooldown = null)
+		public Cooldown(TimeAttribute cooldown, bool ready, TimeSpan? initialCooldown = null)
 		{
 			_cooldown = cooldown;
 			if (!ready)

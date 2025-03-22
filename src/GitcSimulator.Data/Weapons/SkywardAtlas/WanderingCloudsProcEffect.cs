@@ -22,7 +22,6 @@ using System;
 using GitcSimulator.Core;
 using GitcSimulator.Core.Lifeforms;
 using GitcSimulator.Core.Logging;
-using GitcSimulator.Core.Statistics;
 using GitcSimulator.Core.Values;
 using GitcSimulator.Core.Weapons;
 using Environment = GitcSimulator.Core.Environments.Environment;
@@ -38,7 +37,7 @@ namespace GitcSimulator.Data.Weapons.SkywardAtlas
 			160, 200, 240, 280, 320,
 		];
 
-		private readonly Cooldown _procCooldown = new(new TimeStat(TimeSpan.FromSeconds(2.5)), false);
+		private readonly Cooldown _procCooldown = new(new TimeAttribute(TimeSpan.FromSeconds(2.5)), false);
 		private Lifeform? _user;
 
 		private readonly RefinementLevel _refinementLevel;
@@ -80,13 +79,13 @@ namespace GitcSimulator.Data.Weapons.SkywardAtlas
 				return false;
 			}
 
-			var enemy = Environment.Current.GetClosestEnemy(_user.Location, _maxDistance);
+			var enemy = Environment.Current.GetClosestEnemy(_user.Bounds.Location, _maxDistance);
 			if (enemy == null)
 			{
 				return false;
 			}
 
-			Environment.Current.Projectiles.Add(
+			Environment.Current.Objects.Add(
 				new WanderingCloudsProjectile(
 					_user,
 					enemy,

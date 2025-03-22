@@ -23,9 +23,8 @@ using GitcSimulator.Core;
 using GitcSimulator.Core.Attacks;
 using GitcSimulator.Core.Lifeforms;
 using GitcSimulator.Core.Lifeforms.EventArgs;
-using GitcSimulator.Core.Statistics;
-using GitcSimulator.Core.Statistics.Interfaces;
 using GitcSimulator.Core.Values;
+using GitcSimulator.Core.Values.Interfaces;
 using GitcSimulator.Core.Weapons;
 
 namespace GitcSimulator.Data.Weapons.SkywardAtlas
@@ -37,7 +36,7 @@ namespace GitcSimulator.Data.Weapons.SkywardAtlas
 			12, 15, 18, 21, 24,
 		];
 
-		private readonly Cooldown _cooldown = new(new TimeStat(TimeSpan.FromSeconds(30)), true);
+		private readonly Cooldown _cooldown = new(new TimeAttribute(TimeSpan.FromSeconds(30)), true);
 
 		private readonly Guid _id = Guid.NewGuid();
 		private readonly Guid _procId = Guid.NewGuid();
@@ -58,13 +57,13 @@ namespace GitcSimulator.Data.Weapons.SkywardAtlas
 		public void ApplyEffect(Lifeform lifeform)
 		{
 			var dmgBonus = ElementalDMGBonuses[(int)_refinementLevel];
-			lifeform.Stats.ElementalDMG.ApplyToAll(s => s.Bonus.Add(_id, new Percent(dmgBonus)));
+			lifeform.Attributes.ElementalDMG.ApplyToAll(s => s.Bonus.Add(_id, new Percent(dmgBonus)));
 			lifeform.Attacked += OnAttacked;
 		}
 
 		public void RemoveEffect(Lifeform lifeform)
 		{
-			lifeform.Stats.ElementalDMG.ApplyToAll(s => s.Bonus.Remove(_id));
+			lifeform.Attributes.ElementalDMG.ApplyToAll(s => s.Bonus.Remove(_id));
 			lifeform.Attacked -= OnAttacked;
 		}
 

@@ -24,7 +24,6 @@ using GitcSimulator.Core.Elements;
 using GitcSimulator.Core.Lifeforms;
 using GitcSimulator.Core.Logging;
 using GitcSimulator.Core.Reactions;
-using GitcSimulator.Core.Statistics;
 using GitcSimulator.Core.Values;
 using Environment = GitcSimulator.Core.Environments.Environment;
 
@@ -32,10 +31,10 @@ namespace GitcSimulator.Data.Characters.Mizuki.Abilities.ElementalSkill
 {
 	public class DreamdrifterEffect : TemporaryEffect
 	{
-		private readonly Cooldown _cooldown = new(new TimeStat(TimeSpan.FromSeconds(0.75)), false, TimeSpan.FromSeconds(0.25));
+		private readonly Cooldown _cooldown = new(new TimeAttribute(TimeSpan.FromSeconds(0.75)), false, TimeSpan.FromSeconds(0.25));
 		private readonly Percent _DMGMultiplier;
 		private readonly Guid _dreamdrifterId = Guid.NewGuid();
-		private readonly Cooldown _extensionCooldown = new(new TimeStat(TimeSpan.FromSeconds(0.3)), false);
+		private readonly Cooldown _extensionCooldown = new(new TimeAttribute(TimeSpan.FromSeconds(0.3)), false);
 		private readonly int _extensionsRemaining = 2;
 		private int _projectilesLaunched = 0;
 
@@ -58,7 +57,7 @@ namespace GitcSimulator.Data.Characters.Mizuki.Abilities.ElementalSkill
 		public override void ApplyEffect(Lifeform lifeform)
 		{
 			_user = lifeform;
-			lifeform.Stats.ElementalMastery.AddObserver(
+			lifeform.Attributes.ElementalMastery.AddObserver(
 				_dreamdrifterId,
 				d =>
 				{
@@ -70,7 +69,7 @@ namespace GitcSimulator.Data.Characters.Mizuki.Abilities.ElementalSkill
 
 		public override void RemoveEffect(Lifeform lifeform)
 		{
-			lifeform.Stats.ElementalMastery.Remove(_dreamdrifterId);
+			lifeform.Attributes.ElementalMastery.Remove(_dreamdrifterId);
 			RemoveSwirlDMGBonus();
 			_user = null;
 			Environment.Current.Log(LogCategory.EffectRemoved, "Dreamdrifter Effect");
@@ -98,13 +97,13 @@ namespace GitcSimulator.Data.Characters.Mizuki.Abilities.ElementalSkill
 			}
 
 			var env = Environment.Current;
-			var enemy = env.GetClosestEnemy(_user.Location, 10.0); // TODO: find real distance
+			var enemy = env.GetClosestEnemy(_user.Bounds.Location, 10.0); // TODO: find real distance
 			if (enemy == null)
 			{
 				return false;
 			}
 
-			env.Projectiles.Add(new DreamdrifterProjectile(_user, enemy, _internalCooldown, _DMGMultiplier));
+			env.Objects.Add(new DreamdrifterProjectile(_user, enemy, _internalCooldown, _DMGMultiplier));
 			Environment.Current.Log(LogCategory.ProjectileLaunched, $"Dreamdrifter Projectile ({_projectilesLaunched++})");
 			return true;
 		}
@@ -113,10 +112,10 @@ namespace GitcSimulator.Data.Characters.Mizuki.Abilities.ElementalSkill
 		{
 			foreach (var playable in Environment.Current.Team.Playables)
 			{
-				playable.Stats.ReactionDMG[ReactionType.CryoSwirl].Bonus.Remove(_dreamdrifterId);
-				playable.Stats.ReactionDMG[ReactionType.ElectroSwirl].Bonus.Remove(_dreamdrifterId);
-				playable.Stats.ReactionDMG[ReactionType.HydroSwirl].Bonus.Remove(_dreamdrifterId);
-				playable.Stats.ReactionDMG[ReactionType.PyroSwirl].Bonus.Remove(_dreamdrifterId);
+				playable.Attributes.ReactionDMG[ReactionType.CryoSwirl].Bonus.Remove(_dreamdrifterId);
+				playable.Attributes.ReactionDMG[ReactionType.ElectroSwirl].Bonus.Remove(_dreamdrifterId);
+				playable.Attributes.ReactionDMG[ReactionType.HydroSwirl].Bonus.Remove(_dreamdrifterId);
+				playable.Attributes.ReactionDMG[ReactionType.PyroSwirl].Bonus.Remove(_dreamdrifterId);
 			}
 		}
 
@@ -125,10 +124,10 @@ namespace GitcSimulator.Data.Characters.Mizuki.Abilities.ElementalSkill
 			var percent = Percent.FromValue(_swirlDMGBonusMultiplier * elementalMastery);
 			foreach (var playable in Environment.Current.Team.Playables)
 			{
-				playable.Stats.ReactionDMG[ReactionType.CryoSwirl].Bonus.Add(_dreamdrifterId, percent);
-				playable.Stats.ReactionDMG[ReactionType.ElectroSwirl].Bonus.Add(_dreamdrifterId, percent);
-				playable.Stats.ReactionDMG[ReactionType.HydroSwirl].Bonus.Add(_dreamdrifterId, percent);
-				playable.Stats.ReactionDMG[ReactionType.PyroSwirl].Bonus.Add(_dreamdrifterId, percent);
+				playable.Attributes.ReactionDMG[ReactionType.CryoSwirl].Bonus.Add(_dreamdrifterId, percent);
+				playable.Attributes.ReactionDMG[ReactionType.ElectroSwirl].Bonus.Add(_dreamdrifterId, percent);
+				playable.Attributes.ReactionDMG[ReactionType.HydroSwirl].Bonus.Add(_dreamdrifterId, percent);
+				playable.Attributes.ReactionDMG[ReactionType.PyroSwirl].Bonus.Add(_dreamdrifterId, percent);
 			}
 		}
 	}

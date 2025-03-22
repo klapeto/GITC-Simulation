@@ -40,7 +40,7 @@ namespace GitcSimulator.Data.Characters.Mizuki.Abilities.ElementalSkill
 			Lifeform target,
 			InternalCooldown internalCooldown,
 			Percent dmgMultiplier)
-			: base(user.Location, target, 0.4, 0.5 / 6.0)
+			: base(user.Bounds.Location, target, 0.4, 0.5 / 6.0)
 		{
 			_user = user;
 			_internalCooldown = internalCooldown;
@@ -51,7 +51,7 @@ namespace GitcSimulator.Data.Characters.Mizuki.Abilities.ElementalSkill
 		{
 			Environment.Current.Log(LogCategory.ProjectileHit, "Dreamdrifter Projectile");
 			var enemies = Environment.Current
-				.GetClosestEnemies(Location, 4.0)
+				.GetClosestEnemies(Bounds.Location, 4.0)
 				.ToArray();
 			foreach (var enemy in enemies)
 			{
@@ -60,14 +60,16 @@ namespace GitcSimulator.Data.Characters.Mizuki.Abilities.ElementalSkill
 					AttackType.Default,
 					ElementType.Anemo,
 					_user,
-					_user.Stats,
+					_user.Attributes,
 					Target,
-					_user.Stats.ATK,
+					_user.Attributes.ATK,
 					_DMGMultiplier,
 					new Percent(100),
 					0.0,
 					1.0,
-					_internalCooldown
+					_internalCooldown,
+					20,
+					false
 				);
 				enemy.ReceiveDamage(dmg);
 			}

@@ -18,14 +18,12 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 // =========================================================================
 
-using GitcSimulator.Core.HitBoxes;
+using GitcSimulator.Core.Environments.Interfaces;
 
 namespace GitcSimulator.Core.Projectiles.Interfaces
 {
-	public interface IProjectile : IUpdateable
+	public interface IProjectile : IEnvironmentObject
 	{
-		Point Location { get; }
-
 		bool IsAlive { get; }
 	}
 }

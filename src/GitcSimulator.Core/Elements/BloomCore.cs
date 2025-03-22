@@ -19,14 +19,20 @@
 // =========================================================================
 
 using System;
+using GitcSimulator.Core.Environments.Interfaces;
+using GitcSimulator.Core.Geometry;
 
 namespace GitcSimulator.Core.Elements
 {
-	public class BloomCore : EnvironmentObject
+	public class BloomCore : IEnvironmentObject
 	{
-		public override void Update(TimeSpan timeElapsed)
+		public void Update(TimeSpan timeElapsed)
 		{
 			throw new NotImplementedException();
 		}
+
+		public Circle Bounds { get; }
+
+		public bool IsAlive { get; }
 	}
 }

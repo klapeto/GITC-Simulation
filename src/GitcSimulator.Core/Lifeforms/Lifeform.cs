@@ -23,16 +23,17 @@ using System.Collections.Generic;
 using System.Linq;
 using GitcSimulator.Core.Attacks;
 using GitcSimulator.Core.Elements;
+using GitcSimulator.Core.Environments.Interfaces;
+using GitcSimulator.Core.Geometry;
 using GitcSimulator.Core.Lifeforms.EventArgs;
 using GitcSimulator.Core.Logging;
-using GitcSimulator.Core.Statistics;
-using GitcSimulator.Core.Statistics.Interfaces;
 using GitcSimulator.Core.Values;
+using GitcSimulator.Core.Values.Interfaces;
 using Environment = GitcSimulator.Core.Environments.Environment;
 
 namespace GitcSimulator.Core.Lifeforms
 {
-	public class Lifeform : EnvironmentObject
+	public class Lifeform : IEnvironmentObject
 	{
 		private readonly Dictionary<Guid, IEffect> _effects = new();
 
@@ -45,22 +46,36 @@ namespace GitcSimulator.Core.Lifeforms
 		{
 			Name = name;
 			Level = Math.Max(level, 1);
-			Stats = new Stats(baseHP, baseATK, baseDEF);
-			Stats.RES.ApplyToAll(s => s.BaseValue = new Percent(10)); // default
+			Attributes = new Attributes(baseHP, baseATK, baseDEF);
+			Attributes.RES.ApplyToAll(s => s.BaseValue = new Percent(10)); // default
 		}
+
+		public bool IsActionLocked { get; private set; }
 
 		public string Name { get; }
 
 		public int Level { get; protected set; }
 
-		public Stats Stats { get; }
+		public Attributes Attributes { get; }
+
+		public Point LookDirection { get; private set; }
+		
+		public InternalCooldownManager InternalCooldownManager { get; } = new InternalCooldownManager();
 
 		public IReadOnlyCollection<Aura> Auras { get; } = Enum.GetValues(typeof(AuraType))
 			.Cast<AuraType>()
 			.Select(a => new Aura(a))
 			.ToList();
 
-		public bool IsAlive => Stats.HP.BaseValue > 0;
+		public bool IsAlive => Attributes.HP.BaseValue > 0;
+
+		public Poise Poise { get; set; } = Poise.Melee();
+
+		public void LookAt(Point point)
+		{
+			LookDirection = point - Bounds.Location;
+			LookDirection.Normalize();
+		}
 
 		public void AddEffect(Guid id, IEffect effect)
 		{
@@ -91,16 +106,19 @@ namespace GitcSimulator.Core.Lifeforms
 
 		public void ReceiveDamage(DMG dmg)
 		{
-			Environment.Current.Log(LogCategory.DMG, $"({dmg.Source}) -> ({Name}) : {dmg.Dmg:F2} {(dmg.Critical ? "(CRIT)" : string.Empty)}");
+			Environment.Current.Log(
+				LogCategory.DMG,
+				$"({dmg.Source}) -> ({Name}) : {dmg.Dmg:F2} {(dmg.Critical ? "(CRIT)" : string.Empty)}");
+
 			//var actualDMG = 
-			Stats.HP.BaseValue -= dmg.Dmg;
+			Attributes.HP.BaseValue -= dmg.Dmg;
 			if (!IsAlive)
 			{
 				Die();
 			}
 		}
 
-		public override void Update(TimeSpan timeElapsed)
+		public void Update(TimeSpan timeElapsed)
 		{
 			foreach (var effect in _effects
 				         .ToDictionary(e => e.Key, e => e.Value))
@@ -127,6 +145,18 @@ namespace GitcSimulator.Core.Lifeforms
 			return dmg.Dmg;
 		}
 
+		internal void ActionLock()
+		{
+			IsActionLocked = true;
+		}
+
+		internal void ActionUnlock()
+		{
+			IsActionLocked = false;
+		}
+
 		public event EventHandler<AttackEventArgs> Attacked;
+
+		public Circle Bounds { get; set; } = new Circle(new Point(0, 0), 0.5);
 	}
 }

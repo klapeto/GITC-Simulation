@@ -24,11 +24,13 @@ namespace GitcSimulator.Core
 {
 	public class CountDown : IUpdateable
 	{
+		private readonly TimeSpan _originalTime;
 		private TimeSpan _remainingTime;
 
 		public CountDown(TimeSpan remainingTime)
 		{
 			_remainingTime = remainingTime;
+			_originalTime = remainingTime;
 		}
 
 		public bool IsOver => _remainingTime < TimeSpan.Zero;
@@ -39,6 +41,11 @@ namespace GitcSimulator.Core
 			{
 				_remainingTime -= timeElapsed;
 			}
+		}
+
+		public void Reset()
+		{
+			_remainingTime = _originalTime;
 		}
 
 		public void Increase(TimeSpan time)
