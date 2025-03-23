@@ -21,7 +21,7 @@
 							for (var j = 0; j < batchSize; j++)
 							{
 								var result = PerformSimulation(
-									c => c.Cons4Stars[0] < 6
+									c => c.Cons5StarsPromo < 6
 								);
 
 								min = Math.Min(min, result.Wishes);
@@ -40,7 +40,6 @@
 			var min = tasks.Min(t => t.Result.Min);
 
 			Console.WriteLine($"Min: {min}, Max: {max}: Avg: {avg:F2}");
-
 
 			// var result = PerformSimulation(
 			// 	c => c.Cons4Stars[0] < 6
@@ -92,6 +91,9 @@
 			var star4Wins = 0;
 			var star4Loss = 0;
 
+			var radiance = 0.0;
+			var radianceCaptured = 0;
+
 			while (keepGoing(
 				       new WishSimulationResult(
 					       wishes,
@@ -102,7 +104,8 @@
 					       star5Wins,
 					       star5Loss,
 					       star4Wins,
-					       star4Loss)))
+					       star4Loss,
+					       radianceCaptured)))
 			{
 				wishes++;
 				currentBatch5Star++;
@@ -113,7 +116,7 @@
 					star5Chance += 6.0;
 				}
 
-				if (Wish(star5Chance) || currentBatch5Star % 90 == 0)
+				if (Wish(star5Chance) || currentBatch5Star >= 90)
 				{
 					star5Chance = 0.6;
 
@@ -131,12 +134,21 @@
 								star5Wins,
 								star5Loss,
 								star4Wins,
-								star4Loss));
+								star4Loss,
+								radianceCaptured));
 					}
 					else
 					{
-						if (Wish(50))
+						var won = Wish(50);
+						var radianceWon = !won && Wish(50 + radiance);
+						if (won || radianceWon)
 						{
+							if (radianceWon)
+							{
+								radianceCaptured++;
+							}
+
+							radiance = 0.0;
 							char5Star++;
 							guarantee5Star = false;
 							star5Wins++;
@@ -151,10 +163,12 @@
 									star5Wins,
 									star5Loss,
 									star4Wins,
-									star4Loss));
+									star4Loss,
+									radianceCaptured));
 						}
 						else
 						{
+							radiance += 25.0;
 							char5StarStandard++;
 							guarantee5Star = true;
 							star5Loss++;
@@ -168,7 +182,8 @@
 									star5Wins,
 									star5Loss,
 									star4Wins,
-									star4Loss));
+									star4Loss,
+									radianceCaptured));
 						}
 					}
 
@@ -195,7 +210,8 @@
 								star5Wins,
 								star5Loss,
 								star4Wins,
-								star4Loss));
+								star4Loss,
+								radianceCaptured));
 					}
 					else
 					{
@@ -216,7 +232,8 @@
 									star5Wins,
 									star5Loss,
 									star4Wins,
-									star4Loss));
+									star4Loss,
+									radianceCaptured));
 						}
 						else
 						{
@@ -234,7 +251,8 @@
 									star5Wins,
 									star5Loss,
 									star4Wins,
-									star4Loss));
+									star4Loss,
+									radianceCaptured));
 						}
 					}
 
@@ -251,7 +269,8 @@
 				star5Wins,
 				star5Loss,
 				star4Wins,
-				star4Loss);
+				star4Loss,
+				radianceCaptured);
 		}
 
 		private static bool Wish(double chance)
@@ -287,7 +306,8 @@
 				int wins5Stars,
 				int loss5Stars,
 				int wins4Stars,
-				int loss4Stars)
+				int loss4Stars,
+				int radianceCaptured)
 			{
 				Wishes = wishes;
 				Cons5StarsPromo = cons5StarsPromo;
@@ -317,6 +337,8 @@
 			public int Wins4Stars { get; }
 
 			public int Loss4Stars { get; }
+
+			public int RadianceCaptured { get; }
 		}
 	}
 }
