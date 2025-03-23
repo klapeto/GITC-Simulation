@@ -31,26 +31,29 @@ namespace GitcSimulator.Data.Characters.Mizuki.Abilities.ElementalSkill
 {
 	public class DreamdrifterEffect : TemporaryEffect
 	{
-		private readonly Cooldown _cooldown = new(new TimeAttribute(TimeSpan.FromSeconds(0.75)), false, TimeSpan.FromSeconds(0.25));
+		private readonly Cooldown _cooldown = new(
+			new TimeAttribute(TimeSpan.FromSeconds(0.75)),
+			false,
+			TimeSpan.FromSeconds(0.25));
+
 		private readonly Percent _DMGMultiplier;
 		private readonly Guid _dreamdrifterId = Guid.NewGuid();
 		private readonly Cooldown _extensionCooldown = new(new TimeAttribute(TimeSpan.FromSeconds(0.3)), false);
 		private readonly int _extensionsRemaining = 2;
-		private int _projectilesLaunched = 0;
+		private readonly Future _future;
 
-		private readonly InternalCooldown _internalCooldown = new(
-			TimeSpan.FromSeconds(1.2),
-			[true, false],
-			true,
-			"ElementalSkill");
+		private readonly InternalCooldown _internalCooldown;
 
 		private readonly Percent _swirlDMGBonusMultiplier;
+		private int _projectilesLaunched;
 		private Lifeform? _user;
 
-		public DreamdrifterEffect(Percent dmgMultiplier, Percent swirlDMGBonusMultiplier)
+		public DreamdrifterEffect(Percent dmgMultiplier, Percent swirlDMGBonusMultiplier, InternalCooldown internalCooldown, Future future)
 			: base(TimeSpan.FromSeconds(5))
 		{
 			_swirlDMGBonusMultiplier = swirlDMGBonusMultiplier;
+			_internalCooldown = internalCooldown;
+			_future = future;
 			_DMGMultiplier = dmgMultiplier;
 		}
 
@@ -72,6 +75,7 @@ namespace GitcSimulator.Data.Characters.Mizuki.Abilities.ElementalSkill
 			lifeform.Attributes.ElementalMastery.Remove(_dreamdrifterId);
 			RemoveSwirlDMGBonus();
 			_user = null;
+			_future.Complete();
 			Environment.Current.Log(LogCategory.EffectRemoved, "Dreamdrifter Effect");
 		}
 
@@ -104,7 +108,9 @@ namespace GitcSimulator.Data.Characters.Mizuki.Abilities.ElementalSkill
 			}
 
 			env.Objects.Add(new DreamdrifterProjectile(_user, enemy, _internalCooldown, _DMGMultiplier));
-			Environment.Current.Log(LogCategory.ProjectileLaunched, $"Dreamdrifter Projectile ({_projectilesLaunched++})");
+			Environment.Current.Log(
+				LogCategory.ProjectileLaunched,
+				$"Dreamdrifter Projectile ({_projectilesLaunched++})");
 			return true;
 		}
 

@@ -18,6 +18,7 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 // =========================================================================
 
+using System;
 using GitcSimulator.Core;
 using GitcSimulator.Core.Attacks;
 using GitcSimulator.Core.Elements;
@@ -50,6 +51,13 @@ namespace GitcSimulator.Data.Characters.Mizuki
 			NormalAttack = new PureHeartPureDreams(this);
 			ElementalSkill = new AisaUtamakuraPilgrimage(this);
 			ElementalBurst = new AnrakuSecretSpringTherapy(this);
+
+			InternalCooldownManager.Add(
+				new InternalCooldown(
+					TimeSpan.FromSeconds(1.2),
+					[true, false],
+					true,
+					"Elemental Skill"));
 		}
 
 		public override BaseNormalAttack NormalAttack { get; }

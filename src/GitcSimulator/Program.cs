@@ -22,6 +22,7 @@ using System;
 using GitcSimulator.Core.Geometry;
 using GitcSimulator.Core.Lifeforms;
 using GitcSimulator.Core.Logging;
+using GitcSimulator.Core.Values.Interfaces;
 using GitcSimulator.Data.Characters.Mizuki;
 using GitcSimulator.Data.Weapons.SkywardAtlas;
 using Environment = GitcSimulator.Core.Environments.Environment;
@@ -54,10 +55,14 @@ namespace GitcSimulator
 			mizuki.LookAt(enemy.Location);
 
 			environment.Log(LogCategory.FightStart, "Start");
-			mizuki.NormalAttack.Use();
-			mizuki.NormalAttack.Use();
+
+			IFuture future = mizuki.NormalAttack.Use();
 			for (var i = 0.0; i < 30.0; i += 1.0 / 60.0)
 			{
+				if (future.IsCompleted)
+				{
+					future = mizuki.NormalAttack.Use();
+				}
 				environment.Update(TimeSpan.FromSeconds(1.0 / 60.0));
 			}
 

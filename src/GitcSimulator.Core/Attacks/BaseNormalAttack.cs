@@ -21,15 +21,18 @@
 using System;
 using System.Linq;
 using GitcSimulator.Core.Lifeforms;
+using GitcSimulator.Core.Values;
+using GitcSimulator.Core.Values.Interfaces;
 
 namespace GitcSimulator.Core.Attacks
 {
 	public abstract class BaseNormalAttack : BaseTalent, IUpdateable
 	{
-		private readonly CountDown _buffer = new(TimeSpan.FromMilliseconds(1000), false);
 		private int _attackIndex;
-
 		private BaseAttack? _currentAttack;
+		private Future _currentFuture = new();
+
+		private readonly CountDown _resetCountDown = new(TimeSpan.FromSeconds(800));
 
 		protected BaseNormalAttack(Lifeform user)
 			: base(user)
@@ -40,45 +43,46 @@ namespace GitcSimulator.Core.Attacks
 
 		public void Update(TimeSpan timeElapsed)
 		{
-			_buffer.Update(timeElapsed);
 			if (_currentAttack != null)
 			{
+				_resetCountDown.Update(timeElapsed);
 				_currentAttack.Update(timeElapsed);
 				if (_currentAttack.IsOver)
 				{
-					if (!_buffer.IsOver)
-					{
-						_buffer.Clear();	// Could this be better if it was a queue? Since this is a simulation...
-						SetNextAttack();
-						_currentAttack.Invoke(Level.CurrentValue);
-					}
-					else
-					{
-						SetNoAttack();
-					}
+					_currentFuture.Complete();
 				}
 			}
 		}
 
-		public override void Use()
+		public override IFuture Use()
 		{
 			if (_currentAttack == null)
 			{
 				SetFirstAttack();
 				_currentAttack!.Invoke(Level.CurrentValue);
+				_currentFuture = new Future();
+				_resetCountDown.Reset();
 			}
 			else
 			{
 				if (_currentAttack.IsOver)
 				{
-					SetNextAttack();
+					if (_resetCountDown.IsOver)
+					{
+						SetFirstAttack();
+					}
+					else
+					{
+						SetNextAttack();
+					}
+
 					_currentAttack.Invoke(Level.CurrentValue);
-				}
-				else
-				{
-					_buffer.Reset();
+					_currentFuture = new Future();
+					_resetCountDown.Reset();
 				}
 			}
+
+			return _currentFuture;
 		}
 
 		private void SetNoAttack()
@@ -95,7 +99,7 @@ namespace GitcSimulator.Core.Attacks
 
 		private void SetNextAttack()
 		{
-			if (_attackIndex++ >= Attacks.Length)
+			if (++_attackIndex >= Attacks.Length)
 			{
 				_attackIndex = 0;
 			}

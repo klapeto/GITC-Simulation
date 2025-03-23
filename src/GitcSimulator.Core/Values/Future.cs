@@ -18,23 +18,17 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 // =========================================================================
 
-using GitcSimulator.Core.Lifeforms;
-using GitcSimulator.Core.Values;
 using GitcSimulator.Core.Values.Interfaces;
 
-namespace GitcSimulator.Core.Attacks
+namespace GitcSimulator.Core.Values
 {
-	public abstract class BaseTalent
+	public class Future : IFuture
 	{
-		protected BaseTalent(Lifeform user)
+		public bool IsCompleted { get; private set; }
+
+		public void Complete()
 		{
-			User = user;
+			IsCompleted = true;
 		}
-
-		public Lifeform User { get; }
-
-		public LevelAttribute Level { get; } = new(1);
-
-		public abstract IFuture Use();
 	}
 }

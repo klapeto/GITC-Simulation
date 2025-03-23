@@ -21,11 +21,13 @@
 using System;
 using GitcSimulator.Core.Lifeforms;
 using GitcSimulator.Core.Values;
+using GitcSimulator.Core.Values.Interfaces;
 
 namespace GitcSimulator.Core.Attacks
 {
 	public abstract class CooldownedTalent : BaseTalent, IUpdateable
 	{
+		private Future _future = new Future();
 		protected CooldownedTalent(Lifeform user)
 			: base(user)
 		{
@@ -51,15 +53,18 @@ namespace GitcSimulator.Core.Attacks
 			}
 		}
 
-		public sealed override void Use()
+		public sealed override IFuture Use()
 		{
 			if (IsReady)
 			{
+				_future = new Future();
 				CoolDownRemaining = Cooldown.CurrentValue;
-				OnUsed();
+				OnUsed(_future);
 			}
+
+			return _future;
 		}
 
-		protected abstract void OnUsed();
+		protected abstract void OnUsed(Future future);
 	}
 }

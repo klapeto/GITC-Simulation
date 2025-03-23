@@ -21,6 +21,7 @@
 using System;
 using GitcSimulator.Core.Elements;
 using GitcSimulator.Core.Lifeforms;
+using GitcSimulator.Core.Values;
 
 namespace GitcSimulator.Core.Attacks
 {
@@ -31,7 +32,7 @@ namespace GitcSimulator.Core.Attacks
 		{
 		}
 
-		protected override void OnUsed()
+		protected override void OnUsed(Future future)
 		{
 			throw new NotImplementedException();
 		}

@@ -96,7 +96,7 @@ namespace GitcSimulator.Data.Characters.Mizuki.Abilities.ElementalSkill
 
 		public Animation? Animation { get; protected set; } = new(TimeSpan.FromSeconds(0.533));
 
-		protected override void OnUsed()
+		protected override void OnUsed(Future future)
 		{
 			var sphere = new Circle(User.Bounds.Location, 5.5);
 
@@ -116,7 +116,9 @@ namespace GitcSimulator.Data.Characters.Mizuki.Abilities.ElementalSkill
 				_id,
 				new DreamdrifterEffect(
 					_continuousDMGMultipliers[Level.CurrentValue - 1],
-					_swirlDMGBonus[Level.CurrentValue - 1]));
+					_swirlDMGBonus[Level.CurrentValue - 1],
+					User.InternalCooldownManager.Get("Elemental Skill", TimeSpan.FromSeconds(1.2)),
+					future));
 		}
 
 		private DMG CalculateSkillStartDMG(Lifeform target)
