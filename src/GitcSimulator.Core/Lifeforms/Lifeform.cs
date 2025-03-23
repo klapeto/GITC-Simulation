@@ -35,8 +35,14 @@ namespace GitcSimulator.Core.Lifeforms
 {
 	public class Lifeform : IEnvironmentObject
 	{
+		private readonly bool[] _actionLocks = Enum.GetValues(typeof(ActionType))
+			.Cast<int>()
+			.Select(_ => false).ToArray();
+
 		private readonly Dictionary<Guid, IEffect> _effects = new();
+
 		private Point _lookDirection;
+		private Circle _bounds = new(new Point(0, 0), 0.5);
 
 		public Lifeform(
 			string name,
@@ -50,8 +56,6 @@ namespace GitcSimulator.Core.Lifeforms
 			Attributes = new Attributes(baseHP, baseATK, baseDEF);
 			Attributes.RES.ApplyToAll(s => s.BaseValue = new Percent(10)); // default
 		}
-
-		public bool IsActionLocked { get; private set; }
 
 		public string Name { get; }
 
@@ -94,7 +98,11 @@ namespace GitcSimulator.Core.Lifeforms
 			}
 		}
 
-		public Circle Bounds { get; set; } = new(new Point(0, 0), 0.5);
+		public Circle Bounds
+		{
+			get => _bounds;
+			set => _bounds = value;
+		}
 
 		public void LookAt(Point point)
 		{
@@ -106,6 +114,16 @@ namespace GitcSimulator.Core.Lifeforms
 		{
 			_effects.Add(id, effect);
 			effect.ApplyEffect(this);
+		}
+		
+		public void Offset(Point offset)
+		{
+			Offset(offset.X, offset.Y);
+		}
+
+		public void Offset(double offsetX, double offsetY)
+		{
+			_bounds.Offset(offsetX, offsetY);
 		}
 
 		public void RemoveEffect(Guid id)
@@ -143,6 +161,11 @@ namespace GitcSimulator.Core.Lifeforms
 			}
 		}
 
+		public bool CanPerformAction(ActionType actionType)
+		{
+			return !_actionLocks[(int)actionType] && !_actionLocks[(int)ActionType.Any];
+		}
+
 		// private ReactionType? GetReaction(ElementalInstance? elementalInstance)
 		// {
 		// 	if (elementalInstance == null) return null;
@@ -154,14 +177,14 @@ namespace GitcSimulator.Core.Lifeforms
 			return dmg.Dmg;
 		}
 
-		internal void ActionLock()
+		public void ActionLock(ActionType actionType)
 		{
-			IsActionLocked = true;
+			_actionLocks[(int)actionType] = true;
 		}
 
-		internal void ActionUnlock()
+		public void ActionUnlock(ActionType actionType)
 		{
-			IsActionLocked = false;
+			_actionLocks[(int)actionType] = false;
 		}
 
 		public event EventHandler<AttackEventArgs> Attacked;

@@ -24,6 +24,8 @@ namespace GitcSimulator.Core.Geometry
 {
 	public struct Circle
 	{
+		private Point _location;
+
 		public Circle(Point location, double radius)
 		{
 			Location = location;
@@ -34,13 +36,17 @@ namespace GitcSimulator.Core.Geometry
 		{
 		}
 
-		public Point Location { get; private set; }
+		public Point Location
+		{
+			readonly get => _location;
+			private init => _location = value;
+		}
 
 		public double Radius { get; }
 
 		public void MoveTo(Point newLocation)
 		{
-			Location = newLocation;
+			_location = newLocation;
 		}
 
 		public void Offset(Point offset)
@@ -50,7 +56,7 @@ namespace GitcSimulator.Core.Geometry
 
 		public void Offset(double offsetX, double offsetY)
 		{
-			Location = new Point(Location.X + offsetX, Location.Y + offsetY);
+			_location = new Point(Location.X + offsetX, Location.Y + offsetY);
 		}
 
 		public bool Intersects(Circle circle)

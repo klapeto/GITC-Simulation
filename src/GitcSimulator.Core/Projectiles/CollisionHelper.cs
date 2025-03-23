@@ -25,6 +25,13 @@ namespace GitcSimulator.Core.Projectiles
 {
 	public class CollisionHelper
 	{
+		public static Point CalculateMotionOffset(Point direction, TimeSpan timeElapsed, double speed)
+		{
+			return new Point(
+				(speed * timeElapsed.TotalSeconds) * direction.X,
+				(speed * timeElapsed.TotalSeconds) * direction.Y);
+		}
+		
 		public static bool Collides(Circle previousBounds, Circle currentBounds, Circle otherBounds)
 		{
 			var previousDirection = otherBounds.Location - previousBounds.Location;

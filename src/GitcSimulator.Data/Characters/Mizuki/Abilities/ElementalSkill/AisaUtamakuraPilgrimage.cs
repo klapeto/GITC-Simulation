@@ -92,9 +92,7 @@ namespace GitcSimulator.Data.Characters.Mizuki.Abilities.ElementalSkill
 
 		public override TimeAttribute Cooldown { get; } = new(TimeSpan.FromSeconds(15));
 
-		public InternalCooldown? InternalCooldown => null;
-
-		public Animation? Animation { get; protected set; } = new(TimeSpan.FromSeconds(0.533));
+		public override Animation? Animation { get; } = new(TimeSpan.FromSeconds(0.533));
 
 		protected override void OnUsed(Future future)
 		{

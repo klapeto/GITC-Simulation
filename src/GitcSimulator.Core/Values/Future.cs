@@ -24,11 +24,22 @@ namespace GitcSimulator.Core.Values
 {
 	public class Future : IFuture
 	{
+		public static Future Canceled => new() { IsCancelled = true };
+
+		public static Future Completed => new() { IsCancelled = true };
+
 		public bool IsCompleted { get; private set; }
+
+		public bool IsCancelled { get; private set; }
 
 		public void Complete()
 		{
 			IsCompleted = true;
+		}
+
+		public void Cancel()
+		{
+			IsCancelled = true;
 		}
 	}
 }

@@ -28,5 +28,7 @@ namespace GitcSimulator.Core.Attacks
 			: base(user)
 		{
 		}
+
+		protected override ActionType ActionType => ActionType.ElementalSkill;
 	}
 }

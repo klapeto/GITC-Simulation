@@ -56,6 +56,11 @@ namespace GitcSimulator.Core.Attacks
 
 		public override IFuture Use()
 		{
+			if (!User.CanPerformAction(ActionType.NormalAttack))
+			{
+				return Future.Canceled;
+			}
+
 			if (_currentAttack == null)
 			{
 				SetFirstAttack();

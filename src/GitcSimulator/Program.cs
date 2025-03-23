@@ -22,7 +22,6 @@ using System;
 using GitcSimulator.Core.Geometry;
 using GitcSimulator.Core.Lifeforms;
 using GitcSimulator.Core.Logging;
-using GitcSimulator.Core.Values.Interfaces;
 using GitcSimulator.Data.Characters.Mizuki;
 using GitcSimulator.Data.Weapons.SkywardAtlas;
 using Environment = GitcSimulator.Core.Environments.Environment;
@@ -46,7 +45,7 @@ namespace GitcSimulator
 			var enemy =
 				new Enemy("Dummy", 100, 1000000, 1000)
 				{
-					Bounds = new Circle(new Point(4, 4), 0.6),
+					Bounds = new Circle(new Point(1, 1), 0.6),
 				};
 
 			environment.Team.Playables.Add(mizuki);
@@ -56,12 +55,17 @@ namespace GitcSimulator
 
 			environment.Log(LogCategory.FightStart, "Start");
 
-			IFuture future = mizuki.NormalAttack.Use();
+			var future = mizuki.ElementalSkill.Use();
 			for (var i = 0.0; i < 30.0; i += 1.0 / 60.0)
 			{
-				if (future.IsCompleted)
+				if (future is { IsCompleted: true, IsCancelled: false })
 				{
-					future = mizuki.NormalAttack.Use();
+					future = mizuki.ElementalSkill.Use();
+				}
+
+				if (mizuki.Location.DistanceTo(enemy.Location) > 2.0)
+				{
+					mizuki.LookAt(enemy.Location + new Point(0.5, 0.5));	// She keeps moving during skill, so force to circle arround enemy
 				}
 
 				environment.Update(TimeSpan.FromSeconds(1.0 / 60.0));

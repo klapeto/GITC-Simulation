@@ -80,7 +80,10 @@ namespace GitcSimulator.Core.Environments
 
 		public void Log(LogCategory logCategory, string message)
 		{
-			Console.WriteLine($"[{GetLogTime()}] [{logCategory}] {message}");
+			if (logCategory == LogCategory.DMG)
+			{
+				Console.WriteLine($"[{GetLogTime()}] [{logCategory}] {message}");
+			}
 		}
 
 		private string GetLogTime()

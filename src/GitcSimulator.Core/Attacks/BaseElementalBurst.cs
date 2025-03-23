@@ -19,7 +19,6 @@
 // =========================================================================
 
 using System;
-using GitcSimulator.Core.Elements;
 using GitcSimulator.Core.Lifeforms;
 using GitcSimulator.Core.Values;
 
@@ -31,6 +30,8 @@ namespace GitcSimulator.Core.Attacks
 			: base(user)
 		{
 		}
+
+		protected override ActionType ActionType => ActionType.ElementalBurst;
 
 		protected override void OnUsed(Future future)
 		{

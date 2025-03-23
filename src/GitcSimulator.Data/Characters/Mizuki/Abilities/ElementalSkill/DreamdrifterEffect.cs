@@ -23,6 +23,7 @@ using GitcSimulator.Core;
 using GitcSimulator.Core.Elements;
 using GitcSimulator.Core.Lifeforms;
 using GitcSimulator.Core.Logging;
+using GitcSimulator.Core.Projectiles;
 using GitcSimulator.Core.Reactions;
 using GitcSimulator.Core.Values;
 using Environment = GitcSimulator.Core.Environments.Environment;
@@ -36,7 +37,7 @@ namespace GitcSimulator.Data.Characters.Mizuki.Abilities.ElementalSkill
 			false,
 			TimeSpan.FromSeconds(0.25));
 
-		private readonly Percent _DMGMultiplier;
+		private readonly Percent _dmgMultiplier;
 		private readonly Guid _dreamdrifterId = Guid.NewGuid();
 		private readonly Cooldown _extensionCooldown = new(new TimeAttribute(TimeSpan.FromSeconds(0.3)), false);
 		private readonly int _extensionsRemaining = 2;
@@ -54,7 +55,7 @@ namespace GitcSimulator.Data.Characters.Mizuki.Abilities.ElementalSkill
 			_swirlDMGBonusMultiplier = swirlDMGBonusMultiplier;
 			_internalCooldown = internalCooldown;
 			_future = future;
-			_DMGMultiplier = dmgMultiplier;
+			_dmgMultiplier = dmgMultiplier;
 		}
 
 		public override void ApplyEffect(Lifeform lifeform)
@@ -67,11 +68,15 @@ namespace GitcSimulator.Data.Characters.Mizuki.Abilities.ElementalSkill
 					RemoveSwirlDMGBonus();
 					AddSwirlDMGBonus(d);
 				});
+			lifeform.ActionLock(ActionType.NormalAttack);
+			lifeform.ActionLock(ActionType.Jump);
 			Environment.Current.Log(LogCategory.EffectApplied, "Dreamdrifter Effect");
 		}
 
 		public override void RemoveEffect(Lifeform lifeform)
 		{
+			lifeform.ActionUnlock(ActionType.NormalAttack);
+			lifeform.ActionUnlock(ActionType.Jump);
 			lifeform.Attributes.ElementalMastery.Remove(_dreamdrifterId);
 			RemoveSwirlDMGBonus();
 			_user = null;
@@ -91,6 +96,8 @@ namespace GitcSimulator.Data.Characters.Mizuki.Abilities.ElementalSkill
 					_cooldown.Reset();
 				}
 			}
+
+			_user!.Offset(CollisionHelper.CalculateMotionOffset(_user!.LookDirection, timeElapsed, 4.0));
 		}
 
 		private bool TryLaunchAttack()
@@ -107,7 +114,7 @@ namespace GitcSimulator.Data.Characters.Mizuki.Abilities.ElementalSkill
 				return false;
 			}
 
-			env.Objects.Add(new DreamdrifterProjectile(_user, enemy, _internalCooldown, _DMGMultiplier));
+			env.Objects.Add(new DreamdrifterProjectile(_user, enemy, _internalCooldown, _dmgMultiplier));
 			Environment.Current.Log(
 				LogCategory.ProjectileLaunched,
 				$"Dreamdrifter Projectile ({_projectilesLaunched++})");

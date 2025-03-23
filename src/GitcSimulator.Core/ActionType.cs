@@ -18,27 +18,16 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 // =========================================================================
 
-using System;
-using GitcSimulator.Core;
-using GitcSimulator.Core.Animations;
-using GitcSimulator.Core.Attacks;
-using GitcSimulator.Core.Lifeforms;
-using GitcSimulator.Core.Values;
-
-namespace GitcSimulator.Data.Characters.Mizuki.Abilities.Burst
+namespace GitcSimulator.Core
 {
-	public class AnrakuSecretSpringTherapy : BaseElementalBurst
+	public enum ActionType
 	{
-		private readonly Cooldown _snackCooldown = new(new TimeAttribute(TimeSpan.FromSeconds(1.5)), false);
-
-		public AnrakuSecretSpringTherapy(Lifeform user)
-			: base(user)
-		{
-			var snackAni = TimeSpan.FromSeconds(0.33);
-		}
-
-		public override TimeAttribute Cooldown { get; } = new(TimeSpan.FromSeconds(15));
-
-		public override Animation? Animation { get; } = new(TimeSpan.FromSeconds(1.8));
+		Any,
+		Move,
+		Dash,
+		Jump,
+		NormalAttack,
+		ElementalSkill,
+		ElementalBurst,
 	}
 }

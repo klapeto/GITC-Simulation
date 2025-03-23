@@ -68,10 +68,7 @@ namespace GitcSimulator.Core.Projectiles
 			}
 
 			var previousBounds = Bounds;
-			_bounds.Offset(
-				(Speed * timeElapsed.TotalSeconds) * _direction.X,
-				(Speed * timeElapsed.TotalSeconds) * _direction.Y
-			);
+			_bounds.Offset(CollisionHelper.CalculateMotionOffset(_direction, _timePassed, Speed));
 
 			var enemy = Environment.Current.Enemies
 				.FirstOrDefault(e => CollisionHelper.Collides(previousBounds, _bounds, e.Bounds));

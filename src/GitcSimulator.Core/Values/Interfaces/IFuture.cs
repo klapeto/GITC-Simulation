@@ -23,5 +23,7 @@ namespace GitcSimulator.Core.Values.Interfaces
 	public interface IFuture
 	{
 		bool IsCompleted { get; }
+		
+		bool IsCancelled { get; }
 	}
 }
