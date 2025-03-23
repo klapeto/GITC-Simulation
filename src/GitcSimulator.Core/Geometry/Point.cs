@@ -97,8 +97,11 @@ namespace GitcSimulator.Core.Geometry
 		public void Normalize()
 		{
 			var distance = Math.Sqrt((X * X) + (Y * Y));
-			X /= distance;
-			Y /= distance;
+			if (distance != 0.0)
+			{
+				X /= distance;
+				Y /= distance;
+			}
 		}
 	}
 }

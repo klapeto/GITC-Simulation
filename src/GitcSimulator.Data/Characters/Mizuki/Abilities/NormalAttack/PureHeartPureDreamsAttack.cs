@@ -36,10 +36,11 @@ namespace GitcSimulator.Data.Characters.Mizuki.Abilities.NormalAttack
 		public PureHeartPureDreamsAttack(
 			Lifeform user,
 			TimeSpan animationDuration,
+			TimeSpan hitMarkTimeStamp,
 			Percent[] multipliers,
 			InternalCooldown internalCooldown,
 			double poise)
-			: base(user, animationDuration)
+			: base(user, animationDuration, hitMarkTimeStamp)
 		{
 			_multipliers = multipliers;
 			_internalCooldown = internalCooldown;

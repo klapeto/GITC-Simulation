@@ -57,9 +57,9 @@ namespace GitcSimulator.Data.Characters.Mizuki.Abilities.NormalAttack
 			var internalCooldown = User.InternalCooldownManager.Get("Normal Attack", TimeSpan.FromSeconds(2.5));
 			Attacks = new[]
 			{
-				new PureHeartPureDreamsAttack(User, TimeSpan.FromSeconds(0.18), Hit1Multipliers, internalCooldown, 9.802),
-				new PureHeartPureDreamsAttack(User, TimeSpan.FromSeconds(0.3), Hit2Multipliers, internalCooldown, 8.796),
-				new PureHeartPureDreamsAttack(User, TimeSpan.FromSeconds(0.63), Hit3Multipliers, internalCooldown, 13.382),
+				new PureHeartPureDreamsAttack(User, TimeSpan.FromSeconds(0.45), TimeSpan.FromSeconds(0.18), Hit1Multipliers, internalCooldown, 9.802),
+				new PureHeartPureDreamsAttack(User, TimeSpan.FromSeconds(0.5), TimeSpan.FromSeconds(0.3), Hit2Multipliers, internalCooldown, 8.796),
+				new PureHeartPureDreamsAttack(User, TimeSpan.FromSeconds(1.28), TimeSpan.FromSeconds(0.63), Hit3Multipliers, internalCooldown, 13.382),
 			};
 		}
 

@@ -32,7 +32,7 @@ namespace GitcSimulator.Core.Attacks
 		private BaseAttack? _currentAttack;
 		private Future _currentFuture = new();
 
-		private readonly CountDown _resetCountDown = new(TimeSpan.FromSeconds(800));
+		private readonly CountDown _resetCountDown = new(TimeSpan.FromMilliseconds(800));
 
 		protected BaseNormalAttack(Lifeform user)
 			: base(user)
@@ -43,7 +43,7 @@ namespace GitcSimulator.Core.Attacks
 
 		public void Update(TimeSpan timeElapsed)
 		{
-			if (_currentAttack != null)
+			if (_currentAttack is { IsOver: false })
 			{
 				_resetCountDown.Update(timeElapsed);
 				_currentAttack.Update(timeElapsed);

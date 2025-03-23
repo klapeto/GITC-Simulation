@@ -63,6 +63,7 @@ namespace GitcSimulator
 				{
 					future = mizuki.NormalAttack.Use();
 				}
+
 				environment.Update(TimeSpan.FromSeconds(1.0 / 60.0));
 			}
 

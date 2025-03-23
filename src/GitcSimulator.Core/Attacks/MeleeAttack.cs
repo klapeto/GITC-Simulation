@@ -28,10 +28,11 @@ namespace GitcSimulator.Core.Attacks
 {
 	public abstract class MeleeAttack : BaseAttack
 	{
-		public MeleeAttack(Lifeform user, TimeSpan animationDuration, TimeSpan hitLag)
+		public MeleeAttack(Lifeform user, TimeSpan animationDuration, TimeSpan hitMarkTimeStamp, TimeSpan hitLag)
 			: base(
 				user,
 				animationDuration,
+				hitMarkTimeStamp,
 				hitLag)
 		{
 		}

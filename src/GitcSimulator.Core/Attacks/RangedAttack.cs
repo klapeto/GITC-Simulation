@@ -27,18 +27,20 @@ namespace GitcSimulator.Core.Attacks
 {
 	public abstract class RangedAttack : BaseAttack
 	{
-		public RangedAttack(Lifeform user, TimeSpan animationDuration)
+		public RangedAttack(Lifeform user, TimeSpan animationDuration, TimeSpan hitMarkTimeStamp)
 			: base(
 				user,
 				animationDuration,
+				hitMarkTimeStamp,
 				TimeSpan.Zero)
 		{
 		}
 
-		public RangedAttack(Lifeform user, TimeSpan animationDuration, TimeSpan hitLagDuration)
+		public RangedAttack(Lifeform user, TimeSpan animationDuration, TimeSpan hitMarkTimeStamp, TimeSpan hitLagDuration)
 			: base(
 				user,
 				animationDuration,
+				hitMarkTimeStamp,
 				hitLagDuration)
 		{
 		}

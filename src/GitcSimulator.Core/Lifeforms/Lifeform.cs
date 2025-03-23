@@ -133,7 +133,7 @@ namespace GitcSimulator.Core.Lifeforms
 		{
 			Environment.Current.Log(
 				LogCategory.DMG,
-				$"({dmg.Source}) -> ({Name}) : {dmg.Dmg:F2} {(dmg.Critical ? "(CRIT)" : string.Empty)}");
+				$"({dmg.Source}:{dmg.Name}) -> ({Name}) : {dmg.Dmg:F2} {(dmg.Critical ? "(CRIT)" : string.Empty)}");
 
 			//var actualDMG = 
 			Attributes.HP.BaseValue -= dmg.Dmg;
