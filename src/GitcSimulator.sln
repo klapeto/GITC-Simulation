@@ -20,6 +20,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Other Files", "Other Files"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GitcSimulator.Data", "GitcSimulator.Data\GitcSimulator.Data.csproj", "{48CC8CC3-8875-490A-B362-96D8E1543542}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GitcSimulator.WishSimulator", "GitcSimulator.WishSimulator\GitcSimulator.WishSimulator.csproj", "{457AF866-CDD0-4504-99FA-8B6F2173E50F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -42,6 +44,10 @@ Global
 		{48CC8CC3-8875-490A-B362-96D8E1543542}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{48CC8CC3-8875-490A-B362-96D8E1543542}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{48CC8CC3-8875-490A-B362-96D8E1543542}.Release|Any CPU.Build.0 = Release|Any CPU
+		{457AF866-CDD0-4504-99FA-8B6F2173E50F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{457AF866-CDD0-4504-99FA-8B6F2173E50F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{457AF866-CDD0-4504-99FA-8B6F2173E50F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{457AF866-CDD0-4504-99FA-8B6F2173E50F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{7BC786F4-154E-42B0-B365-2F56207A5A55} = {FAE727E9-3769-4664-9F69-8A771C7C0DB6}
