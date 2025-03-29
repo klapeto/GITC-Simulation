@@ -29,6 +29,7 @@ namespace GitcSimulator.Data.Characters.Mizuki.Abilities.NormalAttack
 {
 	public class PureHeartPureDreamsProjectile : BaseProjectile
 	{
+		private const double MoveSpeed = 14.0;
 		private readonly Attribute _attribute;
 		private readonly Attributes _attributes;
 		private readonly Percent _dmgMultiplier;
@@ -48,6 +49,7 @@ namespace GitcSimulator.Data.Characters.Mizuki.Abilities.NormalAttack
 			_poise = poise;
 			_attributes = user.Attributes.Snapshot();
 			_attribute = _attributes.ATK.Snapshot();
+			Speed = MoveSpeed;
 		}
 
 		protected override DMG OnHit(Lifeform target)

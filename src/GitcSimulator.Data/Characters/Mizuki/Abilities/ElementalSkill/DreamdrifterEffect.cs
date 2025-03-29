@@ -32,6 +32,8 @@ namespace GitcSimulator.Data.Characters.Mizuki.Abilities.ElementalSkill
 {
 	public class DreamdrifterEffect : TemporaryEffect
 	{
+		private const double MoveSpeed = 6.75;
+
 		private readonly Cooldown _cooldown = new(
 			new TimeAttribute(TimeSpan.FromSeconds(0.75)),
 			false,
@@ -49,7 +51,11 @@ namespace GitcSimulator.Data.Characters.Mizuki.Abilities.ElementalSkill
 		private int _projectilesLaunched;
 		private Lifeform? _user;
 
-		public DreamdrifterEffect(Percent dmgMultiplier, Percent swirlDMGBonusMultiplier, InternalCooldown internalCooldown, Future future)
+		public DreamdrifterEffect(
+			Percent dmgMultiplier,
+			Percent swirlDMGBonusMultiplier,
+			InternalCooldown internalCooldown,
+			Future future)
 			: base(TimeSpan.FromSeconds(5))
 		{
 			_swirlDMGBonusMultiplier = swirlDMGBonusMultiplier;
@@ -93,11 +99,11 @@ namespace GitcSimulator.Data.Characters.Mizuki.Abilities.ElementalSkill
 			{
 				if (!TryLaunchAttack())
 				{
-					_cooldown.Reset();
+					_cooldown.End();
 				}
 			}
 
-			_user!.Offset(CollisionHelper.CalculateMotionOffset(_user!.LookDirection, timeElapsed, 4.0));
+			_user!.Offset(CollisionHelper.CalculateMotionOffset(_user!.LookDirection, timeElapsed, MoveSpeed));
 		}
 
 		private bool TryLaunchAttack()

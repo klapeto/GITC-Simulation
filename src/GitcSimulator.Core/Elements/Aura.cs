@@ -35,9 +35,11 @@ namespace GitcSimulator.Core.Elements
 
 		public AuraType Type { get; }
 
+		public TimeSpan DurationRemaining => TimeSpan.FromSeconds(Units * _decayRatePerUnit.TotalSeconds);
+
 		public double Units { get; private set; }
 
-		public bool IsUp => Units > 0.0;
+		public bool IsUp => Units > 0.0 && DurationRemaining > TimeSpan.Zero;
 
 		public void Update(TimeSpan timeElapsed)
 		{

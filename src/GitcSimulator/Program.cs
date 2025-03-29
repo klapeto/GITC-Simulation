@@ -19,6 +19,8 @@
 // =========================================================================
 
 using System;
+using GitcSimulator.Core.Attacks;
+using GitcSimulator.Core.Elements;
 using GitcSimulator.Core.Geometry;
 using GitcSimulator.Core.Lifeforms;
 using GitcSimulator.Core.Logging;
@@ -50,23 +52,37 @@ namespace GitcSimulator
 
 			environment.Team.Playables.Add(mizuki);
 			environment.Enemies.Add(enemy);
-
+			
 			mizuki.LookAt(enemy.Location);
 
 			environment.Log(LogCategory.FightStart, "Start");
 
-			var future = mizuki.ElementalSkill.Use();
+			enemy.ReceiveDamage(new DMG(mizuki, "Pyro", 210,
+				new ElementalInstance(ElementType.Pyro, 2.0), mizuki.Attributes, false, 80, false));
+
+			for (var i = 0.0; i < 1.38; i += 1.0 / 60.0)
+			{
+				environment.Update(TimeSpan.FromSeconds(1.0 / 60.0));
+			}
+			
+			enemy.ReceiveDamage(new DMG(mizuki, "Electro", 210,
+				new ElementalInstance(ElementType.Electro, 1.0), mizuki.Attributes, false, 80,false));
+			
+			enemy.ReceiveDamage(new DMG(mizuki, "Electro", 210,
+				new ElementalInstance(ElementType.Electro, 1.0), mizuki.Attributes, false, 80,false));
+			
+			//var future = mizuki.ElementalSkill.Use();
 			for (var i = 0.0; i < 30.0; i += 1.0 / 60.0)
 			{
-				if (future is { IsCompleted: true, IsCancelled: false })
-				{
-					future = mizuki.ElementalSkill.Use();
-				}
-
-				if (mizuki.Location.DistanceTo(enemy.Location) > 2.0)
-				{
-					mizuki.LookAt(enemy.Location + new Point(0.5, 0.5));	// She keeps moving during skill, so force to circle arround enemy
-				}
+				// if (future is { IsCompleted: true, IsCancelled: false })
+				// {
+				// 	future = mizuki.ElementalSkill.Use();
+				// }
+				//
+				// if (mizuki.Location.DistanceTo(enemy.Location) > 2.0)
+				// {
+				// 	mizuki.LookAt(enemy.Location + new Point(0.5, 0.5));	// She keeps moving during skill, so force to circle arround enemy
+				// }
 
 				environment.Update(TimeSpan.FromSeconds(1.0 / 60.0));
 			}

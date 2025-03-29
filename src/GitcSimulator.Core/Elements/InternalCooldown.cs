@@ -40,7 +40,7 @@ namespace GitcSimulator.Core.Elements
 
 		public TimeSpan Time { get; }
 
-		public bool CanApply { get; private set; }
+		public bool CanApply { get; private set; } = true;
 
 		public string Tag { get; }
 
@@ -89,7 +89,7 @@ namespace GitcSimulator.Core.Elements
 				}
 			}
 
-			if (!CanApply)
+			//if (!CanApply)
 			{
 				CanApply = _sequenceIndex < _sequence.Length ? _sequence[_sequenceIndex] : _sequence.Last();
 			}

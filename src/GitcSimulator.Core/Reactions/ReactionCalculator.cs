@@ -43,7 +43,7 @@ namespace GitcSimulator.Core.Reactions
 				[ReactionType.Overloaded] = 2.75,
 				[ReactionType.Burgeon] = 3.0,
 				[ReactionType.Hyperbloom] = 3.0,
-				[ReactionType.Shatter] = 3.0
+				[ReactionType.Shatter] = 3.0,
 			};
 
 		public static ICollection<ReactionType> GetReactionTypes(ElementType attackElementType, Lifeform defender)
@@ -76,6 +76,11 @@ namespace GitcSimulator.Core.Reactions
 					if (defender.HasAura(AuraType.Burning))
 					{
 						reactionTypes.Add(ReactionType.VaporizeHtP);
+					}
+
+					if (defender.HasAura(AuraType.Electro))
+					{
+						reactionTypes.Add(ReactionType.ElectroCharged);
 					}
 
 					break;
@@ -309,7 +314,12 @@ namespace GitcSimulator.Core.Reactions
 			}
 		}
 
-		public static Reaction CalculateReaction(ReactionType reactionType, Lifeform attacker, Attributes attackerAttributes, Lifeform target, double additionalDMG = 0.0)
+		public static Reaction CalculateReaction(
+			ReactionType reactionType,
+			Lifeform attacker,
+			Attributes attackerAttributes,
+			Lifeform target,
+			double additionalDMG = 0.0)
 		{
 			var reactionBonus = GetReactionBonus(reactionType, attackerAttributes);
 			additionalDMG += attackerAttributes.ReactionDMG[reactionType].Increase;
@@ -367,23 +377,23 @@ namespace GitcSimulator.Core.Reactions
 			}
 		}
 
-		private static Percent GetCatalyzeMultiplier(ReactionType reactionType)
-		{
-			return reactionType switch
-			{
-				ReactionType.Aggravate => Percent.FromValue(1.15),
-				ReactionType.Spread => Percent.FromValue(1.25),
-				_ => Percent.FromValue(1.0)
-			};
-		}
-
 		public static Percent GetAmplifyingReactionMultiplier(ReactionType reactionType)
 		{
 			return reactionType switch
 			{
 				ReactionType.VaporizeHtP or ReactionType.MeltPtC => Percent.FromValue(2.0),
 				ReactionType.VaporizePtH or ReactionType.MeltCtP => Percent.FromValue(1.5),
-				_ => Percent.FromValue(1.0)
+				_ => Percent.FromValue(1.0),
+			};
+		}
+
+		private static Percent GetCatalyzeMultiplier(ReactionType reactionType)
+		{
+			return reactionType switch
+			{
+				ReactionType.Aggravate => Percent.FromValue(1.15),
+				ReactionType.Spread => Percent.FromValue(1.25),
+				_ => Percent.FromValue(1.0),
 			};
 		}
 
@@ -396,21 +406,21 @@ namespace GitcSimulator.Core.Reactions
 		{
 			var em = attackerAttributes.ElementalMastery.CurrentValue;
 
-			return Percent.FromValue(2.78 * (em / (em + 1400)));
+			return Percent.FromValue(1.0 + (2.78 * (em / (em + 1400))));
 		}
 
 		private static Percent GetTransformativeEmBonus(Attributes attackerAttributes)
 		{
 			var em = attackerAttributes.ElementalMastery.CurrentValue;
 
-			return Percent.FromValue(16.0 * (em / (em + 2000)));
+			return Percent.FromValue(1.0 + (16.0 * (em / (em + 2000))));
 		}
 
 		private static Percent GetCatalyzeEmBonus(Attributes attackerAttributes)
 		{
 			var em = attackerAttributes.ElementalMastery.CurrentValue;
 
-			return Percent.FromValue(5.0 * em / (em + 1200));
+			return Percent.FromValue(1.0 + (5.0 * em / (em + 1200)));
 		}
 	}
 }

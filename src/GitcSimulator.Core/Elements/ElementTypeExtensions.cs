@@ -18,44 +18,27 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 // =========================================================================
 
-using System.Collections.Generic;
-using GitcSimulator.Core.Lifeforms;
-using GitcSimulator.Core.Reactions;
-using GitcSimulator.Core.Values;
-
-namespace GitcSimulator.Core.Attacks
+namespace GitcSimulator.Core.Elements
 {
-	public class DMG : BasicDMG
+	public static class ElementTypeExtensions
 	{
-		public DMG(
-			Lifeform source,
-			string name,
-			double dmg,
-			ElementalInstance elementalInstance,
-			Attributes sourceAttributes,
-			bool critical,
-			double poise,
-			bool blunt)
-			: base(dmg, critical)
+		public static AuraType? ToAuraType(this ElementType elementType)
 		{
-			ElementalInstance = elementalInstance;
-			Poise = poise;
-			Blunt = blunt;
-			Source = source;
-			Name = name;
-			SourceAttributes = sourceAttributes;
+			switch (elementType)
+			{
+				case ElementType.Electro:
+					return AuraType.Electro;
+				case ElementType.Hydro:
+					return AuraType.Hydro;
+				case ElementType.Pyro:
+					return AuraType.Pyro;
+				case ElementType.Cryo:
+					return AuraType.Cryo;
+				case ElementType.Dendro:
+					return AuraType.Dendro;
+				default:
+					return null;
+			}
 		}
-
-		public ElementalInstance ElementalInstance { get; }
-
-		public string Name { get; }
-
-		public Lifeform Source { get; }
-		
-		public Attributes SourceAttributes { get; }
-
-		public double Poise { get; }
-
-		public bool Blunt { get; }
 	}
 }

@@ -67,7 +67,7 @@ namespace GitcSimulator.Data.Weapons.SkywardAtlas
 			{
 				if (!TryProc())
 				{
-					_procCooldown.Reset();
+					_procCooldown.End();
 				}
 			}
 		}

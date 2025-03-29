@@ -18,6 +18,7 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 // =========================================================================
 
+using System.Collections.Generic;
 using GitcSimulator.Core.Elements;
 using GitcSimulator.Core.Lifeforms;
 using GitcSimulator.Core.Reactions;
@@ -122,7 +123,6 @@ namespace GitcSimulator.Core.Attacks
 			bool blunt)
 		{
 			var applies = internalCooldown?.CanApply ?? true;
-			var reactionMultiplier = 1.0;
 
 			var dmg = CalculateAbilityInitialDmg(
 				attackerAttributes,
@@ -133,37 +133,17 @@ namespace GitcSimulator.Core.Attacks
 				baseDMGMultiplier,
 				additionalDMG);
 
-			if (applies)
-			{
-				var reactionTypes = ReactionCalculator.GetReactionTypes(elementType, target);
-
-				foreach (var reactionType in reactionTypes)
-				{
-					var reaction = ReactionCalculator.CalculateReaction(reactionType, attacker, attackerAttributes, target);
-
-					if (reaction.OriginalDMGMultiplier.ToDouble() > 1.0)
-					{
-						multiplier *= reaction.OriginalDMGMultiplier;
-					}
-
-					dmg += reaction.AdditionalDMG;
-				}
-			}
-
 			var dmgBonus = CalculateDmgBonus(attackerAttributes, target, type, elementType);
-			var defMultiplier = CalculateDefMultiplier(attacker, attackerAttributes, target);
-			var resMultiplier = CalculateResMultiplier(target, elementType);
 
-			dmg *= dmgBonus * defMultiplier * resMultiplier;
-
-			dmg *= reactionMultiplier;
+			dmg *= dmgBonus;
 			dmg *= CalculateCriticalDmgMultiplier(attackerAttributes, type, elementType, out var critical);
 
 			return new DMG(
-				attacker.Name,
+				attacker,
 				name,
 				dmg,
 				new ElementalInstance(elementType, applies ? elementalUnits : 0.0),
+				attackerAttributes,
 				critical,
 				poise,
 				blunt);

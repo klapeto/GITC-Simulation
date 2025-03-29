@@ -26,35 +26,41 @@ namespace GitcSimulator.Core
 	public class Cooldown : IUpdateable
 	{
 		private readonly TimeAttribute _cooldown;
-		private TimeSpan _cooldownRemaining;
 
 		public Cooldown(TimeAttribute cooldown, bool ready, TimeSpan? initialCooldown = null)
 		{
 			_cooldown = cooldown;
 			if (!ready)
 			{
-				_cooldownRemaining = _cooldown.CurrentValue;
+				TimeRemaining = _cooldown.CurrentValue;
 			}
 
 			if (initialCooldown.HasValue)
 			{
-				_cooldownRemaining = initialCooldown.Value;
+				TimeRemaining = initialCooldown.Value;
 			}
 		}
 
-		public bool IsReady => _cooldownRemaining.Ticks <= 0;
+		public TimeSpan TimeRemaining { get; private set; }
+
+		public bool IsReady => TimeRemaining.Ticks <= 0;
 
 		public void Update(TimeSpan timeElapsed)
 		{
 			if (!IsReady)
 			{
-				_cooldownRemaining -= timeElapsed;
+				TimeRemaining -= timeElapsed;
 			}
+		}
+
+		public void End()
+		{
+			TimeRemaining = TimeSpan.Zero;
 		}
 
 		public void Reset()
 		{
-			_cooldownRemaining = TimeSpan.Zero;
+			TimeRemaining = _cooldown.CurrentValue;
 		}
 
 		public bool TryTrigger()
@@ -64,7 +70,7 @@ namespace GitcSimulator.Core
 				return false;
 			}
 
-			_cooldownRemaining = _cooldown.CurrentValue;
+			TimeRemaining = _cooldown.CurrentValue;
 			return true;
 		}
 	}

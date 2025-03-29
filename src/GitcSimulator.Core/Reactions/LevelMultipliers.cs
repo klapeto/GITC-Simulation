@@ -782,7 +782,7 @@ namespace GitcSimulator.Core.Reactions
 				return multipliers.Last();
 			}
 
-			return multipliers[level - 1];
+			return multipliers[level];
 		}
 	}
 }
